@@ -174,8 +174,6 @@ public class Fragment_Orders extends Fragment  {
         });
 
 
-
-
     }
 
     private void addFragmentAndTitles()
