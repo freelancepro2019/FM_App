@@ -12,7 +12,12 @@ public class Preferences {
 
     private Preferences() {
     }
-
+    public static Preferences getInstance() {
+        if (instance == null) {
+            instance = new Preferences();
+        }
+        return instance;
+    }
     public static synchronized Preferences newInstance()
     {
         if (instance==null)
@@ -105,6 +110,21 @@ public class Preferences {
         editor2.clear();
         editor2.apply();
 
+    }
+    public void create_update_language(Context context, String lang) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("language", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("lang", lang);
+        editor.apply();
+
+
+    }
+    public void setIsLanguageSelected(Context context)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("language_selected", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("selected",true);
+        editor.apply();
     }
 
 }

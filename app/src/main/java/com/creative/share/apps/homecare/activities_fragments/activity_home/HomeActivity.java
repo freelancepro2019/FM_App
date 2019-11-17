@@ -1,7 +1,9 @@
 package com.creative.share.apps.homecare.activities_fragments.activity_home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -13,7 +15,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.creative.share.apps.homecare.R;
 import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.Fragment_Main;
 import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.Fragment_Profile;
-import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.Fragment_Settings;
+import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.fragment_settings.Fragment_Settings;
 import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.fragment_orders.Fragment_Orders;
 import com.creative.share.apps.homecare.databinding.ActivityHomeBinding;
 import com.creative.share.apps.homecare.language.LanguageHelper;
@@ -219,6 +221,27 @@ public class HomeActivity extends AppCompatActivity {
             {
                 DisplayFragmentMain();
             }
+    }
+
+    public void RefreshActivity(String lang) {
+        //Log.e("lang",selected_language);
+        Paper.book().write("lang", lang);
+        preferences.create_update_language(this, lang);
+        preferences.setIsLanguageSelected(this);
+        LanguageHelper.setNewLocale(this, lang);
+
+        new Handler()
+                .postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                    }
+                }, 1050);
+
+
     }
 }
 

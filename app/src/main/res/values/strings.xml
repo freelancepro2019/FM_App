@@ -125,5 +125,29 @@
     <string name="no_service">No service</string>
     <string name="no_orders">No orders</string>
     <string name="orders">Orders</string>
+    <string name="about_us">About Us</string>
+    <string name="rate_app">Rate App</string>
+    <string name="share_app">Share App</string>
+    <string name="subject">Subject</string>
+    <string name="user_email">Your Email</string>
+    <string name="language_setting">Change Language</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Make_Order">Make Order</string>
+    <string name="Service_name">Service Name</string>
+    <string name="date">Date</string>
+    <string name="gender">Gender :</string>
+    <string name="Male">Male</string>
+    <string name="Female">Female</string>
+    <string name="any">Any</string>
+    <string name="address">Address</string>
+    <string name="another_phone">Another Phone Number</string>
+    <string name="description">Description</string>
+    <string name="Payment_ways">Payment Ways</string>
+    <string name="MasterCard">Master Card</string>
+    <string name="vodafoneCash">Vodafone Cash</string>
+    <string name="Fawry">Fawry</string>
+    <string name="CashMoney">Cash Money</string>
 
 </resources>

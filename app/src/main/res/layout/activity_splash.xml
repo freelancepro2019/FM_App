@@ -9,13 +9,14 @@
         android:id="@+id/cons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@drawable/login_bg"
         tools:context=".activities_fragments.activity_splash.SplashActivity">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="match_parent"
             android:padding="20dp"
+            android:src="@drawable/splash"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
