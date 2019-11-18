@@ -182,9 +182,9 @@ public class Fragment_Orders extends Fragment  {
         fragmentList.add(Fragment_Current_Orders.newInstance());
         fragmentList.add(Fragment_Previous_Orders.newInstance());
 
-        titles.add("Pending");
-        titles.add("Current");
-        titles.add("Previous");
+        titles.add(getString(R.string.pending));
+        titles.add(getString(R.string.current));
+        titles.add(getString(R.string.previous));
 
 
     }

@@ -33,7 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         manager = getSupportFragmentManager();
@@ -48,25 +49,22 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
-    private void displayFragmentLanguage() {
+    private void displayFragmentLanguage()
+    {
         fragment_language = Fragment_Language.newInstance();
-
         manager.beginTransaction().add(R.id.fragment_sign_in_container, fragment_language, "fragment_language").addToBackStack("fragment_language").commit();
 
     }
-
-    public void displayFragmentSignIn() {
+    public void displayFragmentSignIn()
+    {
         fragment_count++;
         fragment_sign_in = Fragment_Sign_In.newInstance();
-
         manager.beginTransaction().add(R.id.fragment_sign_in_container, fragment_sign_in, "fragment_sign_in").addToBackStack("fragment_sign_in").commit();
 
     }
 
-
-
-    public void refreshActivity(String lang) {
+    public void refreshActivity(String lang)
+    {
         Paper.init(this);
         Paper.book().write("lang", lang);
         preferences.selectedLanguage(this, lang);
@@ -90,4 +88,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             finish();
         }
-    }}
+    }
+
+}

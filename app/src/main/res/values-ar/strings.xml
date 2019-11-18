@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">الرعاية المنزلية</string>
+    <string name="app_name">حراج الاول</string>
     <string name="map_api_key">AIzaSyCbc2Y5AIwZ8uUeHRUXiozGN3CnpjKT0oI</string>
 
 
@@ -138,6 +138,9 @@
     <string name="no_service">لا توجد خدمات</string>
     <string name="no_orders">لا توجد طلبات</string>
     <string name="orders">الطلبات</string>
+    <string name="pending">قيد الإنتظار</string>
+    <string name="current">الحالية</string>
+    <string name="previous">السابقة</string>
     <string name="about_us">عن التطبيق</string>
     <string name="rate_app">قيم التطبيق</string>
     <string name="share_app">شارك التطبيق</string>
@@ -159,6 +162,7 @@
     <string name="vodafoneCash">فودافون كاش</string>
     <string name="Fawry">فورى</string>
     <string name="CashMoney">نقدا</string>
+    <string name="ch_gender">إختر النوع</string>
 
 
 </resources>

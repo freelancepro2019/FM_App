@@ -17,10 +17,12 @@ import com.creative.share.apps.homecare.activities_fragments.activity_home.fragm
 import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.Fragment_Profile;
 import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.fragment_settings.Fragment_Settings;
 import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.fragment_orders.Fragment_Orders;
+import com.creative.share.apps.homecare.activities_fragments.activity_login.LoginActivity;
 import com.creative.share.apps.homecare.databinding.ActivityHomeBinding;
 import com.creative.share.apps.homecare.language.LanguageHelper;
 import com.creative.share.apps.homecare.models.UserModel;
 import com.creative.share.apps.homecare.preferences.Preferences;
+import com.creative.share.apps.homecare.share.Common;
 
 import java.util.Locale;
 
@@ -37,31 +39,43 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
 
 
-
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
         super.attachBaseContext(LanguageHelper.updateResources(newBase, Paper.book().read("lang", Locale.getDefault().getLanguage())));
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_home);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
         initView();
 
     }
 
     private void initView() {
+        preferences = Preferences.getInstance();
+
         fragmentManager = getSupportFragmentManager();
         setUpBottomNavigation();
+        binding.imageLogout.setOnClickListener((view -> {
+            if (userModel==null)
+            {
+                navigateToSignInActivity();
+            }else
+            {
+                logout();
+            }
+        }));
     }
 
 
-    private void setUpBottomNavigation()
-    {
+
+
+    private void setUpBottomNavigation() {
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(getString(R.string.home), R.drawable.ic_nav_home);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(getString(R.string.orders),R.drawable.ic_checklist);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(getString(R.string.orders), R.drawable.ic_checklist);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem(getString(R.string.profile), R.drawable.ic_user);
         AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.more), R.drawable.ic_more);
 
@@ -77,15 +91,27 @@ public class HomeActivity extends AppCompatActivity {
         binding.ahBottomNav.addItem(item4);
 
         binding.ahBottomNav.setOnTabSelectedListener((position, wasSelected) -> {
+            userModel = preferences.getUserData(this);
             switch (position) {
                 case 0:
+
                     DisplayFragmentMain();
                     break;
                 case 1:
-                    DisplayFragmentOrders();
+                    if (userModel != null) {
+                        DisplayFragmentOrders();
+
+                    } else {
+                        Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
+                    }
                     break;
                 case 2:
-                    DisplayFragmentProfile();
+                    if (userModel != null) {
+                        DisplayFragmentProfile();
+
+                    } else {
+                        Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
+                    }
                     break;
                 case 3:
 
@@ -214,13 +240,29 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (fragment_main!=null&&fragment_main.isAdded()&&fragment_main.isVisible())
-        {
-            finish();
-        }else
+        if (fragment_main != null && fragment_main.isAdded() && fragment_main.isVisible()) {
+            if (userModel==null)
             {
-                DisplayFragmentMain();
-            }
+                navigateToSignInActivity();
+            }else
+                {
+                    logout();
+                }
+        } else {
+            DisplayFragmentMain();
+        }
+    }
+
+    private void navigateToSignInActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void logout() {
+        preferences.clear(this);
+        finish();
+
     }
 
     public void RefreshActivity(String lang) {
@@ -231,14 +273,11 @@ public class HomeActivity extends AppCompatActivity {
         LanguageHelper.setNewLocale(this, lang);
 
         new Handler()
-                .postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                .postDelayed(() -> {
 
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
-                    }
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
                 }, 1050);
 
 

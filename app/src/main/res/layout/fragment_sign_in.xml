@@ -9,6 +9,9 @@
             type="String" />
 
         <variable
+            name="skipListener"
+            type="com.creative.share.apps.homecare.interfaces.Listeners.SkipListener" />
+        <variable
             name="loginModel"
             type="com.creative.share.apps.homecare.models.LoginModel" />
 
@@ -255,11 +258,28 @@
                         />
 
                     <TextView
-                        android:id="@+id/tvNewAccount"
+                        android:id="@+id/tvSkip"
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="20dp"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:text="@string/skip"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:textStyle="bold"
+                        android:onClick="@{()->skipListener.skip()}"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tvNewAccount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         android:text="@string/create_an_account"

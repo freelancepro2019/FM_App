@@ -2,6 +2,7 @@ package com.creative.share.apps.homecare.activities_fragments.activity_sign_up;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,19 +27,29 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.creative.share.apps.homecare.R;
+import com.creative.share.apps.homecare.activities_fragments.activity_home.HomeActivity;
 import com.creative.share.apps.homecare.databinding.FragmentClientSignUpBinding;
 import com.creative.share.apps.homecare.interfaces.Listeners;
 import com.creative.share.apps.homecare.models.SignUpClientModel;
+import com.creative.share.apps.homecare.models.UserModel;
 import com.creative.share.apps.homecare.preferences.Preferences;
+import com.creative.share.apps.homecare.remote.Api;
 import com.creative.share.apps.homecare.share.Common;
+import com.creative.share.apps.homecare.tags.Tags;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Locale;
 
 import io.paperdb.Paper;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Fragment_Client_SignUp extends Fragment implements Listeners.ShowCountryDialogListener, OnCountryPickerListener, Listeners.BackListener, Listeners.SignUpListener {
     private FragmentClientSignUpBinding binding;
@@ -98,6 +110,10 @@ public class Fragment_Client_SignUp extends Fragment implements Listeners.ShowCo
         });
 
         binding.flImage.setOnClickListener(view -> checkCameraPermission());
+
+        binding.rbMale.setOnClickListener(view -> signUpClientModel.setGender(1));
+        binding.rbFemale.setOnClickListener(view -> signUpClientModel.setGender(2));
+
     }
 
 
@@ -106,10 +122,165 @@ public class Fragment_Client_SignUp extends Fragment implements Listeners.ShowCo
 
         if (signUpClientModel.isDataValid(activity)) {
             Common.CloseKeyBoard(activity,binding.edtName);
+            if (uri==null)
+            {
+                signUpWithoutImage();
+            }else
+            {
+                signUpWithImage();
+            }
 
         }
     }
 
+
+    private void signUpWithoutImage()
+    {
+
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+
+        RequestBody name_part = Common.getRequestBodyText(signUpClientModel.getName());
+        RequestBody phone_part = Common.getRequestBodyText(signUpClientModel.getPhone());
+        RequestBody phone_code_part = Common.getRequestBodyText(signUpClientModel.getPhone_code());
+        RequestBody password_part = Common.getRequestBodyText(signUpClientModel.getPassword());
+        RequestBody email_part = Common.getRequestBodyText(signUpClientModel.getEmail());
+        RequestBody gender_part = Common.getRequestBodyText(String.valueOf(signUpClientModel.getGender()));
+        RequestBody soft_type = Common.getRequestBodyText("1");
+
+
+        try {
+            Api.getService(Tags.base_url)
+                    .signUpClientWithoutImage(name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type)
+                    .enqueue(new Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                            dialog.dismiss();
+                            if (response.isSuccessful() && response.body() != null) {
+                                preferences.create_update_userData(activity, response.body());
+                                preferences.createSession(activity, Tags.session_login);
+                                Intent intent = new Intent(activity, HomeActivity.class);
+                                startActivity(intent);
+                                activity.finish();
+
+                            } else {
+
+                                try {
+
+                                    Log.e("error", response.code() + "_" + response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (response.code() == 500) {
+                                    Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                } else {
+                                    Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
+                            try {
+                                dialog.dismiss();
+                                if (t.getMessage() != null) {
+                                    Log.e("error", t.getMessage());
+                                    if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                        Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            dialog.dismiss();
+
+        }
+    }
+    private void signUpWithImage()
+    {
+
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+
+        RequestBody name_part = Common.getRequestBodyText(signUpClientModel.getName());
+        RequestBody phone_part = Common.getRequestBodyText(signUpClientModel.getPhone());
+        RequestBody phone_code_part = Common.getRequestBodyText(signUpClientModel.getPhone_code());
+        RequestBody password_part = Common.getRequestBodyText(signUpClientModel.getPassword());
+        RequestBody email_part = Common.getRequestBodyText(signUpClientModel.getEmail());
+        RequestBody gender_part = Common.getRequestBodyText(String.valueOf(signUpClientModel.getGender()));
+        RequestBody soft_type = Common.getRequestBodyText("1");
+        MultipartBody.Part image = Common.getMultiPart(activity,uri,"logo");
+
+        try {
+            Api.getService(Tags.base_url)
+                    .signUpClientWithImage(name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type,image)
+                    .enqueue(new Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                            dialog.dismiss();
+                            if (response.isSuccessful() && response.body() != null) {
+                                preferences.create_update_userData(activity, response.body());
+                                preferences.createSession(activity, Tags.session_login);
+                                Intent intent = new Intent(activity, HomeActivity.class);
+                                startActivity(intent);
+                                activity.finish();
+
+                            } else {
+
+                                try {
+
+                                    Log.e("error", response.code() + "_" + response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (response.code() == 500) {
+                                    Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                } else {
+                                    Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
+                            try {
+                                dialog.dismiss();
+                                if (t.getMessage() != null) {
+                                    Log.e("error", t.getMessage());
+                                    if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                        Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            dialog.dismiss();
+
+        }
+
+    }
     private void checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(activity, camera_perm) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(activity, write_perm) == PackageManager.PERMISSION_GRANTED) {

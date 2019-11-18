@@ -1,14 +1,17 @@
 package com.creative.share.apps.homecare.activities_fragments.activity_login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,17 +24,24 @@ import com.creative.share.apps.homecare.activities_fragments.activity_sign_up.Si
 import com.creative.share.apps.homecare.databinding.FragmentSignInBinding;
 import com.creative.share.apps.homecare.interfaces.Listeners;
 import com.creative.share.apps.homecare.models.LoginModel;
+import com.creative.share.apps.homecare.models.UserModel;
 import com.creative.share.apps.homecare.preferences.Preferences;
+import com.creative.share.apps.homecare.remote.Api;
 import com.creative.share.apps.homecare.share.Common;
+import com.creative.share.apps.homecare.tags.Tags;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import io.paperdb.Paper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class Fragment_Sign_In extends Fragment implements Listeners.LoginListener, Listeners.ShowCountryDialogListener, OnCountryPickerListener {
+public class Fragment_Sign_In extends Fragment implements Listeners.LoginListener, Listeners.ShowCountryDialogListener,Listeners.SkipListener, OnCountryPickerListener {
     private FragmentSignInBinding binding;
     private LoginActivity activity;
     private String lang;
@@ -60,16 +70,15 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
         binding.setLang(lang);
         binding.setLoginModel(loginModel);
         binding.setLoginListener(this);
+        binding.setSkipListener(this);
         binding.setShowCountryListener(this);
         binding.setLoginListener(this);
         createCountryDialog();
-
         binding.tvNewAccount.setOnClickListener(view -> {
             Intent intent = new Intent(activity, SignUpActivity.class);
             startActivity(intent);
             activity.finish();
         });
-
         binding.edtPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -90,14 +99,10 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
             }
         });
 
-
-
-
-
-
     }
 
-    private void createCountryDialog() {
+    private void createCountryDialog()
+    {
         countryPicker = new CountryPicker.Builder()
                 .canSearch(true)
                 .listener(this)
@@ -133,12 +138,9 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
 
 
     }
-
-
-
-
     @Override
-    public void checkDataLogin() {
+    public void checkDataLogin()
+    {
 
         if (loginModel.isDataValid(activity))
         {
@@ -146,19 +148,18 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
             login(loginModel);
         }
     }
+    private void login(LoginModel loginModel)
+    {
 
-    private void login(LoginModel loginModel) {
 
-        Intent intent = new Intent(activity, HomeActivity.class);
-        startActivity(intent);
 
-        /*ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.show();
         try {
 
             Api.getService(Tags.base_url)
-                    .login(loginModel.getPhone_code(),loginModel.getPhone(),1)
+                    .login(loginModel.getPhone_code(),loginModel.getPhone(),loginModel.getPassword())
                     .enqueue(new Callback<UserModel>() {
                         @Override
                         public void onResponse(Call<UserModel> call, Response<UserModel> response) {
@@ -168,46 +169,29 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
                                 preferences.create_update_userData(activity,response.body());
                                 preferences.createSession(activity, Tags.session_login);
 
-                                if (!activity.isOut)
-                                {
-                                    Intent intent = new Intent(activity, HomeActivity.class);
-                                    startActivity(intent);
-                                }
-
-
+                                Intent intent = new Intent(activity, HomeActivity.class);
+                                startActivity(intent);
                                 activity.finish();
 
                             }else
                             {
 
+                                try {
+
+                                    Log.e("error",response.code()+"_"+response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                                 if (response.code() == 500) {
                                     Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
 
-
-                                }else if (response.code()==401)
-                                {
-                                    try {
-                                        UserModel userModel = new Gson().fromJson(response.errorBody().string(),UserModel.class);
-                                        CreateDialogAlert(userModel);
-
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }else if (response.code()==402)
-                                {
-                                    Toast.makeText(activity, R.string.blokced, Toast.LENGTH_SHORT).show();
 
                                 }else
                                 {
                                     Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
 
-                                    try {
 
-                                        Log.e("error",response.code()+"_"+response.errorBody().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
                             }
                         }
@@ -234,12 +218,8 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
         }catch (Exception e){
             dialog.dismiss();
 
-        }*/
+        }
     }
-
-
-
-
     @Override
     public void showDialog() {
         countryPicker.showDialog(activity);
@@ -258,6 +238,10 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
     }
 
 
-
-
+    @Override
+    public void skip() {
+        Intent intent= new Intent(activity,HomeActivity.class);
+        startActivity(intent);
+        activity.finish();
+    }
 }

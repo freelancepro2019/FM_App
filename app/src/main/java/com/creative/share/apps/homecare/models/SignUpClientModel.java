@@ -3,6 +3,7 @@ package com.creative.share.apps.homecare.models;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.widget.Toast;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -19,6 +20,7 @@ public class SignUpClientModel extends BaseObservable {
     private String phone_code;
     private String phone;
     private String password;
+    private int gender;
 
     public ObservableField<String> error_name = new ObservableField<>();
     public ObservableField<String> error_email = new ObservableField<>();
@@ -35,6 +37,7 @@ public class SignUpClientModel extends BaseObservable {
                 Patterns.EMAIL_ADDRESS.matcher(email).matches()&&
                 !TextUtils.isEmpty(phone_code)&&
                 !TextUtils.isEmpty(phone)&&
+                gender!=0&&
                 password.length()>=6
         )
         {
@@ -96,12 +99,18 @@ public class SignUpClientModel extends BaseObservable {
                 error_password.set(null);
             }
 
+            if (gender==0)
+            {
+                Toast.makeText(context, R.string.ch_gender, Toast.LENGTH_SHORT).show();
+
+            }
 
             return false;
         }
     }
 
     public SignUpClientModel() {
+        gender = 0;
         this.phone_code = "";
         notifyPropertyChanged(BR.phone_code);
         this.phone="";
@@ -182,7 +191,11 @@ public class SignUpClientModel extends BaseObservable {
 
     }
 
+    public int getGender() {
+        return gender;
+    }
 
-
-
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
 }

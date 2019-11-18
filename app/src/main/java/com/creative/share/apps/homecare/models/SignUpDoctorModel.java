@@ -23,6 +23,7 @@ public class SignUpDoctorModel extends BaseObservable {
     private String experience_id;
     private String department_id;
     private String about_me;
+    private int gender;
     private boolean isAcceptTerms ;
 
 
@@ -46,6 +47,7 @@ public class SignUpDoctorModel extends BaseObservable {
                 !TextUtils.isEmpty(experience_id)&&
                 !TextUtils.isEmpty(department_id)&&
                 !TextUtils.isEmpty(about_me)&&
+                gender!=0&&
                 isAcceptTerms
         )
         {
@@ -127,6 +129,12 @@ public class SignUpDoctorModel extends BaseObservable {
 
             }
 
+            if (gender==0)
+            {
+                Toast.makeText(context, R.string.ch_gender, Toast.LENGTH_SHORT).show();
+
+            }
+
             if (!isAcceptTerms)
             {
                 Toast.makeText(context, R.string.cnt_sign_accept, Toast.LENGTH_SHORT).show();
@@ -138,6 +146,8 @@ public class SignUpDoctorModel extends BaseObservable {
     }
 
     public SignUpDoctorModel() {
+        this.gender =0;
+
         this.phone_code = "";
         notifyPropertyChanged(BR.phone_code);
         this.phone="";
@@ -254,8 +264,15 @@ public class SignUpDoctorModel extends BaseObservable {
     public boolean isAcceptTerms() {
         return isAcceptTerms;
     }
-
     public void setAcceptTerms(boolean acceptTerms) {
         isAcceptTerms = acceptTerms;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
     }
 }

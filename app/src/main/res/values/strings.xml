@@ -125,6 +125,9 @@
     <string name="no_service">No service</string>
     <string name="no_orders">No orders</string>
     <string name="orders">Orders</string>
+    <string name="pending">Pending</string>
+    <string name="current">Current</string>
+    <string name="previous">Previous</string>
     <string name="about_us">About Us</string>
     <string name="rate_app">Rate App</string>
     <string name="share_app">Share App</string>
@@ -149,5 +152,6 @@
     <string name="vodafoneCash">Vodafone Cash</string>
     <string name="Fawry">Fawry</string>
     <string name="CashMoney">Cash Money</string>
+    <string name="ch_gender">Choose gender</string>
 
 </resources>
