@@ -36,6 +36,8 @@ public class HomeActivity extends AppCompatActivity {
     private Fragment_Orders fragment_orders;
     private Fragment_Profile fragment_profile;
     private Fragment_Settings fragment_settings;
+    private Fragment_MakeOrder fragment_makeOrder;
+
     private FragmentManager fragmentManager;
 
 
@@ -237,7 +239,19 @@ public class HomeActivity extends AppCompatActivity {
         binding.ahBottomNav.setCurrentItem(3, false);
         binding.tvTitle.setText(R.string.more);
     }
+    public void DisplayFragmentMakeOrder() {
 
+        fragment_makeOrder = Fragment_MakeOrder.newInstance();
+
+        if (fragment_makeOrder.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_makeOrder).commit();
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_makeOrder, "fragment_makeOrder").addToBackStack("fragment_makeOrder").commit();
+
+        }
+
+
+    }
     @Override
     public void onBackPressed() {
         if (fragment_main != null && fragment_main.isAdded() && fragment_main.isVisible()) {

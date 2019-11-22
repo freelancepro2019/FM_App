@@ -3,6 +3,8 @@ package com.creative.share.apps.homecare.services;
 
 import com.creative.share.apps.homecare.models.PlaceGeocodeData;
 import com.creative.share.apps.homecare.models.PlaceMapDetailsData;
+import com.creative.share.apps.homecare.models.ServicesDataModel;
+import com.creative.share.apps.homecare.models.SubServicesModel;
 import com.creative.share.apps.homecare.models.UserModel;
 
 import okhttp3.MultipartBody;
@@ -11,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -97,6 +100,14 @@ public interface Service {
 
     @GET("api/logout")
     Call<UserModel> logout(@Query("firebase_token") String firebase_token);
+
+
+    @GET("api/main-services")
+    Call<ServicesDataModel> get_services(@Header("device-lang") String header);
+
+    @GET("api/get-sub-services")
+    Call<SubServicesModel> get_sub_services(@Header("device-lang") String header,
+                                            @Query("main_service_id") int main_service_id);
 }
 
 

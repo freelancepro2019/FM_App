@@ -153,5 +153,6 @@
     <string name="Fawry">Fawry</string>
     <string name="CashMoney">Cash Money</string>
     <string name="ch_gender">Choose gender</string>
+    <string name="Cancel">Cancel</string>
 
 </resources>

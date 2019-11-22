@@ -163,6 +163,7 @@
     <string name="Fawry">فورى</string>
     <string name="CashMoney">نقدا</string>
     <string name="ch_gender">إختر النوع</string>
+    <string name="Cancel">الغاء</string>
 
 
 </resources>
