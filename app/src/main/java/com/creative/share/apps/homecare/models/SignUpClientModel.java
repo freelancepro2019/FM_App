@@ -21,6 +21,7 @@ public class SignUpClientModel extends BaseObservable {
     private String phone;
     private String password;
     private int gender;
+    private boolean isAccept;
 
     public ObservableField<String> error_name = new ObservableField<>();
     public ObservableField<String> error_email = new ObservableField<>();
@@ -38,7 +39,8 @@ public class SignUpClientModel extends BaseObservable {
                 !TextUtils.isEmpty(phone_code)&&
                 !TextUtils.isEmpty(phone)&&
                 gender!=0&&
-                password.length()>=6
+                password.length()>=6&&
+                isAccept
         )
         {
             error_name.set(null);
@@ -104,6 +106,11 @@ public class SignUpClientModel extends BaseObservable {
                 Toast.makeText(context, R.string.ch_gender, Toast.LENGTH_SHORT).show();
 
             }
+            if (!isAccept)
+            {
+                Toast.makeText(context, R.string.accept_terms_and_conditions, Toast.LENGTH_SHORT).show();
+
+            }
 
             return false;
         }
@@ -111,6 +118,7 @@ public class SignUpClientModel extends BaseObservable {
 
     public SignUpClientModel() {
         gender = 0;
+        isAccept = false;
         this.phone_code = "";
         notifyPropertyChanged(BR.phone_code);
         this.phone="";
@@ -122,6 +130,7 @@ public class SignUpClientModel extends BaseObservable {
         this.email = "";
         notifyPropertyChanged(BR.email);
         this.image_url ="";
+
 
 
 
@@ -197,5 +206,13 @@ public class SignUpClientModel extends BaseObservable {
 
     public void setGender(int gender) {
         this.gender = gender;
+    }
+
+    public boolean isAccept() {
+        return isAccept;
+    }
+
+    public void setAccept(boolean accept) {
+        isAccept = accept;
     }
 }

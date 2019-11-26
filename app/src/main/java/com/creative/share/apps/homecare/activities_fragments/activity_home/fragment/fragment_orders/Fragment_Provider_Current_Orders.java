@@ -21,14 +21,14 @@ import java.util.Locale;
 
 import io.paperdb.Paper;
 
-public class Fragment_Current_Orders extends Fragment  {
+public class Fragment_Provider_Current_Orders extends Fragment  {
     private FragmentPendingCurrentPreviousOrderBinding binding;
     private HomeActivity activity;
     private String lang;
     private Preferences preferences;
 
-    public static Fragment_Current_Orders newInstance() {
-        return new Fragment_Current_Orders();
+    public static Fragment_Provider_Current_Orders newInstance() {
+        return new Fragment_Provider_Current_Orders();
     }
 
     @Override

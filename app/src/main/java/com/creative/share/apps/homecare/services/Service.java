@@ -1,14 +1,17 @@
 package com.creative.share.apps.homecare.services;
 
 
+import com.creative.share.apps.homecare.models.NotificationDataModel;
 import com.creative.share.apps.homecare.models.PlaceGeocodeData;
 import com.creative.share.apps.homecare.models.PlaceMapDetailsData;
 import com.creative.share.apps.homecare.models.ServicesDataModel;
 import com.creative.share.apps.homecare.models.SubServicesModel;
+import com.creative.share.apps.homecare.models.TermsDataModel;
 import com.creative.share.apps.homecare.models.UserModel;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -37,7 +40,8 @@ public interface Service {
 
     @Multipart
     @POST("api/provider-register")
-    Call<UserModel> signUpDoctorWithImage(@Part("name") RequestBody name,
+    Call<UserModel> signUpDoctorWithImage(@Header("device-lang") String header,
+                                          @Part("name") RequestBody name,
                                           @Part("phone") RequestBody phone,
                                           @Part("phone_code") RequestBody phone_code,
                                           @Part("password") RequestBody password,
@@ -53,7 +57,8 @@ public interface Service {
 
     @Multipart
     @POST("api/provider-register")
-    Call<UserModel> signUpDoctorWithoutImage(@Part("name") RequestBody name,
+    Call<UserModel> signUpDoctorWithoutImage(@Header("device-lang") String header,
+                                             @Part("name") RequestBody name,
                                              @Part("phone") RequestBody phone,
                                              @Part("phone_code") RequestBody phone_code,
                                              @Part("password") RequestBody password,
@@ -69,7 +74,8 @@ public interface Service {
 
     @Multipart
     @POST("api/user-register")
-    Call<UserModel> signUpClientWithImage(@Part("name") RequestBody name,
+    Call<UserModel> signUpClientWithImage(@Header("device-lang") String header,
+                                          @Part("name") RequestBody name,
                                           @Part("phone") RequestBody phone,
                                           @Part("phone_code") RequestBody phone_code,
                                           @Part("password") RequestBody password,
@@ -82,7 +88,8 @@ public interface Service {
 
     @Multipart
     @POST("api/user-register")
-    Call<UserModel> signUpClientWithoutImage(@Part("name") RequestBody name,
+    Call<UserModel> signUpClientWithoutImage(@Header("device-lang") String header,
+                                             @Part("name") RequestBody name,
                                              @Part("phone") RequestBody phone,
                                              @Part("phone_code") RequestBody phone_code,
                                              @Part("password") RequestBody password,
@@ -94,12 +101,14 @@ public interface Service {
 
     @FormUrlEncoded
     @POST("Api/login")
-    Call<UserModel> login(@Field("phone") String phone,
+    Call<UserModel> login(@Header("device-lang") String header,
+                          @Field("phone") String phone,
                           @Field("phone_code") String phone_code,
                           @Field("password") String password);
 
     @GET("api/logout")
-    Call<UserModel> logout(@Query("firebase_token") String firebase_token);
+    Call<UserModel> logout(@Header("device-lang") String header,
+                           @Query("firebase_token") String firebase_token);
 
 
     @GET("api/main-services")
@@ -107,7 +116,29 @@ public interface Service {
 
     @GET("api/get-sub-services")
     Call<SubServicesModel> get_sub_services(@Header("device-lang") String header,
-                                            @Query("main_service_id") int main_service_id);
+                                            @Query("main_service_id") String main_service_id);
+
+    @FormUrlEncoded
+    @POST("api/contact-us")
+    Call<ResponseBody> contactUs(@Header("device-lang") String header,
+                                 @Field("name") String name,
+                                 @Field("email") String email,
+                                 @Field("subject") String subject,
+                                 @Field("message") String message
+    );
+
+
+    @GET("api/setting")
+    Call<TermsDataModel> getAppData(@Header("device-lang") String header);
+
+
+    @GET("api/my-notifications")
+    Call<NotificationDataModel> getNotifications(@Header("device-lang") String header,
+                                                 @Header("Authorization") String user_token,
+                                                 @Query("page") int page,
+                                                 @Query("limit_per_page") int limit_per_page
+                                          );
+
 }
 
 

@@ -420,6 +420,18 @@
                 android:text="@string/signup"
                 android:onClick="@{()->signUpListener.checkDataSignUp()}"
                 />
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:text="@string/accept_terms_and_conditions"
+                android:button="@drawable/rb_bg"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                />
         </LinearLayout>
 
         <ImageView

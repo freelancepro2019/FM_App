@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 
 import com.creative.share.apps.homecare.R;
 import com.creative.share.apps.homecare.activities_fragments.activity_home.HomeActivity;
+import com.creative.share.apps.homecare.activities_fragments.activity_terms.TermsActivity;
 import com.creative.share.apps.homecare.databinding.FragmentClientSignUpBinding;
 import com.creative.share.apps.homecare.interfaces.Listeners;
 import com.creative.share.apps.homecare.models.SignUpClientModel;
@@ -89,6 +90,20 @@ public class Fragment_Client_SignUp extends Fragment implements Listeners.ShowCo
         binding.setSignUpModel(signUpClientModel);
         createCountryDialog();
         binding.imageSwitchUser.setOnClickListener((v) -> activity.displayFragmentDoctorSignUp());
+
+        binding.checkbox.setOnClickListener(view -> {
+            if (binding.checkbox.isChecked())
+            {
+                signUpClientModel.setAccept(true);
+                Intent intent = new Intent(activity, TermsActivity.class);
+                intent.putExtra("type",1);
+                startActivity(intent);
+            }else
+            {
+                signUpClientModel.setAccept(false);
+
+            }
+        });
 
         binding.edtPhone.addTextChangedListener(new TextWatcher() {
             @Override
@@ -152,7 +167,7 @@ public class Fragment_Client_SignUp extends Fragment implements Listeners.ShowCo
 
         try {
             Api.getService(Tags.base_url)
-                    .signUpClientWithoutImage(name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type)
+                    .signUpClientWithoutImage(lang,name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type)
                     .enqueue(new Callback<UserModel>() {
                         @Override
                         public void onResponse(Call<UserModel> call, Response<UserModel> response) {
@@ -225,7 +240,7 @@ public class Fragment_Client_SignUp extends Fragment implements Listeners.ShowCo
 
         try {
             Api.getService(Tags.base_url)
-                    .signUpClientWithImage(name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type,image)
+                    .signUpClientWithImage(lang,name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type,image)
                     .enqueue(new Callback<UserModel>() {
                         @Override
                         public void onResponse(Call<UserModel> call, Response<UserModel> response) {

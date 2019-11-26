@@ -21,14 +21,14 @@ import java.util.Locale;
 
 import io.paperdb.Paper;
 
-public class Fragment_Pendding_Orders extends Fragment  {
+public class Fragment_Client_Current_Orders extends Fragment  {
     private FragmentPendingCurrentPreviousOrderBinding binding;
     private HomeActivity activity;
     private String lang;
     private Preferences preferences;
 
-    public static Fragment_Pendding_Orders newInstance() {
-        return new Fragment_Pendding_Orders();
+    public static Fragment_Client_Current_Orders newInstance() {
+        return new Fragment_Client_Current_Orders();
     }
 
     @Override
@@ -45,6 +45,7 @@ public class Fragment_Pendding_Orders extends Fragment  {
         Paper.init(activity);
         lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
 
 
 

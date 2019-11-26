@@ -15,7 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.creative.share.apps.homecare.R;
 import com.creative.share.apps.homecare.activities_fragments.activity_home.HomeActivity;
 import com.creative.share.apps.homecare.adapters.ViewPagerAdapter;
-import com.creative.share.apps.homecare.databinding.FragmentOrdersBinding;
+import com.creative.share.apps.homecare.databinding.FragmentClientOrdersBinding;
 import com.creative.share.apps.homecare.preferences.Preferences;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ import java.util.Locale;
 
 import io.paperdb.Paper;
 
-public class Fragment_Orders extends Fragment  {
-    private FragmentOrdersBinding binding;
+public class Fragment_Client_Orders extends Fragment  {
+    private FragmentClientOrdersBinding binding;
     private HomeActivity activity;
     private String lang;
     private Preferences preferences;
@@ -34,13 +34,13 @@ public class Fragment_Orders extends Fragment  {
     private ViewPagerAdapter adapter;
 
 
-    public static Fragment_Orders newInstance() {
-        return new Fragment_Orders();
+    public static Fragment_Client_Orders newInstance() {
+        return new Fragment_Client_Orders();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding= DataBindingUtil.inflate(inflater, R.layout.fragment_orders, container, false);
+        binding= DataBindingUtil.inflate(inflater, R.layout.fragment_client_orders, container, false);
         View view = binding.getRoot();
         initView();
         return view;
@@ -178,9 +178,9 @@ public class Fragment_Orders extends Fragment  {
 
     private void addFragmentAndTitles()
     {
-        fragmentList.add(Fragment_Pendding_Orders.newInstance());
-        fragmentList.add(Fragment_Current_Orders.newInstance());
-        fragmentList.add(Fragment_Previous_Orders.newInstance());
+        fragmentList.add(Fragment_Client_Pending_Orders.newInstance());
+        fragmentList.add(Fragment_Client_Current_Orders.newInstance());
+        fragmentList.add(Fragment_Client_Previous_Orders.newInstance());
 
         titles.add(getString(R.string.pending));
         titles.add(getString(R.string.current));

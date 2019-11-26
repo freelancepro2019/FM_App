@@ -48,19 +48,15 @@ public class Common {
 
     }
 
-    public static void CreateDialogAlert(Context context,String msg) {
+    public static void CreateDialogAlert(Context context,String msg,int color) {
         final AlertDialog dialog = new AlertDialog.Builder(context)
                 .create();
 
         DialogAlertBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_alert, null, false);
-
+        binding.btnCancel.setBackgroundResource(color);
+        binding.llContainer.setBackgroundResource(color);
         binding.tvMsg.setText(msg);
-        binding.btnCancel.setOnClickListener(new View.OnClickListener() {
-                                                 @Override
-                                                 public void onClick(View v) {
-                                                     dialog.dismiss();
-                                                 }
-                                             }
+        binding.btnCancel.setOnClickListener(v -> dialog.dismiss()
 
         );
         dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;

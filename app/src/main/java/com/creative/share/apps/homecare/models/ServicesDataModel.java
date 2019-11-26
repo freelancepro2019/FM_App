@@ -7,8 +7,12 @@ import java.util.List;
 public class ServicesDataModel implements Serializable {
     private List<ServiceModel> services;
 
-    public class ServiceModel implements Serializable {
-        private int service_id;
+    public List<ServiceModel> getServices() {
+        return services;
+    }
+
+    public static class  ServiceModel implements Serializable {
+        private String service_id;
         private String logo;
         private WordsModel words;
 
@@ -16,7 +20,7 @@ public class ServicesDataModel implements Serializable {
             return words;
         }
 
-        public int getService_id() {
+        public String getService_id() {
             return service_id;
         }
 
@@ -24,17 +28,22 @@ public class ServicesDataModel implements Serializable {
             return logo;
         }
 
-        public class WordsModel implements Serializable {
+        public void setWords(WordsModel words) {
+            this.words = words;
+        }
+
+        public static class WordsModel implements Serializable {
             private String title;
 
             public String getTitle() {
                 return title;
             }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
         }
     }
 
-    public List<ServiceModel> getServices() {
-        return services;
-    }
 
 }

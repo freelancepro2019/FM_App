@@ -41,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Fragment_Sign_In extends Fragment implements Listeners.LoginListener, Listeners.ShowCountryDialogListener,Listeners.SkipListener, OnCountryPickerListener {
+public class Fragment_Sign_In extends Fragment implements Listeners.LoginListener, Listeners.ShowCountryDialogListener, Listeners.SkipListener, OnCountryPickerListener {
     private FragmentSignInBinding binding;
     private LoginActivity activity;
     private String lang;
@@ -55,7 +55,7 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding= DataBindingUtil.inflate(inflater, R.layout.fragment_sign_in, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sign_in, container, false);
         View view = binding.getRoot();
         initView();
         return view;
@@ -92,8 +92,7 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.toString().startsWith("0"))
-                {
+                if (editable.toString().startsWith("0")) {
                     binding.edtPhone.setText("");
                 }
             }
@@ -101,8 +100,7 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
 
     }
 
-    private void createCountryDialog()
-    {
+    private void createCountryDialog() {
         countryPicker = new CountryPicker.Builder()
                 .canSearch(true)
                 .listener(this)
@@ -113,72 +111,63 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
         TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 
         try {
-            if (countryPicker.getCountryFromSIM()!=null)
-            {
+            if (countryPicker.getCountryFromSIM() != null) {
                 updatePhoneCode(countryPicker.getCountryFromSIM());
-            }else if (telephonyManager!=null&&countryPicker.getCountryByISO(telephonyManager.getNetworkCountryIso())!=null)
-            {
+            } else if (telephonyManager != null && countryPicker.getCountryByISO(telephonyManager.getNetworkCountryIso()) != null) {
                 updatePhoneCode(countryPicker.getCountryByISO(telephonyManager.getNetworkCountryIso()));
-            }else if (countryPicker.getCountryByLocale(Locale.getDefault())!=null)
-            {
+            } else if (countryPicker.getCountryByLocale(Locale.getDefault()) != null) {
                 updatePhoneCode(countryPicker.getCountryByLocale(Locale.getDefault()));
-            }else
-            {
+            } else {
                 String code = "+20";
                 binding.tvCode.setText(code);
-                loginModel.setPhone_code(code.replace("+","00"));
+                loginModel.setPhone_code(code.replace("+", "00"));
 
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             String code = "+20";
             binding.tvCode.setText(code);
-            loginModel.setPhone_code(code.replace("+","00"));
+            loginModel.setPhone_code(code.replace("+", "00"));
         }
 
 
     }
-    @Override
-    public void checkDataLogin()
-    {
 
-        if (loginModel.isDataValid(activity))
-        {
-            Common.CloseKeyBoard(activity,binding.edtPhone);
+    @Override
+    public void checkDataLogin() {
+
+        if (loginModel.isDataValid(activity)) {
+            Common.CloseKeyBoard(activity, binding.edtPhone);
             login(loginModel);
         }
     }
-    private void login(LoginModel loginModel)
-    {
+
+    private void login(LoginModel loginModel) {
 
 
-
-        ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.show();
         try {
 
             Api.getService(Tags.base_url)
-                    .login(loginModel.getPhone_code(),loginModel.getPhone(),loginModel.getPassword())
+                    .login(lang, loginModel.getPhone_code(), loginModel.getPhone(), loginModel.getPassword())
                     .enqueue(new Callback<UserModel>() {
                         @Override
                         public void onResponse(Call<UserModel> call, Response<UserModel> response) {
                             dialog.dismiss();
-                            if (response.isSuccessful()&&response.body()!=null)
-                            {
-                                preferences.create_update_userData(activity,response.body());
+                            if (response.isSuccessful() && response.body() != null) {
+                                preferences.create_update_userData(activity, response.body());
                                 preferences.createSession(activity, Tags.session_login);
 
                                 Intent intent = new Intent(activity, HomeActivity.class);
                                 startActivity(intent);
                                 activity.finish();
 
-                            }else
-                            {
+                            } else {
 
                                 try {
 
-                                    Log.e("error",response.code()+"_"+response.errorBody().string());
+                                    Log.e("error", response.code() + "_" + response.errorBody().string());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -187,8 +176,15 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
                                     Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
 
 
-                                }else
-                                {
+                                } else if (response.code() == 404) {
+                                    Toast.makeText(activity, R.string.user_not_found, Toast.LENGTH_SHORT).show();
+
+
+                                }else if (response.code() == 406) {
+                                    Toast.makeText(activity, R.string.user_bloked, Toast.LENGTH_SHORT).show();
+
+
+                                } else {
                                     Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
 
 
@@ -200,26 +196,25 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
                         public void onFailure(Call<UserModel> call, Throwable t) {
                             try {
                                 dialog.dismiss();
-                                if (t.getMessage()!=null)
-                                {
-                                    Log.e("error",t.getMessage());
-                                    if (t.getMessage().toLowerCase().contains("failed to connect")||t.getMessage().toLowerCase().contains("unable to resolve host"))
-                                    {
-                                        Toast.makeText(activity,R.string.something, Toast.LENGTH_SHORT).show();
-                                    }else
-                                    {
-                                        Toast.makeText(activity,t.getMessage(), Toast.LENGTH_SHORT).show();
+                                if (t.getMessage() != null) {
+                                    Log.e("error", t.getMessage());
+                                    if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                        Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
-                            }catch (Exception e){}
+                            } catch (Exception e) {
+                            }
                         }
                     });
-        }catch (Exception e){
+        } catch (Exception e) {
             dialog.dismiss();
 
         }
     }
+
     @Override
     public void showDialog() {
         countryPicker.showDialog(activity);
@@ -227,20 +222,19 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
 
     @Override
     public void onSelectCountry(Country country) {
-      updatePhoneCode(country);
+        updatePhoneCode(country);
     }
 
-    private void updatePhoneCode(Country country)
-    {
+    private void updatePhoneCode(Country country) {
         binding.tvCode.setText(country.getDialCode());
-        loginModel.setPhone_code(country.getDialCode().replace("+","00"));
+        loginModel.setPhone_code(country.getDialCode().replace("+", "00"));
 
     }
 
 
     @Override
     public void skip() {
-        Intent intent= new Intent(activity,HomeActivity.class);
+        Intent intent = new Intent(activity, HomeActivity.class);
         startActivity(intent);
         activity.finish();
     }

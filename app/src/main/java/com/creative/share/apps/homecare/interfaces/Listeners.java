@@ -1,5 +1,7 @@
 package com.creative.share.apps.homecare.interfaces;
 
+import com.creative.share.apps.homecare.models.ContactUsModel;
+
 public interface Listeners {
 
 
@@ -21,5 +23,21 @@ public interface Listeners {
 
     interface SignUpListener {
         void checkDataSignUp();
+    }
+
+    interface MoreActions
+    {
+        void aboutApp();
+        void changeLanguage();
+        void contactUs();
+        void rateApp();
+        void terms();
+        void share();
+        void logout();
+    }
+
+    interface ContactListener
+    {
+        void sendContact(ContactUsModel contactUsModel);
     }
 }

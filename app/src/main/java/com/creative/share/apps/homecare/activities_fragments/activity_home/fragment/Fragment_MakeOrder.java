@@ -1,19 +1,13 @@
-package com.creative.share.apps.homecare.activities_fragments.activity_home;
+package com.creative.share.apps.homecare.activities_fragments.activity_home.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,21 +16,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import com.creative.share.apps.homecare.R;
-import com.creative.share.apps.homecare.activities_fragments.activity_home.fragment.fragment_orders.Fragment_Pendding_Orders;
+import com.creative.share.apps.homecare.activities_fragments.activity_home.HomeActivity;
 import com.creative.share.apps.homecare.models.PlaceGeocodeData;
 import com.creative.share.apps.homecare.models.PlaceMapDetailsData;
 import com.creative.share.apps.homecare.preferences.Preferences;
 import com.creative.share.apps.homecare.remote.Api;
-import com.creative.share.apps.homecare.share.Common;
-import com.creative.share.apps.homecare.tags.Tags;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;

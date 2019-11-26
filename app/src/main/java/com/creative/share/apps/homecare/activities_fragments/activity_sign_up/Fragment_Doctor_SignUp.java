@@ -27,9 +27,12 @@ import androidx.fragment.app.Fragment;
 
 import com.creative.share.apps.homecare.R;
 import com.creative.share.apps.homecare.activities_fragments.activity_home.HomeActivity;
+import com.creative.share.apps.homecare.activities_fragments.activity_terms.TermsActivity;
+import com.creative.share.apps.homecare.adapters.Spinner_Department_Adapter;
 import com.creative.share.apps.homecare.adapters.Spinner_Experiment_Adapter;
 import com.creative.share.apps.homecare.databinding.FragmentDoctorSignUpBinding;
 import com.creative.share.apps.homecare.interfaces.Listeners;
+import com.creative.share.apps.homecare.models.ServicesDataModel;
 import com.creative.share.apps.homecare.models.SignUpDoctorModel;
 import com.creative.share.apps.homecare.models.UserModel;
 import com.creative.share.apps.homecare.preferences.Preferences;
@@ -66,6 +69,8 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
     private final String camera_perm = Manifest.permission.CAMERA;
     private final String write_perm = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final int camera_req = 1;
+    private Spinner_Department_Adapter adapter;
+    private List<ServicesDataModel.ServiceModel> serviceModelList;
 
     public static Fragment_Doctor_SignUp newInstance() {
         return new Fragment_Doctor_SignUp();
@@ -80,6 +85,13 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
     }
 
     private void initView() {
+        serviceModelList  = new ArrayList<>();
+        ServicesDataModel.ServiceModel model = new ServicesDataModel.ServiceModel();
+        ServicesDataModel.ServiceModel.WordsModel wordsModel = new ServicesDataModel.ServiceModel.WordsModel();
+        wordsModel.setTitle(getString(R.string.ch));
+        model.setWords(wordsModel);
+        serviceModelList.add(model);
+
         experimentList = new ArrayList<>();
         signUpDoctorModel = new SignUpDoctorModel();
         preferences = Preferences.newInstance();
@@ -98,6 +110,9 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
 
         spinner_experiment_adapter = new Spinner_Experiment_Adapter(experimentList,activity);
         binding.spinnerExperience.setAdapter(spinner_experiment_adapter);
+
+        adapter = new Spinner_Department_Adapter(serviceModelList,activity);
+        binding.spinnerDepartment.setAdapter(adapter);
 
         binding.spinnerExperience.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -119,11 +134,35 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
             }
         });
 
+
+        binding.spinnerDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if (i==0)
+                {
+                    signUpDoctorModel.setDepartment_id("");
+                }else
+                {
+                    signUpDoctorModel.setDepartment_id(serviceModelList.get(i).getService_id());
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         binding.imageSwitchUser.setOnClickListener((v)->activity.back());
         binding.checkbox.setOnClickListener(view -> {
             if (binding.checkbox.isChecked())
             {
                 signUpDoctorModel.setAcceptTerms(true);
+                Intent intent = new Intent(activity, TermsActivity.class);
+                intent.putExtra("type",2);
+                startActivity(intent);
             }else
                 {
                     signUpDoctorModel.setAcceptTerms(false);
@@ -133,7 +172,7 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
         binding.flImage.setOnClickListener((v)->checkCameraPermission());
         binding.rbMale.setOnClickListener(view -> signUpDoctorModel.setGender(1));
         binding.rbFemale.setOnClickListener(view -> signUpDoctorModel.setGender(2));
-
+        getData();
 
     }
 
@@ -143,6 +182,69 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
         for (int i =1;i<16;i++)
         {
             experimentList.add(String.valueOf(i));
+        }
+    }
+    private void getData() {
+
+        ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        try {
+            Api.getService(Tags.base_url).get_services(lang).enqueue(new Callback<ServicesDataModel>() {
+                @Override
+                public void onResponse(Call<ServicesDataModel> call, Response<ServicesDataModel> response) {
+                    dialog.dismiss();
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (response.body().getServices().size() > 0) {
+                            serviceModelList.addAll(response.body().getServices());
+                            adapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        try {
+
+                            Log.e("error", response.code() + "_" + response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (response.code() == 500) {
+                            Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                        } else {
+                            Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ServicesDataModel> call, Throwable t) {
+
+                    try {
+                        dialog.dismiss();
+                        if (t.getMessage() != null) {
+                            Log.e("error", t.getMessage());
+                            if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    } catch (Exception e) {
+                    }
+
+
+
+                }
+            });
+
+        }catch (Exception e)
+        {
+           dialog.dismiss();
         }
     }
     @Override
@@ -183,7 +285,7 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
 
         try {
             Api.getService(Tags.base_url)
-                    .signUpDoctorWithoutImage(name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type,department_part,exper_part,about_part)
+                    .signUpDoctorWithoutImage(lang,name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type,department_part,exper_part,about_part)
                     .enqueue(new Callback<UserModel>() {
                         @Override
                         public void onResponse(Call<UserModel> call, Response<UserModel> response) {
@@ -259,7 +361,7 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
 
         try {
             Api.getService(Tags.base_url)
-                    .signUpDoctorWithImage(name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type,department_part,exper_part,about_part,image)
+                    .signUpDoctorWithImage(lang,name_part,phone_part,phone_code_part,password_part,email_part,gender_part,soft_type,department_part,exper_part,about_part,image)
                     .enqueue(new Callback<UserModel>() {
                         @Override
                         public void onResponse(Call<UserModel> call, Response<UserModel> response) {

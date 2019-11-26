@@ -164,6 +164,11 @@
     <string name="CashMoney">نقدا</string>
     <string name="ch_gender">إختر النوع</string>
     <string name="Cancel">الغاء</string>
+    <string name="all_services_are_reserved_for_homecare_app">جميع الحقوق محفوظة لهذا التطبيق.</string>
+    <string name="send_order">إرسال طلب</string>
+    <string name="user_not_found">هذا المستخدم غير موجود</string>
+    <string name="user_bloked">تم حظر المستخدم</string>
+    <string name="show_details">عرض التفاصيل</string>
 
 
 </resources>

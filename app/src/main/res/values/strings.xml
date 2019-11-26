@@ -154,5 +154,11 @@
     <string name="CashMoney">Cash Money</string>
     <string name="ch_gender">Choose gender</string>
     <string name="Cancel">Cancel</string>
+    <string name="all_services_are_reserved_for_homecare_app">All rights are reserved for this App</string>
+    <string name="send_order">Send order</string>
+    <string name="user_not_found">User not found</string>
+    <string name="user_bloked">User is blocked</string>
+    <string name="show_details">Show details</string>
+
 
 </resources>

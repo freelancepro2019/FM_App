@@ -8,7 +8,7 @@ public class SubServicesModel implements Serializable {
     private List<SubServiceModel> services;
 
     public class SubServiceModel implements Serializable {
-        private int id;
+        private String id;
         private String logo;
         private WordsModel words;
 
@@ -16,7 +16,7 @@ public class SubServicesModel implements Serializable {
             return words;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 

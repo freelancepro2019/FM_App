@@ -5,10 +5,12 @@
 
     >
     <LinearLayout
+        android:id="@+id/llContainer"
          android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/custom_bg">
+
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,26 +54,14 @@
 
             >
 
-            <androidx.cardview.widget.CardView
+            <Button
+                android:id="@+id/btnCancel"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                app:cardBackgroundColor="@color/colorPrimaryDark"
-                app:cardElevation="3dp"
-                app:cardCornerRadius="20dp"
-                android:layout_margin="3dp"
-
-
-                >
-                <Button
-                    android:id="@+id/btn_cancel"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent"
-                    android:text="@string/ok"
-                    android:textColor="@color/white"
-                    />
-            </androidx.cardview.widget.CardView>
-
+                android:layout_height="40dp"
+                android:text="@string/ok"
+                android:background="@drawable/btn_login"
+                android:textColor="@color/white"
+                />
 
         </LinearLayout>
 
