@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="userId"
+            name="user_type"
             type="String" />
         <variable
             name="orderModel"
@@ -24,22 +24,22 @@
        <androidx.constraintlayout.widget.ConstraintLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:padding="5dp"
+           android:padding="8dp"
            android:background="@drawable/rounded_gray_bg"
 
 
            >
            <com.makeramen.roundedimageview.RoundedImageView
                android:id="@+id/image"
-               android:layout_width="80dp"
-               android:layout_height="80dp"
+               android:layout_width="70dp"
+               android:layout_height="70dp"
                app:riv_mutate_background="true"
                app:riv_corner_radius="40dp"
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintTop_toTopOf="parent"
                android:src="@drawable/splash"
                android:background="@color/white"
-               avatarUserNotification="@{userId.equals(orderModel.user_id)?orderModel.client.logo:orderModel.provider.logo}"
+               avatarUserNotification='@{user_type.equals("1")?orderModel.client.logo:orderModel.provider.logo}'
                />
            <TextView
                android:id="@+id/tvTitle"
@@ -89,14 +89,14 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:textColor="@color/black"
-                   android:textSize="15sp"
+                   android:textSize="13sp"
                    android:text="@string/no_patient"/>
 
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:textColor="@color/mdtp_light_gray"
-                   android:textSize="13sp"
+                   android:textColor="@color/black"
+                   android:textSize="15sp"
                    android:text="@{orderModel.num_patients}"
 
                    />
@@ -111,20 +111,21 @@
                android:layout_marginTop="10dp"
                android:orientation="horizontal"
                android:gravity="center_vertical"
+
                >
 
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:textColor="@color/black"
-                   android:textSize="15sp"
+                   android:textColor="@color/colorPrimary"
+                   android:textSize="13sp"
                    android:text="@string/price"/>
 
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:textColor="@color/mdtp_light_gray"
-                   android:textSize="13sp"
+                   android:textColor="@color/colorPrimary"
+                   android:textSize="15sp"
                    android:text='@{orderModel.price+" "+@string/le}'
 
                    />

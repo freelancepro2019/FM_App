@@ -19,6 +19,7 @@ public class NotificationDataModel implements Serializable {
     public class NotificationModel implements Serializable
     {
         private String notification_id;
+        private String process_id_fk;
         private String from_user_id;
         private String to_user_id;
         private String notification_type;
@@ -30,6 +31,10 @@ public class NotificationDataModel implements Serializable {
 
         public String getNotification_id() {
             return notification_id;
+        }
+
+        public String getProcess_id_fk() {
+            return process_id_fk;
         }
 
         public String getFrom_user_id() {

@@ -12,23 +12,28 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.day.star.apps.homecare.R;
+import com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fragment_orders.Fragment_Client_Current_Orders;
+import com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fragment_orders.Fragment_Client_Pending_Orders;
+import com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fragment_orders.Fragment_Provider_Current_Orders;
 import com.day.star.apps.homecare.databinding.LoadMoreRowBinding;
 import com.day.star.apps.homecare.databinding.OrderRowBinding;
 import com.day.star.apps.homecare.models.OrderDataModel;
 
 import java.util.List;
 
-public class ClientOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int DATA = 1;
     private final int LOAD = 2;
     private Context context;
     private List<OrderDataModel.OrderModel>  list;
-    private String user_id;
+    private String user_type;
+    private Fragment fragment;
 
-    public ClientOrderAdapter(Context context, List<OrderDataModel.OrderModel>  list, Fragment fragment,String user_id) {
+    public OrderAdapter(Context context, List<OrderDataModel.OrderModel>  list, Fragment fragment, String user_type) {
         this.context = context;
         this.list = list;
-        this.user_id = user_id;
+        this.user_type = user_type;
+        this.fragment = fragment;
 
     }
 
@@ -58,9 +63,29 @@ public class ClientOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         {
             Holder1 holder1 = (Holder1) holder;
             holder1.binding.setOrderModel(orderModel);
-            holder1.binding.setUserId(user_id);
+            holder1.binding.setUserType(user_type);
 
 
+            holder1.itemView.setOnClickListener(view -> {
+                {
+                    OrderDataModel.OrderModel orderModel2 = list.get(holder1.getAdapterPosition());
+
+                    if (fragment instanceof Fragment_Client_Current_Orders)
+                    {
+                        Fragment_Client_Current_Orders fragment_client_current_orders = (Fragment_Client_Current_Orders) fragment;
+                        fragment_client_current_orders.setItemData(orderModel2);
+                    }else if (fragment instanceof Fragment_Client_Pending_Orders)
+                    {
+                        Fragment_Client_Pending_Orders fragment_client_pending_orders = (Fragment_Client_Pending_Orders) fragment;
+                        fragment_client_pending_orders.setItemData(orderModel2);
+                    }
+                    else if (fragment instanceof Fragment_Provider_Current_Orders)
+                    {
+                        Fragment_Provider_Current_Orders fragment_provider_current_orders = (Fragment_Provider_Current_Orders) fragment;
+                        fragment_provider_current_orders.setItemData(orderModel2);
+                    }
+                }
+            });
 
         }else if (holder instanceof LoadHolder)
         {
@@ -69,6 +94,7 @@ public class ClientOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             loadHolder.binding.progBar.setIndeterminate(true);
 
         }
+
 
 
 

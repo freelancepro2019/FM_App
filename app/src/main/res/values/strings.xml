@@ -181,6 +181,14 @@
     <string name="no_time">No-times</string>
     <string name="no_patients">No-patients</string>
     <string name="sorry_no_prov">Sorry,There are no providers.Please try again later.</string>
+    <string name="order_details">Order details</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="accept">Accept</string>
+    <string name="client_details">Client details:</string>
+    <string name="provider_details">Provider details :</string>
+    <string name="order_is_pending">Order is pending</string>
+    <string name="no_descriptions">No descriptions</string>
+    <string name="num_times">Num-times : </string>
 
 
 </resources>

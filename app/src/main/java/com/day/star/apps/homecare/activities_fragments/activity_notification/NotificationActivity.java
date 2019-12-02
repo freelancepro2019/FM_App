@@ -1,6 +1,7 @@
 package com.day.star.apps.homecare.activities_fragments.activity_notification;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.day.star.apps.homecare.R;
+import com.day.star.apps.homecare.activities_fragments.activity_order_details.OrderDetailsActivity;
 import com.day.star.apps.homecare.adapters.NotificationAdapter;
 import com.day.star.apps.homecare.databinding.ActivityNotificationBinding;
 import com.day.star.apps.homecare.interfaces.Listeners;
@@ -235,7 +237,10 @@ public class NotificationActivity extends AppCompatActivity implements Listeners
 
         if (notificationModel.getAction_type().equals("1"))
         {
-            //provider accept refuse order
+            Intent intent = new Intent(this, OrderDetailsActivity.class);
+            intent.putExtra("order_id",notificationModel.getProcess_id_fk());
+            intent.putExtra("from","notification");
+            startActivity(intent);
         }
 
     }

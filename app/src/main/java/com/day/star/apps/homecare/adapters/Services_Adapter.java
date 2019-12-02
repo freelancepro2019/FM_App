@@ -44,14 +44,14 @@ public class Services_Adapter extends RecyclerView.Adapter<Services_Adapter.Serv
         holder.binding.setServiceModel(serviceModel);
         holder.binding.image.setColorFilter(ContextCompat.getColor(context, R.color.white));
 
-        if (i < colors.length) {
+        /*if (i < colors.length) {
             pos_color = i;
             holder.binding.image.setBackgroundResource(colors[pos_color]);
             holder.binding.tvTitle.setTextColor(ContextCompat.getColor(context, colors[pos_color]));
             pos_color++;
         } else {
             pos_color = 0;
-        }
+        }*/
         holder.itemView.setOnClickListener(v -> {
             ServicesDataModel.ServiceModel model1 = serviceModelList.get(holder.getAdapterPosition());
 

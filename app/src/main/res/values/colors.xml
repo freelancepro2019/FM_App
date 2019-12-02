@@ -16,7 +16,7 @@
     <color name="gray6">#a0a0a0</color>
     <color name="gray7">#f8f8f8</color>
     <color name="transparent">#00000000</color>
-    <color name="red">#920a0c</color>
+    <color name="red">#ff0c0c</color>
 
 
     <color name="color1">#ff7f9e</color>
@@ -53,5 +53,6 @@
 
 
     <color name="avatar_bg">#5500c2d3</color>
+    <color name="color_whats">#61b060</color>
 
 </resources>

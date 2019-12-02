@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.day.star.apps.homecare.R;
 import com.day.star.apps.homecare.activities_fragments.activity_home.HomeActivity;
-import com.day.star.apps.homecare.adapters.ClientOrderAdapter;
+import com.day.star.apps.homecare.adapters.OrderAdapter;
 import com.day.star.apps.homecare.databinding.FragmentPendingCurrentPreviousOrderBinding;
 import com.day.star.apps.homecare.models.OrderDataModel;
 import com.day.star.apps.homecare.models.UserModel;
@@ -44,7 +44,7 @@ public class Fragment_Provider_Previous_Orders extends Fragment  {
     private UserModel userModel;
     private LinearLayoutManager manager;
     private List<OrderDataModel.OrderModel> orderModelList;
-    private ClientOrderAdapter adapter;
+    private OrderAdapter adapter;
     private boolean isLoading = false;
     private int current_page = 1;
 
@@ -73,7 +73,7 @@ public class Fragment_Provider_Previous_Orders extends Fragment  {
         binding.recView.setLayoutManager(manager);
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
-        adapter = new ClientOrderAdapter(activity,orderModelList,this,userModel.getUser_id());
+        adapter = new OrderAdapter(activity,orderModelList,this,userModel.getUser_type());
         binding.recView.setAdapter(adapter);
         binding.recView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

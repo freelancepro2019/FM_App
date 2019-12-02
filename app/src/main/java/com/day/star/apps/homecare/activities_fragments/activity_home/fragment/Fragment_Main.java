@@ -151,7 +151,7 @@ public class Fragment_Main extends Fragment {
 
 
     public void setItemData(ServicesDataModel.ServiceModel model, int color) {
-        activity.openSheet(color,model);
+        activity.openSheet(R.color.colorPrimary,model);
     }
 
 

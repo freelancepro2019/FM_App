@@ -224,7 +224,7 @@ public class HomeActivity extends AppCompatActivity {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(this,color));
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimary));
     }
 
     public void openSheet(int color, ServicesDataModel.ServiceModel serviceModel)
@@ -232,7 +232,7 @@ public class HomeActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             changeStatusBarColor(color);
         }
-        this.color = color;
+        this.color = R.color.colorPrimary;
         main_service_id = serviceModel.getService_id();
         tvTitle.setText(serviceModel.getWords().getTitle());
         llTitle.setBackgroundResource(color);

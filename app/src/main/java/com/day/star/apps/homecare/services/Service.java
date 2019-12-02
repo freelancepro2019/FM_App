@@ -6,6 +6,7 @@ import com.day.star.apps.homecare.models.OrderDataModel;
 import com.day.star.apps.homecare.models.PlaceGeocodeData;
 import com.day.star.apps.homecare.models.PlaceMapDetailsData;
 import com.day.star.apps.homecare.models.ServicesDataModel;
+import com.day.star.apps.homecare.models.SingleOrderDataModel;
 import com.day.star.apps.homecare.models.SubServicesModel;
 import com.day.star.apps.homecare.models.TermsDataModel;
 import com.day.star.apps.homecare.models.UserModel;
@@ -190,6 +191,14 @@ public interface Service {
                                    @Field("soft_type") int soft_type
 
     );
+
+
+    @GET("api/one-order")
+    Call<SingleOrderDataModel> getOrderDetails(@Header("device-lang") String header,
+                                               @Header("Authorization") String user_token,
+                                               @Query("order_id") String order_id
+    );
+
 
 }
 

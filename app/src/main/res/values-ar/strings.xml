@@ -193,6 +193,14 @@
     <string name="no_time">عدد المرات</string>
     <string name="no_patients">عدد المرضى</string>
     <string name="sorry_no_prov">عفوا, لا يوجد مقديمن خدمة. من فضلك حاول مرة اخرى لاحقا.</string>
+    <string name="order_details">تفاصيل الطلب</string>
+    <string name="whatsapp">واتس اب</string>
+    <string name="accept">الموافقة</string>
+    <string name="client_details">تفاصيل العميل :</string>
+    <string name="provider_details">تفاصيل مقدم الخدمة :</string>
+    <string name="order_is_pending">الطلب قيد الانتظار</string>
+    <string name="no_descriptions">لا يوجد وصف</string>
+    <string name="num_times">عدد مرات الزيارة : </string>
 
 
 </resources>
