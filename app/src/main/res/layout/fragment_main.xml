@@ -2,10 +2,14 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="model"
+            type="com.day.star.apps.homecare.models.ServicesDataModel.Counter" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/home_bg"
 
         >
 
@@ -16,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:weightSum="3"
             >
@@ -33,7 +37,7 @@
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:singleLine="true"
-                    android:text="0"
+                    android:text="@{String.valueOf(model.service)}"
                     android:textStyle="bold"
                     />
 
@@ -70,7 +74,7 @@
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:singleLine="true"
-                    android:text="0"
+                    android:text="@{String.valueOf(model.providers)}"
                     android:textStyle="bold"
                     />
 
@@ -107,7 +111,7 @@
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:singleLine="true"
-                    android:text="0"
+                    android:text="@{String.valueOf(model.users)}"
                     android:textStyle="bold"
                     />
 

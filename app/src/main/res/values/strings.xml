@@ -57,7 +57,7 @@
     <string name="location">Location</string>
     <string name="share">share</string>
     <string name="edit">Edit</string>
-    <string name="price">Price</string>
+    <string name="price">Price : </string>
     <string name="delete">Delete</string>
     <string name="change_language">Change language</string>
     <string name="detials">Details</string>
@@ -135,14 +135,12 @@
     <string name="user_email">Your Email</string>
     <string name="language_setting">Change Language</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Make_Order">Make Order</string>
     <string name="Service_name">Service Name</string>
     <string name="date">Date</string>
     <string name="gender">Gender :</string>
-    <string name="Male">Male</string>
-    <string name="Female">Female</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
     <string name="any">Any</string>
     <string name="address">Address</string>
     <string name="another_phone">Another Phone Number</string>
@@ -159,6 +157,30 @@
     <string name="user_not_found">User not found</string>
     <string name="user_bloked">User is blocked</string>
     <string name="show_details">Show details</string>
+    <string name="no_patient">No-Patients : </string>
+    <string name="le">EGP</string>
+    <string name="account">Account</string>
+    <string name="profile_settings">Profile settings</string>
+    <string name="feedback">Feedback</string>
+    <string name="gender2">Gender</string>
+    <string name="serv_only">Service is for providers only</string>
+    <string name="personal_information">Personal information</string>
+    <string name="education_amp_certificate"><![CDATA[Education & Certificate]]></string>
+    <string name="price2">Price</string>
+    <string name="times">times: </string>
+    <string name="age">Age (patients)</string>
+    <string name="ch_num_tim">Choose number of times</string>
+    <string name="ch_num_pat">Choose number of patients</string>
+    <string name="ch_date">Choose date</string>
+    <string name="ch_type">Choose time</string>
+    <string name="gender_providers">Gender (providers)</string>
+    <string name="ch_prov_gen">Choose provider gender</string>
+    <string name="ch_pay_way">Choose payment way</string>
+    <string name="total">Total :</string>
+    <string name="order_sent">Order sent successfully!</string>
+    <string name="no_time">No-times</string>
+    <string name="no_patients">No-patients</string>
+    <string name="sorry_no_prov">Sorry,There are no providers.Please try again later.</string>
 
 
 </resources>

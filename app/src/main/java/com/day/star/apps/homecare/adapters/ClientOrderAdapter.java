@@ -1,0 +1,114 @@
+package com.day.star.apps.homecare.adapters;
+
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.day.star.apps.homecare.R;
+import com.day.star.apps.homecare.databinding.LoadMoreRowBinding;
+import com.day.star.apps.homecare.databinding.OrderRowBinding;
+import com.day.star.apps.homecare.models.OrderDataModel;
+
+import java.util.List;
+
+public class ClientOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int DATA = 1;
+    private final int LOAD = 2;
+    private Context context;
+    private List<OrderDataModel.OrderModel>  list;
+    private String user_id;
+
+    public ClientOrderAdapter(Context context, List<OrderDataModel.OrderModel>  list, Fragment fragment,String user_id) {
+        this.context = context;
+        this.list = list;
+        this.user_id = user_id;
+
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        if (viewType==DATA) {
+            OrderRowBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.order_row, parent, false);
+            return new Holder1(binding);
+
+
+        }else
+            {
+                LoadMoreRowBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.load_more_row,parent,false);
+                return new LoadHolder(binding);
+            }
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        OrderDataModel.OrderModel orderModel = list.get(position);
+
+
+        if (holder instanceof Holder1)
+        {
+            Holder1 holder1 = (Holder1) holder;
+            holder1.binding.setOrderModel(orderModel);
+            holder1.binding.setUserId(user_id);
+
+
+
+        }else if (holder instanceof LoadHolder)
+        {
+            LoadHolder loadHolder = (LoadHolder) holder;
+            loadHolder.binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(context,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+            loadHolder.binding.progBar.setIndeterminate(true);
+
+        }
+
+
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public class Holder1 extends RecyclerView.ViewHolder {
+        private OrderRowBinding binding;
+
+        public Holder1(@NonNull OrderRowBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+    }
+
+
+    public class LoadHolder extends RecyclerView.ViewHolder {
+        private LoadMoreRowBinding binding;
+
+        public LoadHolder(@NonNull LoadMoreRowBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if (list.get(position)==null)
+        {
+            return LOAD;
+        }else
+        {
+            return DATA;
+        }
+    }
+}

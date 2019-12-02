@@ -6,7 +6,7 @@
     <data>
         <variable
             name="backListener"
-            type="com.creative.share.apps.homecare.interfaces.Listeners.BackListener" />
+            type="com.day.star.apps.homecare.interfaces.Listeners.BackListener" />
 
         <variable
             name="lang"
@@ -14,7 +14,7 @@
 
         <variable
             name="subModel"
-            type="com.creative.share.apps.homecare.models.SubServicesModel.SubServiceModel" />
+            type="com.day.star.apps.homecare.models.SubServicesModel.SubServiceModel" />
 
 
     </data>
@@ -75,34 +75,39 @@
             android:fillViewport="true"
             android:background="@color/white"
             >
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+
+                >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:padding="10sp"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:text="@{subModel.words.content}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/btnSend"
 
                     />
                 <Button
                     android:id="@+id/btnSend"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_margin="20dp"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/send_order"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
     </LinearLayout>

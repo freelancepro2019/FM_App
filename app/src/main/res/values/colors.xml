@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00681f</color>
-    <color name="colorPrimaryDark">#00681f</color>
-    <color name="colorAccent">#e4df23</color>
+    <color name="colorPrimary">@color/color4</color>
+    <color name="colorPrimaryDark">@color/color5</color>
+    <color name="colorAccent">@color/color5</color>
 
     <color name="white">#ffffff</color>
     <color name="black">#000</color>
@@ -33,9 +33,25 @@
     <color name="color12">#ff0c0c</color>
     <color name="nav_bg">#f7f8fa</color>
 
+    <color name="gradient1">#fe8c00</color>
+    <color name="gradient11">#f83600</color>
+
+    <color name="gradient2">#556270</color>
+    <color name="gradient22">#ff6b6b</color>
+
+    <color name="gradient3">#9d50bb</color>
+    <color name="gradient33">#6e48ee</color>
+
+    <color name="gradient4">#b3ffab</color>
+    <color name="gradient44">#12fff7</color>
+
+    <color name="gradient5">#5f2c82</color>
+    <color name="gradient55">#49a09d</color>
+
+    <color name="gradient6">#dd5e89</color>
+    <color name="gradient66">#f7bb97</color>
 
 
-
-
+    <color name="avatar_bg">#5500c2d3</color>
 
 </resources>

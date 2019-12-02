@@ -6,7 +6,7 @@
     <data>
         <variable
             name="backListener"
-            type="com.creative.share.apps.homecare.interfaces.Listeners.BackListener" />
+            type="com.day.star.apps.homecare.interfaces.Listeners.BackListener" />
 
         <variable
             name="lang"

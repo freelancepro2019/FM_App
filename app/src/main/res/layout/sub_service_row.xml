@@ -10,7 +10,7 @@
             type="String" />
         <variable
             name="subModel"
-            type="com.creative.share.apps.homecare.models.SubServicesModel.SubServiceModel" />
+            type="com.day.star.apps.homecare.models.SubServicesModel.SubServiceModel" />
     </data>
 
     <LinearLayout

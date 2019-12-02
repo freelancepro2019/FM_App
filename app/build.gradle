@@ -4,7 +4,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.creative.share.apps.homecare"
+        applicationId "com.day.star.apps.homecare"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
@@ -62,5 +62,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.0.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.wdullaer:materialdatetimepicker:3.6.4'
+    implementation 'com.github.IntruderShanky:Squint:3.0.1'
+    implementation 'com.github.florent37:diagonallayout:1.0.9'
+
+
 
 }
+apply plugin: 'com.google.gms.google-services'

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="serviceModel"
-            type="com.creative.share.apps.homecare.models.ServicesDataModel.ServiceModel" />
+            type="com.day.star.apps.homecare.models.ServicesDataModel.ServiceModel" />
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

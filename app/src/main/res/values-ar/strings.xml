@@ -65,7 +65,7 @@
     <string name="location">موقع</string>
     <string name="share">شارك</string>
     <string name="edit">تعديل</string>
-    <string name="price">سعر</string>
+    <string name="price">السعر : </string>
     <string name="delete">حذف</string>
 
     <string name="detials">تفاصيل</string>
@@ -151,8 +151,8 @@
     <string name="Service_name">اسم الخدمة </string>
     <string name="date">التاريخ</string>
     <string name="gender">الجنس :</string>
-    <string name="Male">ذكر</string>
-    <string name="Female">انثي</string>
+    <string name="male">ذكر</string>
+    <string name="female">انثي</string>
     <string name="any">ايهما</string>
     <string name="address">العنوان</string>
     <string name="another_phone">رقم جوال اخر  </string>
@@ -169,6 +169,30 @@
     <string name="user_not_found">هذا المستخدم غير موجود</string>
     <string name="user_bloked">تم حظر المستخدم</string>
     <string name="show_details">عرض التفاصيل</string>
+    <string name="no_patient">عدد المرضى : </string>
+    <string name="le">ج.م</string>
+    <string name="account">الحساب</string>
+    <string name="profile_settings">إعدادات الحساب</string>
+    <string name="feedback">التعليقات</string>
+    <string name="gender2">الجنس</string>
+    <string name="serv_only">الخدمات لمقدمين الخدمة فقط</string>
+    <string name="personal_information">معلومات شخصية</string>
+    <string name="education_amp_certificate"><![CDATA[التعليم & الشهادة]]></string>
+    <string name="price2">السعر</string>
+    <string name="times">عدد المرات: </string>
+    <string name="age">العمر (المريض)</string>
+    <string name="ch_num_tim">إختر عدد مرات الزيارة</string>
+    <string name="ch_num_pat">إختر عدد المرضى</string>
+    <string name="ch_date">إختر التاريخ</string>
+    <string name="ch_type">إختر الوقت</string>
+    <string name="gender_providers">الجنس (مقدمين الخدمة)</string>
+    <string name="ch_prov_gen">إختر جنس مقدمي الخدمة</string>
+    <string name="ch_pay_way">إختر طريقة الدفع</string>
+    <string name="total">الإجمالي : </string>
+    <string name="order_sent">تم إرسال طلبك بنجاح!</string>
+    <string name="no_time">عدد المرات</string>
+    <string name="no_patients">عدد المرضى</string>
+    <string name="sorry_no_prov">عفوا, لا يوجد مقديمن خدمة. من فضلك حاول مرة اخرى لاحقا.</string>
 
 
 </resources>

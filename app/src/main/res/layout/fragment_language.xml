@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:background="@drawable/login_bg"
+        android:background="@drawable/sign_up_bg"
         >
 
         <LinearLayout

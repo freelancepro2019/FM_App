@@ -7,7 +7,7 @@
 
         <variable
             name="notificationModel"
-            type="com.creative.share.apps.homecare.models.NotificationDataModel.NotificationModel" />
+            type="com.day.star.apps.homecare.models.NotificationDataModel.NotificationModel" />
     </data>
    <LinearLayout
        android:layout_width="match_parent"
@@ -15,7 +15,8 @@
        android:orientation="vertical"
        android:layout_marginStart="5dp"
        android:layout_marginEnd="5dp"
-       android:layout_marginTop="5dp"
+       android:layout_marginTop="2dp"
+       android:layout_marginBottom="3dp"
 
        >
 

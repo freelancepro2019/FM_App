@@ -1,0 +1,196 @@
+package com.day.star.apps.homecare.services;
+
+
+import com.day.star.apps.homecare.models.NotificationDataModel;
+import com.day.star.apps.homecare.models.OrderDataModel;
+import com.day.star.apps.homecare.models.PlaceGeocodeData;
+import com.day.star.apps.homecare.models.PlaceMapDetailsData;
+import com.day.star.apps.homecare.models.ServicesDataModel;
+import com.day.star.apps.homecare.models.SubServicesModel;
+import com.day.star.apps.homecare.models.TermsDataModel;
+import com.day.star.apps.homecare.models.UserModel;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.Query;
+
+public interface Service {
+
+    @GET("place/findplacefromtext/json")
+    Call<PlaceMapDetailsData> searchOnMap(@Query(value = "inputtype") String inputtype,
+                                          @Query(value = "input") String input,
+                                          @Query(value = "fields") String fields,
+                                          @Query(value = "language") String language,
+                                          @Query(value = "key") String key
+    );
+
+    @GET("geocode/json")
+    Call<PlaceGeocodeData> getGeoData(@Query(value = "latlng") String latlng,
+                                      @Query(value = "language") String language,
+                                      @Query(value = "key") String key);
+
+
+    @Multipart
+    @POST("api/provider-register")
+    Call<UserModel> signUpDoctorWithImage(@Header("device-lang") String header,
+                                          @Part("name") RequestBody name,
+                                          @Part("phone") RequestBody phone,
+                                          @Part("phone_code") RequestBody phone_code,
+                                          @Part("password") RequestBody password,
+                                          @Part("email") RequestBody email,
+                                          @Part("gender") RequestBody gender,
+                                          @Part("soft_type") RequestBody soft_type,
+                                          @Part("department") RequestBody department,
+                                          @Part("exper") RequestBody exper,
+                                          @Part("about") RequestBody about,
+                                          @Part MultipartBody.Part logo
+
+    );
+
+    @Multipart
+    @POST("api/provider-register")
+    Call<UserModel> signUpDoctorWithoutImage(@Header("device-lang") String header,
+                                             @Part("name") RequestBody name,
+                                             @Part("phone") RequestBody phone,
+                                             @Part("phone_code") RequestBody phone_code,
+                                             @Part("password") RequestBody password,
+                                             @Part("email") RequestBody email,
+                                             @Part("gender") RequestBody gender,
+                                             @Part("soft_type") RequestBody soft_type,
+                                             @Part("department") RequestBody department,
+                                             @Part("exper") RequestBody exper,
+                                             @Part("about") RequestBody about
+
+    );
+
+
+    @Multipart
+    @POST("api/user-register")
+    Call<UserModel> signUpClientWithImage(@Header("device-lang") String header,
+                                          @Part("name") RequestBody name,
+                                          @Part("phone") RequestBody phone,
+                                          @Part("phone_code") RequestBody phone_code,
+                                          @Part("password") RequestBody password,
+                                          @Part("email") RequestBody email,
+                                          @Part("gender") RequestBody gender,
+                                          @Part("soft_type") RequestBody soft_type,
+                                          @Part MultipartBody.Part logo
+
+    );
+
+    @Multipart
+    @POST("api/user-register")
+    Call<UserModel> signUpClientWithoutImage(@Header("device-lang") String header,
+                                             @Part("name") RequestBody name,
+                                             @Part("phone") RequestBody phone,
+                                             @Part("phone_code") RequestBody phone_code,
+                                             @Part("password") RequestBody password,
+                                             @Part("email") RequestBody email,
+                                             @Part("gender") RequestBody gender,
+                                             @Part("soft_type") RequestBody soft_type
+
+    );
+
+    @FormUrlEncoded
+    @POST("api/login")
+    Call<UserModel> login(@Header("device-lang") String header,
+                          @Field("phone_code") String phone_code,
+                          @Field("phone") String phone,
+                          @Field("password") String password);
+
+    @GET("api/logout")
+    Call<ResponseBody> logout(@Header("device-lang") String header,
+                              @Header("Authorization") String user_token,
+                              @Query("firebase_token") String firebase_token);
+
+
+    @GET("api/main-services")
+    Call<ServicesDataModel> get_services(@Header("device-lang") String header);
+
+    @GET("api/get-sub-services")
+    Call<SubServicesModel> get_sub_services(@Header("device-lang") String header,
+                                            @Query("main_service_id") String main_service_id);
+
+    @FormUrlEncoded
+    @POST("api/contact-us")
+    Call<ResponseBody> contactUs(@Header("device-lang") String header,
+                                 @Field("name") String name,
+                                 @Field("email") String email,
+                                 @Field("subject") String subject,
+                                 @Field("message") String message
+    );
+
+
+    @GET("api/setting")
+    Call<TermsDataModel> getAppData(@Header("device-lang") String header);
+
+
+    @GET("api/my-notifications")
+    Call<NotificationDataModel> getNotifications(@Header("device-lang") String header,
+                                                 @Header("Authorization") String user_token,
+                                                 @Query("page") int page,
+                                                 @Query("limit_per_page") int limit_per_page
+    );
+
+    @GET("api/client-orders")
+    Call<OrderDataModel> getClientOrders(@Header("device-lang") String header,
+                                         @Header("Authorization") String user_token,
+                                         @Query("type") String type,
+                                         @Query("page") int page,
+                                         @Query("limit_per_page") int limit_per_page
+    );
+
+    @GET("api/provider-orders")
+    Call<OrderDataModel> getProviderOrders(@Header("device-lang") String header,
+                                           @Header("Authorization") String user_token,
+                                           @Query("type") String type,
+                                           @Query("page") int page,
+                                           @Query("limit_per_page") int limit_per_page
+    );
+
+    @FormUrlEncoded
+    @POST("api/create-order")
+    Call<ResponseBody> createOrder(@Header("device-lang") String header,
+                                   @Header("Authorization") String user_token,
+                                   @Field("main_service_id") String main_service_id,
+                                   @Field("sub_service_id") String sub_service_id,
+                                   @Field("order_date") String order_date,
+                                   @Field("order_time") long order_time,
+                                   @Field("age") String age,
+                                   @Field("gender") int gender,
+                                   @Field("address") String address,
+                                   @Field("google_lat") double google_lat,
+                                   @Field("google_long") double google_long,
+                                   @Field("phone") String phone,
+                                   @Field("other_phone") String other_phone,
+                                   @Field("payment") int payment,
+                                   @Field("desc") String desc,
+                                   @Field("price") double price,
+                                   @Field("num_times") int num_times,
+                                   @Field("num_patients") int num_patients
+
+
+    );
+
+
+    @FormUrlEncoded
+    @POST("api/update-firebase-token")
+    Call<ResponseBody> updateToken(@Header("device-lang") String header,
+                                   @Header("Authorization") String user_token,
+                                   @Field("firebase_token") String token,
+                                   @Field("soft_type") int soft_type
+
+    );
+
+}
+
+
