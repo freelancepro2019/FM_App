@@ -3,6 +3,7 @@ package com.day.star.apps.homecare.activities_fragments.activity_splash;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -23,7 +24,7 @@ import io.paperdb.Paper;
 
 public class SplashActivity extends AppCompatActivity {
     private ActivitySplashBinding binding;
-    private Animation animation;
+    private Animation animation1,animation2;
     private Preferences preferences;
 
     @Override
@@ -40,10 +41,11 @@ public class SplashActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
         preferences = Preferences.newInstance();
 
-        animation = AnimationUtils.loadAnimation(getBaseContext(), R.anim.alpha);
-        binding.cons.startAnimation(animation);
+        animation1 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
+        binding.imageSplash.startAnimation(animation1);
+        animation2 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale);
 
-        animation.setAnimationListener(new Animation.AnimationListener() {
+        animation1.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -51,11 +53,29 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                binding.llLogo.setVisibility(View.VISIBLE);
+                binding.llLogo.startAnimation(animation2);
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        animation2.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
                 String session = preferences.getSession(SplashActivity.this);
                 if (session.equals(Tags.session_login)) {
-                        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
+                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
@@ -69,5 +89,9 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
     }
 }

@@ -1,6 +1,7 @@
 package com.day.star.apps.homecare.services;
 
 
+import com.day.star.apps.homecare.models.NotificationCountModel;
 import com.day.star.apps.homecare.models.NotificationDataModel;
 import com.day.star.apps.homecare.models.OrderDataModel;
 import com.day.star.apps.homecare.models.PlaceGeocodeData;
@@ -199,6 +200,25 @@ public interface Service {
                                                @Query("order_id") String order_id
     );
 
+    @GET("api/unread-notifications")
+    Call<NotificationCountModel> getNotificationCount(@Header("device-lang") String header,
+                                                      @Header("Authorization") String user_token
+    );
+
+
+    @FormUrlEncoded
+    @POST("api/accept-order")
+    Call<ResponseBody> providerAcceptOrder(@Header("device-lang") String header,
+                                           @Header("Authorization") String user_token
+
+    );
+
+    @FormUrlEncoded
+    @POST("api/refuse-order")
+    Call<ResponseBody> providerRefuseOrder(@Header("device-lang") String header,
+                                           @Header("Authorization") String user_token
+
+    );
 
 }
 

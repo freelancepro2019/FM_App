@@ -23,6 +23,7 @@
         <variable
             name="from"
             type="String" />
+
         <import type="android.view.View"/>
 
 

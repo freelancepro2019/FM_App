@@ -40,6 +40,7 @@ import com.day.star.apps.homecare.activities_fragments.activity_sub_service_deta
 import com.day.star.apps.homecare.adapters.SubServiceAdapter;
 import com.day.star.apps.homecare.databinding.ActivityHomeBinding;
 import com.day.star.apps.homecare.language.LanguageHelper;
+import com.day.star.apps.homecare.models.NotificationCountModel;
 import com.day.star.apps.homecare.models.ServicesDataModel;
 import com.day.star.apps.homecare.models.SubServicesModel;
 import com.day.star.apps.homecare.models.UserModel;
@@ -146,6 +147,7 @@ public class HomeActivity extends AppCompatActivity {
         {
             if(userModel!=null)
             {
+                updateNotificationCount(0);
                 Intent intent = new Intent(this, NotificationActivity.class);
                 startActivity(intent);
 
@@ -160,6 +162,7 @@ public class HomeActivity extends AppCompatActivity {
         if(userModel!=null)
         {
             updateTokenFireBase();
+            getNotificationCount();
         }
 
     }
@@ -218,6 +221,61 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void getNotificationCount()
+    {
+        Api.getService(Tags.base_url).
+                getNotificationCount(lang,userModel.getToken())
+                .enqueue(new Callback<NotificationCountModel>() {
+                    @Override
+                    public void onResponse(Call<NotificationCountModel> call, Response<NotificationCountModel> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            updateNotificationCount(response.body().getUnread_counter());
+                        } else {
+                            try {
+
+                                Log.e("error", response.code() + "_" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                Toast.makeText(HomeActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                            } else {
+                                Toast.makeText(HomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<NotificationCountModel> call, Throwable t) {
+
+                        try {
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+
+
+
+                    }
+                });
+    }
+
+    public void updateNotificationCount(int unread_counter) {
+        binding.setNotCount(unread_counter);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void changeStatusBarColor(int color)
     {
@@ -226,6 +284,8 @@ public class HomeActivity extends AppCompatActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimary));
     }
+
+
 
     public void openSheet(int color, ServicesDataModel.ServiceModel serviceModel)
     {
@@ -313,6 +373,7 @@ public class HomeActivity extends AppCompatActivity {
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
+
     public void setSubServiceItemData(SubServicesModel.SubServiceModel subServiceModel) {
 
         Intent intent = new Intent(this, SubServiceDetailsActivity.class);
@@ -333,7 +394,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.ahBottomNav.setDefaultBackgroundColor(ContextCompat.getColor(this, R.color.nav_bg));
         binding.ahBottomNav.setTitleTextSizeInSp(14, 12);
         binding.ahBottomNav.setForceTint(true);
-        binding.ahBottomNav.setAccentColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        binding.ahBottomNav.setAccentColor(ContextCompat.getColor(this, R.color.color3));
         binding.ahBottomNav.setInactiveColor(ContextCompat.getColor(this, R.color.gray4));
         binding.ahBottomNav.addItem(item1);
         binding.ahBottomNav.addItem(item2);

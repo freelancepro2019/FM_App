@@ -68,7 +68,7 @@ public class Fragment_Main extends Fragment {
         binding.recView.setItemViewCacheSize(25);
         binding.recView.setDrawingCacheEnabled(true);
         binding.recView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        binding.recView.setLayoutManager(new GridLayoutManager(activity, 2));
+        binding.recView.setLayoutManager(new GridLayoutManager(activity, 3));
         adapter = new Services_Adapter(serviceModelList, activity, this);
         binding.recView.setAdapter(adapter);
 
