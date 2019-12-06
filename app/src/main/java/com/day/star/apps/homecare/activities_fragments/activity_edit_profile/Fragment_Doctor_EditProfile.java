@@ -49,11 +49,13 @@ import java.util.List;
 import java.util.Locale;
 
 import io.paperdb.Paper;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.ShowCountryDialogListener, OnCountryPickerListener{
+public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.ShowCountryDialogListener, OnCountryPickerListener, Listeners.UpdateProfileListener {
     private FragmentDoctorEditProfileBinding binding;
     private EditProfileActivity activity;
     private String lang;
@@ -89,6 +91,7 @@ public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.S
         wordsModel.setTitle(getString(R.string.ch));
         model.setWords(wordsModel);
         serviceModelList.add(model);
+        binding.setUpdateListener(this);
 
         experimentList = new ArrayList<>();
         editProfileDoctorModel = new EditProfileDoctorModel();
@@ -400,7 +403,7 @@ public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.S
             binding.iconUpload.setVisibility(View.GONE);
             binding.image.setImageBitmap(bitmap);
             uri = getUriFromBitmap(bitmap);
-            uploadImage(uri);
+            binding.image.setImageBitmap(bitmap);
         }
     }
 
@@ -430,12 +433,179 @@ public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.S
     }
 
 
-    private void uploadImage(Uri uri) {
 
+
+
+    @Override
+    public void updateProfile() {
+        if (editProfileDoctorModel.isDataValid(activity))
+        {
+            if (uri==null)
+            {
+                editProfileWithoutImage();
+            }else
+                {
+                    editProfileWithImage();
+                }
+        }
     }
 
 
+    private void editProfileWithoutImage()
+    {
+
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+
+        RequestBody name_part = Common.getRequestBodyText(editProfileDoctorModel.getName());
+        RequestBody phone_part = Common.getRequestBodyText(editProfileDoctorModel.getPhone());
+        RequestBody phone_code_part = Common.getRequestBodyText(editProfileDoctorModel.getPhone_code());
+        RequestBody email_part = Common.getRequestBodyText(editProfileDoctorModel.getEmail());
+        RequestBody gender_part = Common.getRequestBodyText(String.valueOf(editProfileDoctorModel.getGender()));
+        RequestBody department_part = Common.getRequestBodyText(editProfileDoctorModel.getDepartment_id());
+        RequestBody exper_part = Common.getRequestBodyText(editProfileDoctorModel.getExperience_id());
+        RequestBody about_part = Common.getRequestBodyText(editProfileDoctorModel.getAbout_me());
+
+
+        try {
+            Api.getService(Tags.base_url)
+                    .editDoctorProfileWithoutImage(lang,userModel.getToken(),name_part,phone_part,phone_code_part,email_part,gender_part,department_part,exper_part,about_part)
+                    .enqueue(new Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                            dialog.dismiss();
+                            if (response.isSuccessful() && response.body() != null) {
+                                preferences.create_update_userData(activity, response.body());
+                                Intent intent = activity.getIntent();
+                                if (intent!=null)
+                                {
+                                    activity.setResult(Activity.RESULT_OK,intent);
+                                }
+                                activity.finish();
+
+                            } else {
+
+                                try {
+
+                                    Log.e("error", response.code() + "_" + response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (response.code() == 500) {
+                                    Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                } else {
+                                    Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
+                            try {
+                                dialog.dismiss();
+                                if (t.getMessage() != null) {
+                                    Log.e("error", t.getMessage());
+                                    if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                        Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            dialog.dismiss();
+
+        }
+    }
+    private void editProfileWithImage()
+    {
 
 
 
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+
+        RequestBody name_part = Common.getRequestBodyText(editProfileDoctorModel.getName());
+        RequestBody phone_part = Common.getRequestBodyText(editProfileDoctorModel.getPhone());
+        RequestBody phone_code_part = Common.getRequestBodyText(editProfileDoctorModel.getPhone_code());
+        RequestBody email_part = Common.getRequestBodyText(editProfileDoctorModel.getEmail());
+        RequestBody gender_part = Common.getRequestBodyText(String.valueOf(editProfileDoctorModel.getGender()));
+        RequestBody department_part = Common.getRequestBodyText(editProfileDoctorModel.getDepartment_id());
+        RequestBody exper_part = Common.getRequestBodyText(editProfileDoctorModel.getExperience_id());
+        RequestBody about_part = Common.getRequestBodyText(editProfileDoctorModel.getAbout_me());
+        MultipartBody.Part image_part = Common.getMultiPart(activity,uri,"logo");
+
+
+        try {
+            Api.getService(Tags.base_url)
+                    .editDoctorProfileWithImage(lang,userModel.getToken(),name_part,phone_part,phone_code_part,email_part,gender_part,department_part,exper_part,about_part,image_part)
+                    .enqueue(new Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                            dialog.dismiss();
+                            if (response.isSuccessful() && response.body() != null) {
+                                preferences.create_update_userData(activity, response.body());
+                                Intent intent = activity.getIntent();
+                                if (intent!=null)
+                                {
+                                    activity.setResult(Activity.RESULT_OK,intent);
+                                }
+                                activity.finish();
+
+                            } else {
+
+                                try {
+
+                                    Log.e("error", response.code() + "_" + response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (response.code() == 500) {
+                                    Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                } else {
+                                    Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
+                            try {
+                                dialog.dismiss();
+                                if (t.getMessage() != null) {
+                                    Log.e("error", t.getMessage());
+                                    if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                        Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            dialog.dismiss();
+
+        }
+
+    }
 }

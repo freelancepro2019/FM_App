@@ -16,7 +16,11 @@
             name="editModel"
             type="com.day.star.apps.homecare.models.EditProfileClientModel" />
 
+        <variable
+            name="updateListener"
+            type="com.day.star.apps.homecare.interfaces.Listeners.UpdateProfileListener" />
     </data>
+
 
 <ScrollView
     android:layout_width="match_parent"
@@ -359,6 +363,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:text="@string/edit_profile"
+                android:onClick="@{()->updateListener.updateProfile()}"
                 />
 
         </LinearLayout>

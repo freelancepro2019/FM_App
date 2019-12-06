@@ -239,8 +239,8 @@ public interface Service {
     @FormUrlEncoded
     @POST("api/cancel-order")
     Call<ResponseBody> cancelOrder(@Header("device-lang") String header,
-                                           @Header("Authorization") String user_token,
-                                           @Field("order_id") String order_id
+                                   @Header("Authorization") String user_token,
+                                   @Field("order_id") String order_id
 
     );
 
@@ -262,7 +262,76 @@ public interface Service {
     @GET("api/my-rating")
     Call<CommentDataModel> getComments(@Header("device-lang") String header,
                                        @Header("Authorization") String user_token,
-                                       @Query("page")int page
+                                       @Query("page") int page
+    );
+
+
+    @Multipart
+    @POST("api/update-user-profile")
+    Call<UserModel> editClientProfileWithImage(@Header("device-lang") String header,
+                                               @Header("Authorization") String user_token,
+                                               @Part("name") RequestBody name,
+                                               @Part("phone") RequestBody phone,
+                                               @Part("phone_code") RequestBody phone_code,
+                                               @Part("email") RequestBody email,
+                                               @Part("gender") RequestBody gender,
+                                               @Part MultipartBody.Part logo
+
+    );
+
+    @Multipart
+    @POST("api/update-user-profile")
+    Call<UserModel> editClientProfileWithoutImage(@Header("device-lang") String header,
+                                                  @Header("Authorization") String user_token,
+                                                  @Part("name") RequestBody name,
+                                                  @Part("phone") RequestBody phone,
+                                                  @Part("phone_code") RequestBody phone_code,
+                                                  @Part("email") RequestBody email,
+                                                  @Part("gender") RequestBody gender
+
+    );
+
+
+    @Multipart
+    @POST("api/update-provider-profile")
+    Call<UserModel> editDoctorProfileWithImage(@Header("device-lang") String header,
+                                               @Header("Authorization") String user_token,
+                                               @Part("name") RequestBody name,
+                                               @Part("phone") RequestBody phone,
+                                               @Part("phone_code") RequestBody phone_code,
+                                               @Part("email") RequestBody email,
+                                               @Part("gender") RequestBody gender,
+                                               @Part("department") RequestBody department,
+                                               @Part("exper") RequestBody exper,
+                                               @Part("about") RequestBody about,
+                                               @Part MultipartBody.Part logo
+
+    );
+
+    @Multipart
+    @POST("api/update-provider-profile")
+    Call<UserModel> editDoctorProfileWithoutImage(@Header("device-lang") String header,
+                                                  @Header("Authorization") String user_token,
+                                                  @Part("name") RequestBody name,
+                                                  @Part("phone") RequestBody phone,
+                                                  @Part("phone_code") RequestBody phone_code,
+                                                  @Part("email") RequestBody email,
+                                                  @Part("gender") RequestBody gender,
+                                                  @Part("department") RequestBody department,
+                                                  @Part("exper") RequestBody exper,
+                                                  @Part("about") RequestBody about
+
+    );
+
+
+    @FormUrlEncoded
+    @POST("api/client-end-order")
+    Call<ResponseBody> updateVisit(@Header("device-lang") String header,
+                                   @Field("day_date") String day_date,
+                                   @Field("type") String type
+
+
+
     );
 
 }

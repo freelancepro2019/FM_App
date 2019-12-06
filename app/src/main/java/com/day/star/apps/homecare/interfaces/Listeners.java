@@ -36,6 +36,10 @@ public interface Listeners {
         void logout();
     }
 
+    interface UpdateProfileListener
+    {
+        void updateProfile();
+    }
     interface ContactListener
     {
         void sendContact(ContactUsModel contactUsModel);

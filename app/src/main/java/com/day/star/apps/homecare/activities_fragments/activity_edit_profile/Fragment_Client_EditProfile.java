@@ -2,6 +2,7 @@ package com.day.star.apps.homecare.activities_fragments.activity_edit_profile;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,8 @@ import com.day.star.apps.homecare.interfaces.Listeners;
 import com.day.star.apps.homecare.models.EditProfileClientModel;
 import com.day.star.apps.homecare.models.UserModel;
 import com.day.star.apps.homecare.preferences.Preferences;
+import com.day.star.apps.homecare.remote.Api;
+import com.day.star.apps.homecare.share.Common;
 import com.day.star.apps.homecare.tags.Tags;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
@@ -37,11 +41,17 @@ import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Locale;
 
 import io.paperdb.Paper;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class Fragment_Client_EditProfile extends Fragment implements Listeners.ShowCountryDialogListener, OnCountryPickerListener {
+public class Fragment_Client_EditProfile extends Fragment implements Listeners.ShowCountryDialogListener, OnCountryPickerListener , Listeners.UpdateProfileListener {
     private FragmentClientEditProfileBinding binding;
     private EditProfileActivity activity;
     private String lang;
@@ -76,6 +86,7 @@ public class Fragment_Client_EditProfile extends Fragment implements Listeners.S
         lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
         binding.setLang(lang);
         binding.setShowCountryListener(this);
+        binding.setUpdateListener(this);
         binding.setEditModel(editProfileClientModel);
         createCountryDialog();
         updateUI();
@@ -193,7 +204,8 @@ public class Fragment_Client_EditProfile extends Fragment implements Listeners.S
             binding.iconUpload.setVisibility(View.GONE);
             binding.image.setImageBitmap(bitmap);
             uri = getUriFromBitmap(bitmap);
-            uploadImage(uri);
+            binding.image.setImageBitmap(bitmap);
+
         }
     }
 
@@ -254,11 +266,169 @@ public class Fragment_Client_EditProfile extends Fragment implements Listeners.S
     }
 
 
-    private void uploadImage(Uri uri) {
 
+
+    @Override
+    public void updateProfile() {
+
+        if (editProfileClientModel.isDataValid(activity))
+        {
+            if(uri!=null)
+            {
+                updateWithImage();
+            }else
+                {
+                    updateWithoutImage();
+                }
+        }
     }
 
 
+    private void updateWithoutImage()
+    {
+
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+
+        RequestBody name_part = Common.getRequestBodyText(editProfileClientModel.getName());
+        RequestBody phone_part = Common.getRequestBodyText(editProfileClientModel.getPhone());
+        RequestBody phone_code_part = Common.getRequestBodyText(editProfileClientModel.getPhone_code());
+        RequestBody email_part = Common.getRequestBodyText(editProfileClientModel.getEmail());
+        RequestBody gender_part = Common.getRequestBodyText(String.valueOf(editProfileClientModel.getGender()));
 
 
+        try {
+            Api.getService(Tags.base_url)
+                    .editClientProfileWithoutImage(lang,userModel.getToken(),name_part,phone_part,phone_code_part,email_part,gender_part)
+                    .enqueue(new Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                            dialog.dismiss();
+                            if (response.isSuccessful() && response.body() != null) {
+                                preferences.create_update_userData(activity,response.body());
+                                Intent intent = activity.getIntent();
+                                if (intent!=null)
+                                {
+                                    activity.setResult(Activity.RESULT_OK,intent);
+                                }
+                                activity.finish();
+
+                            } else {
+
+                                try {
+
+                                    Log.e("error", response.code() + "_" + response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (response.code() == 500) {
+                                    Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                } else {
+                                    Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
+                            try {
+                                dialog.dismiss();
+                                if (t.getMessage() != null) {
+                                    Log.e("error", t.getMessage());
+                                    if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                        Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            dialog.dismiss();
+
+        }
+    }
+    private void updateWithImage()
+    {
+
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+
+        RequestBody name_part = Common.getRequestBodyText(editProfileClientModel.getName());
+        RequestBody phone_part = Common.getRequestBodyText(editProfileClientModel.getPhone());
+        RequestBody phone_code_part = Common.getRequestBodyText(editProfileClientModel.getPhone_code());
+        RequestBody email_part = Common.getRequestBodyText(editProfileClientModel.getEmail());
+        RequestBody gender_part = Common.getRequestBodyText(String.valueOf(editProfileClientModel.getGender()));
+        MultipartBody.Part image_part = Common.getMultiPart(activity,uri,"logo");
+
+        try {
+            Api.getService(Tags.base_url)
+                    .editClientProfileWithImage(lang,userModel.getToken(),name_part,phone_part,phone_code_part,email_part,gender_part,image_part)
+                    .enqueue(new Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                            dialog.dismiss();
+                            if (response.isSuccessful() && response.body() != null) {
+                                preferences.create_update_userData(activity,response.body());
+                                Intent intent = activity.getIntent();
+                                if (intent!=null)
+                                {
+                                    activity.setResult(Activity.RESULT_OK,intent);
+                                }
+                                activity.finish();
+
+                            } else {
+
+                                try {
+
+                                    Log.e("error", response.code() + "_" + response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (response.code() == 500) {
+                                    Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                } else {
+                                    Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
+                            try {
+                                dialog.dismiss();
+                                if (t.getMessage() != null) {
+                                    Log.e("error", t.getMessage());
+                                    if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                        Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            dialog.dismiss();
+
+        }
+
+    }
 }

@@ -36,6 +36,7 @@ import com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fr
 import com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fragment_settings.Fragment_Settings;
 import com.day.star.apps.homecare.activities_fragments.activity_login.LoginActivity;
 import com.day.star.apps.homecare.activities_fragments.activity_notification.NotificationActivity;
+import com.day.star.apps.homecare.activities_fragments.activity_order_details.OrderDetailsActivity;
 import com.day.star.apps.homecare.activities_fragments.activity_sub_service_details.SubServiceDetailsActivity;
 import com.day.star.apps.homecare.adapters.SubServiceAdapter;
 import com.day.star.apps.homecare.databinding.ActivityHomeBinding;
@@ -52,7 +53,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -100,10 +104,9 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void initView()
-    {
+    private void initView() {
         Paper.init(this);
-        lang = Paper.book().read("lang",Locale.getDefault().getLanguage());
+        lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
         preferences = Preferences.getInstance();
         userModel = preferences.getUserData(this);
         fragmentManager = getSupportFragmentManager();
@@ -116,12 +119,11 @@ public class HomeActivity extends AppCompatActivity {
         recView = findViewById(R.id.recView);
         recView.setLayoutManager(new LinearLayoutManager(this));
         recView.setNestedScrollingEnabled(false);
-        progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         arrow = findViewById(R.id.arrow);
 
 
-        if (lang.equals("ar"))
-        {
+        if (lang.equals("ar")) {
             arrow.setRotation(180.0f);
         }
 
@@ -131,8 +133,7 @@ public class HomeActivity extends AppCompatActivity {
         behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState==BottomSheetBehavior.STATE_DRAGGING)
-                {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
                     behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
             }
@@ -145,26 +146,69 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.flNotification.setOnClickListener(view ->
         {
-            if(userModel!=null)
-            {
+            if (userModel != null) {
                 updateNotificationCount(0);
                 Intent intent = new Intent(this, NotificationActivity.class);
                 startActivity(intent);
 
-            }else
-                {
-                    Common.CreateDialogAlert(this,getString(R.string.please_sign_in_or_sign_up),R.color.colorPrimary);
+            } else {
+                Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up), R.color.colorPrimary);
 
-                }
+            }
 
         });
 
-        if(userModel!=null)
-        {
+        if (userModel != null) {
             updateTokenFireBase();
             getNotificationCount();
         }
 
+        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.ENGLISH);
+        String date = dateFormat.format(new Date(calendar.getTimeInMillis()));
+
+        if (!preferences.getLastVisit(this).equals(date))
+        {
+            updateVisit(date);
+        }
+
+    }
+
+    private void updateVisit(String date)
+    {
+
+        Api.getService(Tags.base_url)
+                .updateVisit(lang,date,"android")
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null )
+                        {
+                           preferences.setLastVisit(HomeActivity.this,date);
+                        } else {
+                            try {
+
+                                Log.e("error", response.code() + "_" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+                    }
+                });
     }
 
     public void updateUserModel()

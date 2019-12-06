@@ -81,7 +81,6 @@ public class NotificationActivity extends AppCompatActivity implements Listeners
         lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
         binding.setBackListener(this);
         binding.setLang(lang);
-
         notificationModelList = new ArrayList<>();
         manager = new LinearLayoutManager(this);
         binding.recView.setLayoutManager(manager);
