@@ -71,6 +71,7 @@ public class Fragment_Client_Current_Orders extends Fragment  {
         Paper.init(activity);
         lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        binding.swipeRefresh.setColorSchemeResources(R.color.colorPrimary,R.color.color1,R.color.color2,R.color.color3);
 
         manager = new LinearLayoutManager(activity);
         binding.recView.setLayoutManager(manager);
@@ -102,6 +103,10 @@ public class Fragment_Client_Current_Orders extends Fragment  {
         });
 
         getOrders(false);
+
+        binding.swipeRefresh.setOnRefreshListener(() ->
+                getOrders(false)
+        );
 
     }
 
@@ -254,7 +259,7 @@ public class Fragment_Client_Current_Orders extends Fragment  {
     public void setItemData(OrderDataModel.OrderModel orderModel) {
         Intent intent = new Intent(activity, OrderDetailsActivity.class);
         intent.putExtra("order_id",orderModel.getOrder_id());
-        intent.putExtra("from","order");
+        intent.putExtra("from","order_client_current");
         startActivity(intent);
     }
 }

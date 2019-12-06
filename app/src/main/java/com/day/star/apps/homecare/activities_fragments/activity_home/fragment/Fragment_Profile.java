@@ -1,10 +1,14 @@
 package com.day.star.apps.homecare.activities_fragments.activity_home.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +16,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.day.star.apps.homecare.R;
+import com.day.star.apps.homecare.activities_fragments.activity_edit_profile.EditProfileActivity;
+import com.day.star.apps.homecare.activities_fragments.activity_feedback.FeedbackActivity;
 import com.day.star.apps.homecare.activities_fragments.activity_home.HomeActivity;
 import com.day.star.apps.homecare.databinding.FragmentProfileBinding;
 import com.day.star.apps.homecare.models.UserModel;
@@ -41,8 +47,8 @@ public class Fragment_Profile extends Fragment  {
         initView();
         return view;
     }
-
-    private void initView() {
+    private void initView()
+    {
         preferences = Preferences.newInstance();
         activity = (HomeActivity) getActivity();
         Paper.init(activity);
@@ -53,19 +59,39 @@ public class Fragment_Profile extends Fragment  {
 
         Picasso.with(activity).load(Uri.parse(Tags.IMAGE_AVATAR+userModel.getLogo())).placeholder(R.drawable.splash).fit().into(binding.image);
 
-        Picasso.with(activity).load(R.drawable.beauty).fit().into(binding.imageBg);
+        binding.llEditProfile.setOnClickListener(view ->
+        {
+            Intent intent = new Intent(activity, EditProfileActivity.class);
+            startActivityForResult(intent,100);
+        });
+
+        binding.llFeedback.setOnClickListener(view ->
+        {
+            if (userModel.getUser_type().equals("1"))
+            {
+                Toast.makeText(activity, R.string.ser_av_prov, Toast.LENGTH_SHORT).show();
+            }else
+                {
+                    Intent intent = new Intent(activity, FeedbackActivity.class);
+                    startActivity(intent);
+                }
+
+        });
+
+        Log.e("ser",userModel.getService_id()+"__");
 
 
 
 
     }
-
-
-
-
-
-
-
-
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==100&&resultCode== Activity.RESULT_OK&&data!=null)
+        {
+            userModel = preferences.getUserData(activity);
+            binding.setUserModel(userModel);
+            activity.updateUserModel();
+        }
+    }
 }

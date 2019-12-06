@@ -189,6 +189,13 @@
     <string name="order_is_pending">Order is pending</string>
     <string name="no_descriptions">No descriptions</string>
     <string name="num_times">Num-times : </string>
+    <string name="av_for_proider">Available for providers</string>
+    <string name="ser_av_prov">Service available for providers</string>
+    <string name="refuse">Refuse</string>
+    <string name="end_order">End order</string>
+    <string name="add_comment">Add comment</string>
+    <string name="add_rate">Add rate</string>
+    <string name="no_comments">No comments</string>
 
 
 </resources>

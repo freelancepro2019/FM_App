@@ -1,6 +1,7 @@
 package com.day.star.apps.homecare.services;
 
 
+import com.day.star.apps.homecare.models.CommentDataModel;
 import com.day.star.apps.homecare.models.NotificationCountModel;
 import com.day.star.apps.homecare.models.NotificationDataModel;
 import com.day.star.apps.homecare.models.OrderDataModel;
@@ -209,15 +210,59 @@ public interface Service {
     @FormUrlEncoded
     @POST("api/accept-order")
     Call<ResponseBody> providerAcceptOrder(@Header("device-lang") String header,
-                                           @Header("Authorization") String user_token
+                                           @Header("Authorization") String user_token,
+                                           @Field("notification_id") String notification_id,
+                                           @Field("from_user_id") String from_user_id,
+                                           @Field("process_id_fk") String process_id_fk
+
 
     );
 
     @FormUrlEncoded
     @POST("api/refuse-order")
     Call<ResponseBody> providerRefuseOrder(@Header("device-lang") String header,
-                                           @Header("Authorization") String user_token
+                                           @Header("Authorization") String user_token,
+                                           @Field("notification_id") String notification_id,
+                                           @Field("from_user_id") String from_user_id,
+                                           @Field("process_id_fk") String process_id_fk
 
+    );
+
+    @FormUrlEncoded
+    @POST("api/refuse-order")
+    Call<ResponseBody> providerEndOrder(@Header("device-lang") String header,
+                                        @Header("Authorization") String user_token,
+                                        @Field("order_id") String order_id
+
+    );
+
+    @FormUrlEncoded
+    @POST("api/cancel-order")
+    Call<ResponseBody> cancelOrder(@Header("device-lang") String header,
+                                           @Header("Authorization") String user_token,
+                                           @Field("order_id") String order_id
+
+    );
+
+
+    @FormUrlEncoded
+    @POST("api/client-end-order")
+    Call<ResponseBody> clientEndOrder(@Header("device-lang") String header,
+                                      @Header("Authorization") String user_token,
+                                      @Field("from_user_id") String from_user_id,
+                                      @Field("process_id_fk") String process_id_fk,
+                                      @Field("notification_id") String notification_id,
+                                      @Field("rate_num") float rate_num,
+                                      @Field("rate_comment") String rate_comment
+
+
+    );
+
+
+    @GET("api/my-rating")
+    Call<CommentDataModel> getComments(@Header("device-lang") String header,
+                                       @Header("Authorization") String user_token,
+                                       @Query("page")int page
     );
 
 }

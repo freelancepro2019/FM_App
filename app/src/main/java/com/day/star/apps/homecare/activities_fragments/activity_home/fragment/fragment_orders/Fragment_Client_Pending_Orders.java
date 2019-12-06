@@ -1,5 +1,6 @@
 package com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fragment_orders;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class Fragment_Client_Pending_Orders extends Fragment  {
     private OrderAdapter adapter;
     private boolean isLoading = false;
     private int current_page = 1;
+    private int selectedPos=-1;
 
     public static Fragment_Client_Pending_Orders newInstance() {
         return new Fragment_Client_Pending_Orders();
@@ -70,6 +72,7 @@ public class Fragment_Client_Pending_Orders extends Fragment  {
         Paper.init(activity);
         lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        binding.swipeRefresh.setColorSchemeResources(R.color.colorPrimary,R.color.color1,R.color.color2,R.color.color3);
 
         manager = new LinearLayoutManager(activity);
         binding.recView.setLayoutManager(manager);
@@ -102,6 +105,9 @@ public class Fragment_Client_Pending_Orders extends Fragment  {
 
         getOrders(false);
 
+        binding.swipeRefresh.setOnRefreshListener(() ->
+                getOrders(false)
+        );
     }
 
 
@@ -181,9 +187,6 @@ public class Fragment_Client_Pending_Orders extends Fragment  {
     private void loadMore(int page)
     {
         try {
-
-
-
             Api.getService(Tags.base_url)
                     .getClientOrders(lang,userModel.getToken(),"pending", page,20)
                     .enqueue(new Callback<OrderDataModel>() {
@@ -250,11 +253,30 @@ public class Fragment_Client_Pending_Orders extends Fragment  {
     }
 
 
-    public void setItemData(OrderDataModel.OrderModel orderModel) {
+    public void setItemData(OrderDataModel.OrderModel orderModel, int adapterPosition) {
+        this.selectedPos = adapterPosition;
 
         Intent intent = new Intent(activity, OrderDetailsActivity.class);
         intent.putExtra("order_id",orderModel.getOrder_id());
-        intent.putExtra("from","order");
-        startActivity(intent);
+        intent.putExtra("from","order_client_pending");
+        startActivityForResult(intent,100);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==100&&resultCode== Activity.RESULT_OK&&data!=null)
+        {
+
+            if (selectedPos!=-1)
+            {
+                orderModelList.remove(this.selectedPos);
+                adapter.notifyItemRemoved(this.selectedPos);
+                this.selectedPos=-1;
+
+            }
+
+        }
     }
 }

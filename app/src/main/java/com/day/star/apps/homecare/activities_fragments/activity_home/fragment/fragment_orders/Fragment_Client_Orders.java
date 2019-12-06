@@ -202,5 +202,13 @@ public class Fragment_Client_Orders extends Fragment  {
 
     }
 
+    public void refreshFragmentPreviousData()
+    {
+        Fragment_Client_Previous_Orders fragment_client_previous_orders = (Fragment_Client_Previous_Orders) adapter.getItem(2);
+
+        fragment_client_previous_orders.getOrders(true);
+
+    }
+
 
 }

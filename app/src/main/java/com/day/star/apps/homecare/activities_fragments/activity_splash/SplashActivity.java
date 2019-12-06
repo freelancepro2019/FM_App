@@ -41,9 +41,9 @@ public class SplashActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
         preferences = Preferences.newInstance();
 
-        animation1 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
+        animation1 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.alpha);
         binding.imageSplash.startAnimation(animation1);
-        animation2 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale);
+        animation2 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.translate);
 
         animation1.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -53,8 +53,8 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                binding.llLogo.setVisibility(View.VISIBLE);
-                binding.llLogo.startAnimation(animation2);
+                binding.imgDayStar.setVisibility(View.VISIBLE);
+                binding.imgDayStar.startAnimation(animation2);
 
             }
 

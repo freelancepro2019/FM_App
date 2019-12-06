@@ -167,7 +167,13 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void updateTokenFireBase() {
+    public void updateUserModel()
+    {
+        userModel = preferences.getUserData(this);
+
+    }
+    private void updateTokenFireBase()
+    {
 
         FirebaseInstanceId.getInstance()
                 .getInstanceId().addOnCompleteListener(task -> {
@@ -606,6 +612,23 @@ public class HomeActivity extends AppCompatActivity {
         binding.tvTitle.setText(R.string.more);
     }
 
+    public void refreshFragmentOrder()
+    {
+        if (userModel.getUser_type().equals("1"))
+        {
+            if (fragment_client_orders!=null&&fragment_client_orders.isAdded())
+            {
+                fragment_client_orders.refreshFragmentPreviousData();
+            }
+
+        }else
+            {
+                if (fragment_provider_orders!=null&&fragment_provider_orders.isAdded())
+                {
+                    fragment_provider_orders.refreshFragmentPreviousData();
+                }
+            }
+    }
     @Override
     public void onBackPressed() {
        back();

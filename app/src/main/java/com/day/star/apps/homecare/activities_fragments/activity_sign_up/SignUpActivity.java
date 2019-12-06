@@ -29,7 +29,6 @@ public class SignUpActivity extends AppCompatActivity {
     private FragmentManager manager;
     private Fragment_Client_SignUp fragment_client_signUp;
     private Fragment_Doctor_SignUp fragment_doctor_signUp;
-
     private Preferences preferences;
 
 
@@ -49,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
             displayFragmentClientSignUp();
         }
     }
+
+
 
 
     public void displayFragmentClientSignUp() {

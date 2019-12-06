@@ -61,7 +61,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             holder1.itemView.setOnClickListener(view -> {
                 NotificationDataModel.NotificationModel notificationModel2 = notificationModelList.get(position);
-                activity.setItemData(notificationModel2);
+                activity.setItemData(notificationModel2,holder1.getAdapterPosition());
             });
 
         }else if (holder instanceof LoadHolder)

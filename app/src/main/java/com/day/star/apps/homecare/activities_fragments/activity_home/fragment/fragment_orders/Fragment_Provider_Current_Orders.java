@@ -1,5 +1,6 @@
 package com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fragment_orders;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class Fragment_Provider_Current_Orders extends Fragment  {
     private OrderAdapter adapter;
     private boolean isLoading = false;
     private int current_page = 1;
+    private int selectedPos;
 
     public static Fragment_Provider_Current_Orders newInstance() {
         return new Fragment_Provider_Current_Orders();
@@ -70,7 +72,7 @@ public class Fragment_Provider_Current_Orders extends Fragment  {
         Paper.init(activity);
         lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
-
+        binding.swipeRefresh.setColorSchemeResources(R.color.colorPrimary,R.color.color1,R.color.color2,R.color.color3);
         manager = new LinearLayoutManager(activity);
         binding.recView.setLayoutManager(manager);
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
@@ -101,7 +103,9 @@ public class Fragment_Provider_Current_Orders extends Fragment  {
         });
 
         getOrders(false);
-
+        binding.swipeRefresh.setOnRefreshListener(() ->
+                getOrders(false)
+        );
     }
 
 
@@ -254,7 +258,31 @@ public class Fragment_Provider_Current_Orders extends Fragment  {
     public void setItemData(OrderDataModel.OrderModel orderModel) {
         Intent intent = new Intent(activity, OrderDetailsActivity.class);
         intent.putExtra("order_id",orderModel.getOrder_id());
-        intent.putExtra("from","order");
-        startActivity(intent);
+        intent.putExtra("from","order_provider_current");
+        startActivityForResult(intent,100);
     }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==100&&resultCode== Activity.RESULT_OK&&data!=null)
+        {
+            if (data.hasExtra("end"))
+            {
+                activity.refreshFragmentOrder();
+            }
+
+            if (selectedPos!=-1)
+            {
+                orderModelList.remove(this.selectedPos);
+                adapter.notifyItemRemoved(this.selectedPos);
+                this.selectedPos=-1;
+
+            }
+
+        }
+    }
+
 }

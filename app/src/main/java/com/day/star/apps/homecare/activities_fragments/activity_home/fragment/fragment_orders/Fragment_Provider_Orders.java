@@ -164,5 +164,13 @@ public class Fragment_Provider_Orders extends Fragment  {
         fragment_provider_previous_orders.getOrders(true);
     }
 
+    public void refreshFragmentPreviousData()
+    {
+        Fragment_Provider_Previous_Orders fragment_provider_previous_orders = (Fragment_Provider_Previous_Orders) adapter.getItem(1);
+
+
+        fragment_provider_previous_orders.getOrders(true);
+    }
+
 
 }

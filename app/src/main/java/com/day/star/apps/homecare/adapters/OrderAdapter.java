@@ -77,7 +77,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     }else if (fragment instanceof Fragment_Client_Pending_Orders)
                     {
                         Fragment_Client_Pending_Orders fragment_client_pending_orders = (Fragment_Client_Pending_Orders) fragment;
-                        fragment_client_pending_orders.setItemData(orderModel2);
+                        fragment_client_pending_orders.setItemData(orderModel2,holder1.getAdapterPosition());
                     }
                     else if (fragment instanceof Fragment_Provider_Current_Orders)
                     {

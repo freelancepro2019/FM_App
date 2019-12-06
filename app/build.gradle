@@ -64,6 +64,7 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:3.6.4'
     implementation 'com.github.IntruderShanky:Squint:3.0.1'
     implementation 'com.github.florent37:diagonallayout:1.0.9'
+    implementation 'com.github.FlyingPumba:SimpleRatingBar:v0.1.5'
 
 
 }

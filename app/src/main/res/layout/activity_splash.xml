@@ -5,47 +5,41 @@
 
     >
 
-    <FrameLayout
-        android:id="@+id/cons"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/sign_up_bg"
-        tools:context=".activities_fragments.activity_splash.SplashActivity">
+        >
+
 
         <ImageView
             android:id="@+id/imageSplash"
-            android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_width="0dp"
+            android:layout_height="400dp"
             android:padding="50dp"
             android:src="@drawable/splash"
             android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
 
             />
 
-        <LinearLayout
-            android:id="@+id/llLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
+        <ImageView
+            android:id="@+id/imgDayStar"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/daystar"
+            android:visibility="invisible"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/imageSplash"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
 
-            >
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/star"
-
-                />
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/daystar"
-                />
-        </LinearLayout>
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -93,6 +93,25 @@
                android:visibility='@{notificationModel.notification_type.equals("2")?View.VISIBLE:View.GONE,default=gone}'
                />
 
+           <TextView
+               android:id="@+id/tvAddRate"
+               android:layout_width="wrap_content"
+               android:layout_height="35dp"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+               android:layout_marginStart="5dp"
+               android:layout_marginEnd="5dp"
+               android:textColor="@color/white"
+               android:textSize="13sp"
+               android:gravity="center"
+               android:paddingLeft="15dp"
+               android:paddingRight="15dp"
+               android:layout_marginBottom="5dp"
+               android:text="@string/add_rate"
+               android:background="@drawable/btn_login"
+               android:visibility='@{notificationModel.action_type.equals("2")?View.VISIBLE:View.GONE,default=gone}'
+               />
+
        </androidx.constraintlayout.widget.ConstraintLayout>
 
        <TextView

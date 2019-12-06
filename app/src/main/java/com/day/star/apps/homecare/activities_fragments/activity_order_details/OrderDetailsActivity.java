@@ -1,5 +1,6 @@
 package com.day.star.apps.homecare.activities_fragments.activity_order_details;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import com.day.star.apps.homecare.models.SingleOrderDataModel;
 import com.day.star.apps.homecare.models.UserModel;
 import com.day.star.apps.homecare.preferences.Preferences;
 import com.day.star.apps.homecare.remote.Api;
+import com.day.star.apps.homecare.share.Common;
 import com.day.star.apps.homecare.tags.Tags;
 
 import java.io.IOException;
@@ -36,6 +38,8 @@ public class OrderDetailsActivity extends AppCompatActivity implements Listeners
     private UserModel userModel;
     private Preferences preferences;
     private String order_id;
+    private String notification_id;
+
     private String from;
     private SingleOrderDataModel.OrderModel orderModel= null;
 
@@ -62,6 +66,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements Listeners
         {
             order_id = intent.getStringExtra("order_id");
             from = intent.getStringExtra("from");
+            notification_id = intent.getStringExtra("notification_id");
 
         }
     }
@@ -140,19 +145,39 @@ public class OrderDetailsActivity extends AppCompatActivity implements Listeners
         binding.btnRefuse.setOnClickListener(view ->
                 refuse()
         );
+
+        binding.btnEndOrder.setOnClickListener(view ->
+                providerEndOrder()
+        );
+
+        binding.btnCancel.setOnClickListener(view ->
+                cancelOrder()
+        );
+
         getOrderData();
 
     }
 
     private void accept() {
+        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
         Api.getService(Tags.base_url)
-                .providerAcceptOrder(lang,userModel.getToken())
+                .providerAcceptOrder(lang,userModel.getToken(),notification_id,userModel.getUser_id(),order_id)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        dialog.dismiss();
                         if (response.isSuccessful() && response.body() != null )
                         {
                             Toast.makeText(OrderDetailsActivity.this, R.string.suc, Toast.LENGTH_SHORT).show();
+                            Intent intent = getIntent();
+                            if (intent!=null)
+                            {
+                                setResult(RESULT_OK,intent);
+                            }
+
                             finish();
                         } else {
                             try {
@@ -167,6 +192,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements Listeners
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         try {
+                            dialog.dismiss();
 
                             if (t.getMessage() != null) {
                                 Log.e("error", t.getMessage());
@@ -185,14 +211,26 @@ public class OrderDetailsActivity extends AppCompatActivity implements Listeners
 
     private void refuse() {
 
+        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+
         Api.getService(Tags.base_url)
-                .providerRefuseOrder(lang,userModel.getToken())
+                .providerRefuseOrder(lang,userModel.getToken(),notification_id,userModel.getUser_id(),order_id)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        dialog.dismiss();
                         if (response.isSuccessful() && response.body() != null )
                         {
                             Toast.makeText(OrderDetailsActivity.this, R.string.suc, Toast.LENGTH_SHORT).show();
+                            Intent intent = getIntent();
+                            if (intent!=null)
+                            {
+                                setResult(RESULT_OK,intent);
+                            }
+
                             finish();
                         } else {
                             try {
@@ -207,7 +245,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements Listeners
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         try {
-
+                            dialog.dismiss();
                             if (t.getMessage() != null) {
                                 Log.e("error", t.getMessage());
                                 if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
@@ -223,7 +261,110 @@ public class OrderDetailsActivity extends AppCompatActivity implements Listeners
                 });
     }
 
+    private void cancelOrder() {
 
+        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+
+        Api.getService(Tags.base_url)
+                .cancelOrder(lang,userModel.getToken(),order_id)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful() && response.body() != null )
+                        {
+                            Toast.makeText(OrderDetailsActivity.this, R.string.suc, Toast.LENGTH_SHORT).show();
+                            Intent intent = getIntent();
+                            if (intent!=null)
+                            {
+                                setResult(RESULT_OK,intent);
+                            }
+
+                            finish();
+                        } else {
+                            try {
+
+                                Log.e("error", response.code() + "_" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(OrderDetailsActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(OrderDetailsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+    }
+
+    private void providerEndOrder() {
+
+        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+
+        Api.getService(Tags.base_url)
+                .providerEndOrder(lang,userModel.getToken(),order_id)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful() && response.body() != null )
+                        {
+                            Toast.makeText(OrderDetailsActivity.this, R.string.suc, Toast.LENGTH_SHORT).show();
+                            Intent intent = getIntent();
+                            if (intent!=null)
+                            {
+                                intent.putExtra("end",true);
+                                setResult(RESULT_OK,intent);
+                            }
+
+                            finish();
+                        } else {
+                            try {
+
+                                Log.e("error", response.code() + "_" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(OrderDetailsActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(OrderDetailsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+    }
 
     private void getOrderData()
     {

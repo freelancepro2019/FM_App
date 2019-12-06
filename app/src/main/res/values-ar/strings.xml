@@ -201,6 +201,13 @@
     <string name="order_is_pending">الطلب قيد الانتظار</string>
     <string name="no_descriptions">لا يوجد وصف</string>
     <string name="num_times">عدد مرات الزيارة : </string>
+    <string name="av_for_proider">متاحة فقط لمقدمين الخدمة</string>
+    <string name="ser_av_prov">التعليقات متاحة لمقدمين الخدمة فقط</string>
+    <string name="refuse">رفض</string>
+    <string name="end_order">إنهاء الطلب</string>
+    <string name="add_comment">أضف تعليق</string>
+    <string name="add_rate">أضف تقييم</string>
+    <string name="no_comments">لا توجد تعليقات</string>
 
 
 </resources>

@@ -26,6 +26,7 @@ public class UserModel implements Serializable {
     private String available;
     private String deleted;
     private String token;
+    private double user_rating;
 
 
     public String getUser_id() {
@@ -114,5 +115,9 @@ public class UserModel implements Serializable {
 
     public String getToken() {
         return token;
+    }
+
+    public double getUser_rating() {
+        return user_rating;
     }
 }
