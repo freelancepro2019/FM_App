@@ -36,7 +36,6 @@ import com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fr
 import com.day.star.apps.homecare.activities_fragments.activity_home.fragment.fragment_settings.Fragment_Settings;
 import com.day.star.apps.homecare.activities_fragments.activity_login.LoginActivity;
 import com.day.star.apps.homecare.activities_fragments.activity_notification.NotificationActivity;
-import com.day.star.apps.homecare.activities_fragments.activity_order_details.OrderDetailsActivity;
 import com.day.star.apps.homecare.activities_fragments.activity_sub_service_details.SubServiceDetailsActivity;
 import com.day.star.apps.homecare.adapters.SubServiceAdapter;
 import com.day.star.apps.homecare.databinding.ActivityHomeBinding;

@@ -24,6 +24,7 @@ import com.day.star.apps.homecare.models.CommentDataModel;
 import com.day.star.apps.homecare.models.UserModel;
 import com.day.star.apps.homecare.preferences.Preferences;
 import com.day.star.apps.homecare.remote.Api;
+import com.day.star.apps.homecare.tags.Tags;
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 
 import java.io.IOException;
@@ -116,7 +117,7 @@ public class FeedbackActivity extends AppCompatActivity implements Listeners.Bac
     {
         try {
 
-            Api.getService(lang)
+            Api.getService(Tags.base_url)
                     .getComments(lang,userModel.getToken(),1)
                     .enqueue(new Callback<CommentDataModel>() {
                         @Override
@@ -178,22 +179,26 @@ public class FeedbackActivity extends AppCompatActivity implements Listeners.Bac
                             }catch (Exception e){}
                         }
                     });
-        }catch (Exception e){
 
+        }catch (Exception e){
+            Log.e("ddd",e.getMessage()+"_");
         }
+
+
     }
     private void loadMore(int page)
     {
 
         try {
-            commentModelList.remove(commentModelList.size()-1);
-            adapter.notifyItemRemoved(commentModelList.size()-1);
 
-            Api.getService(lang)
+            Api.getService(Tags.base_url)
                     .getComments(lang,userModel.getToken(),page)
                     .enqueue(new Callback<CommentDataModel>() {
                         @Override
                         public void onResponse(Call<CommentDataModel> call, Response<CommentDataModel> response) {
+
+                            commentModelList.remove(commentModelList.size()-1);
+                            adapter.notifyItemRemoved(commentModelList.size()-1);
 
                             if (response.isSuccessful()&&response.body()!=null&&response.body().getData()!=null)
                             {
@@ -207,6 +212,10 @@ public class FeedbackActivity extends AppCompatActivity implements Listeners.Bac
 
                             }else
                             {
+                                commentModelList.remove(commentModelList.size()-1);
+                                adapter.notifyItemRemoved(commentModelList.size()-1);
+
+
                                 isLoading  =false;
 
                                 if (response.code() == 500) {
@@ -234,6 +243,10 @@ public class FeedbackActivity extends AppCompatActivity implements Listeners.Bac
                         @Override
                         public void onFailure(Call<CommentDataModel> call, Throwable t) {
                             try {
+
+                                commentModelList.remove(commentModelList.size()-1);
+                                adapter.notifyItemRemoved(commentModelList.size()-1);
+
                                 isLoading  =false;
 
                                 if (t.getMessage()!=null)

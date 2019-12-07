@@ -100,6 +100,8 @@ public class Fragment_Client_EditProfile extends Fragment implements Listeners.S
 
                 editProfileClientModel.setGender(2)
         );
+
+
         binding.edtPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -145,10 +147,11 @@ public class Fragment_Client_EditProfile extends Fragment implements Listeners.S
         if (userModel.getGender().equals("1"))
         {
             binding.rbMale.setChecked(true);
-
+            editProfileClientModel.setGender(1);
         }else if (userModel.getGender().equals("2"))
             {
                 binding.rbFemale.setChecked(true);
+                editProfileClientModel.setGender(2);
 
             }
     }

@@ -16,7 +16,6 @@ public class UserModel implements Serializable {
     private String google_long;
     private String logo;
     private String banner;
-    private String service_id;
     private String gender;
     private String exper;
     private String be_provider;
@@ -27,6 +26,8 @@ public class UserModel implements Serializable {
     private String deleted;
     private String token;
     private double user_rating;
+    private Service service;
+
 
 
     public String getUser_id() {
@@ -77,9 +78,6 @@ public class UserModel implements Serializable {
         return banner;
     }
 
-    public String getService_id() {
-        return service_id;
-    }
 
     public String getGender() {
         return gender;
@@ -119,5 +117,28 @@ public class UserModel implements Serializable {
 
     public double getUser_rating() {
         return user_rating;
+    }
+
+    public Service getService() {
+        return service;
+    }
+
+    public class Service implements Serializable
+    {
+        private String service_id_fk;
+        private String title;
+        private String content;
+
+        public String getId() {
+            return service_id_fk;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getContent() {
+            return content;
+        }
     }
 }

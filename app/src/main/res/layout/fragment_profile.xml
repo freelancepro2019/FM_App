@@ -232,7 +232,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
-                    android:text='@{userModel.user_type.equals("1")?@string/serv_only:""}'
+                    android:text='@{userModel.user_type.equals("1")?@string/serv_only:userModel.service.title??""}'
                     android:textColor="@color/gray6"
                     android:textSize="14sp" />
 

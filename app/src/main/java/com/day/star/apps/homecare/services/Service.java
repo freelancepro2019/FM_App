@@ -325,7 +325,7 @@ public interface Service {
 
 
     @FormUrlEncoded
-    @POST("api/client-end-order")
+    @POST("api/visit-app")
     Call<ResponseBody> updateVisit(@Header("device-lang") String header,
                                    @Field("day_date") String day_date,
                                    @Field("type") String type

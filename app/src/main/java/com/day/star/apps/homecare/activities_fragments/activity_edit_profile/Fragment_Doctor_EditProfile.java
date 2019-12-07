@@ -158,7 +158,6 @@ public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.S
         binding.rbMale.setOnClickListener(view -> editProfileDoctorModel.setGender(1));
         binding.rbFemale.setOnClickListener(view -> editProfileDoctorModel.setGender(2));
 
-        Log.e("ser",userModel.getService_id()+"__");
 
         getData();
         updateUI();
@@ -187,10 +186,13 @@ public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.S
         if (userModel.getGender().equals("1"))
         {
             binding.rbMale.setChecked(true);
+            editProfileDoctorModel.setGender(1);
 
         }else if (userModel.getGender().equals("2"))
         {
             binding.rbFemale.setChecked(true);
+            editProfileDoctorModel.setGender(2);
+
 
         }
         binding.edtAbout.setText(userModel.getAbout());
@@ -227,7 +229,8 @@ public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.S
         for (int i =0;i<serviceModelList.size();i++)
         {
 
-            if (serviceModelList.get(i).getService_id()!=null&&serviceModelList.get(i).getService_id().equals(userModel.getService_id()))
+
+            if (serviceModelList.get(i).getService_id()!=null&&serviceModelList.get(i).getService_id().equals(userModel.getService().getId()))
             {
                 pos = i;
                 break;
@@ -262,12 +265,18 @@ public class Fragment_Doctor_EditProfile extends Fragment implements Listeners.S
                         if (response.body().getServices().size() > 0) {
                             serviceModelList.addAll(response.body().getServices());
                             adapter.notifyDataSetChanged();
-                            if (getServicePos()!=-1)
+                            int pos = getServicePos();
+                            if (pos!=-1)
                             {
-                                binding.spinnerDepartment.setSelection(getServicePos());
+                                binding.spinnerDepartment.setSelection(pos);
 
                             }
-                            editProfileDoctorModel.setDepartment_id(serviceModelList.get(getServicePos()).getService_id());
+
+                            if (pos!=-1)
+                            {
+                                editProfileDoctorModel.setDepartment_id(serviceModelList.get(pos).getService_id());
+
+                            }
 
                         }
                     } else {
