@@ -212,6 +212,10 @@
     <string name="new_order">طلب جديد</string>
     <string name="order_accepted">تم قبول طلبك</string>
     <string name="ord_pen">طلبك قيد الانتظار حتى يتم الموافقة علية من قبل مقدمين الخدمة</string>
+    <string name="client_order_cancel">تم الغاء الطلب من العميل</string>
+    <string name="provider_order_cancel">تم الغاء الطلب من مقدم الخدمة</string>
+    <string name="rate_provider">تم انهاء الطلب قم بالتقييم</string>
+    <string name="have_rating">تم تقييمك</string>
 
 
 </resources>

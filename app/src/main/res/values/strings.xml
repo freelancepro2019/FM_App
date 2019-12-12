@@ -200,6 +200,10 @@
     <string name="new_order">New order</string>
     <string name="order_accepted">your order accepted</string>
     <string name="ord_pen">Order is pending</string>
+    <string name="client_order_cancel">The request was canceled from the client</string>
+    <string name="provider_order_cancel">The request was canceled from the service provider</string>
+    <string name="rate_provider">Request completed, rate</string>
+    <string name="have_rating">You rated</string>
 
 
 </resources>

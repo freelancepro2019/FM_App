@@ -130,7 +130,24 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         {
             body =getString(R.string.ord_pen);
 
+        }else if (not_type!=null&&not_type.equals("client_order_cancel"))
+        {
+            body =getString(R.string.client_order_cancel);
+
+        }else if (not_type!=null&&not_type.equals("provider_order_cancel"))
+        {
+            body =getString(R.string.provider_order_cancel);
+
+        }else if (not_type!=null&&not_type.equals("rate_provider"))
+        {
+            body =getString(R.string.rate_provider);
+
+        }else if (not_type!=null&&not_type.equals("have_rating"))
+        {
+            body =getString(R.string.have_rating);
+
         }
+
 
         String CHANNEL_ID = "my_channel_02";
         CharSequence CHANNEL_NAME = "my_channel_name";
@@ -197,7 +214,25 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         {
             body =getString(R.string.ord_pen);
 
+        }else if (not_type!=null&&not_type.equals("client_order_cancel"))
+        {
+            body =getString(R.string.client_order_cancel);
+
+        }else if (not_type!=null&&not_type.equals("provider_order_cancel"))
+        {
+            body =getString(R.string.provider_order_cancel);
+
+        }else if (not_type!=null&&not_type.equals("rate_provider"))
+        {
+            body =getString(R.string.rate_provider);
+
+        }else if (not_type!=null&&not_type.equals("have_rating"))
+        {
+            body =getString(R.string.have_rating);
+
         }
+
+
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSound(Uri.parse(sound_Path), AudioManager.STREAM_NOTIFICATION);
