@@ -216,6 +216,7 @@
     <string name="provider_order_cancel">تم الغاء الطلب من مقدم الخدمة</string>
     <string name="rate_provider">تم انهاء الطلب قم بالتقييم</string>
     <string name="have_rating">تم تقييمك</string>
+    <string name="thanks_for_using_homecare_app">Thanks for using HomeCare App</string>
 
 
 </resources>

@@ -113,7 +113,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void createNewNotificationVersion(Bitmap bitmap) {
-
+        boolean send = true;
         String sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not;
 
         String not_type = map.get("notification_type");
@@ -126,71 +126,90 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
         }else if (not_type!=null&&not_type.equals("order_accept"))
         {
+
             body =getString(R.string.order_accepted);
 
         }else if (not_type!=null&&not_type.equals("order_blocked"))
         {
+
             body =getString(R.string.ord_pen);
 
         }else if (not_type!=null&&not_type.equals("client_order_cancel"))
         {
+
             body =getString(R.string.client_order_cancel);
 
         }else if (not_type!=null&&not_type.equals("provider_order_cancel"))
         {
+
             body =getString(R.string.provider_order_cancel);
 
         }else if (not_type!=null&&not_type.equals("rate_provider"))
         {
+
             body =getString(R.string.rate_provider);
 
         }else if (not_type!=null&&not_type.equals("have_rating"))
         {
+
             body =getString(R.string.have_rating);
+
+        }else if (not_type!=null&&not_type.equals("refresh_note"))
+        {
+            send = false;
 
         }
 
-
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         String CHANNEL_ID = "my_channel_02";
         CharSequence CHANNEL_NAME = "my_channel_name";
         int IMPORTANCE = NotificationManager.IMPORTANCE_HIGH;
 
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         final NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, IMPORTANCE);
-        channel.setShowBadge(true);
-        channel.setSound(Uri.parse(sound_Path), new AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
-                .setLegacyStreamType(AudioManager.STREAM_NOTIFICATION)
-                .build()
-        );
-        builder.setChannelId(CHANNEL_ID);
-        builder.setSound(Uri.parse(sound_Path), AudioManager.STREAM_NOTIFICATION);
-        builder.setSmallIcon(R.mipmap.ic_launcher_round);
 
-        builder.setLargeIcon(bitmap);
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("not",true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        if (send)
+        {
+            channel.setShowBadge(true);
+            channel.setSound(Uri.parse(sound_Path), new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
+                    .setLegacyStreamType(AudioManager.STREAM_NOTIFICATION)
+                    .build()
+            );
+            builder.setChannelId(CHANNEL_ID);
+            builder.setSound(Uri.parse(sound_Path), AudioManager.STREAM_NOTIFICATION);
+            builder.setSmallIcon(R.mipmap.ic_launcher_round);
 
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
-        taskStackBuilder.addNextIntent(intent);
+            builder.setLargeIcon(bitmap);
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("not",true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+            TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+            taskStackBuilder.addNextIntent(intent);
 
-        builder.setContentIntent(pendingIntent);
+            PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.setContentTitle(title);
-        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
-        builder.setContentText(body);
+            builder.setContentIntent(pendingIntent);
+
+            builder.setContentTitle(title);
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
+            builder.setContentText(body);
+
+        }
+
 
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (manager != null) {
 
-            manager.createNotificationChannel(channel);
-            manager.notify(78887, builder.build());
+            if (send)
+            {
+                manager.createNotificationChannel(channel);
+                manager.notify(78887, builder.build());
+            }
             EventBus.getDefault().post(new NotFireModel(true));
+
         }
 
 
@@ -198,6 +217,8 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
     private void createOldNotificationVersion(Bitmap bitmap) {
 
+        boolean send = true;
+
         String sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not;
 
         String not_type = map.get("notification_type");
@@ -232,34 +253,47 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         {
             body =getString(R.string.have_rating);
 
+        }else if (not_type!=null&&not_type.equals("refresh_note"))
+        {
+            send = false;
+
         }
 
-
-
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSound(Uri.parse(sound_Path), AudioManager.STREAM_NOTIFICATION);
-        builder.setSmallIcon(R.mipmap.ic_launcher_round);
 
-        builder.setLargeIcon(bitmap);
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("not",true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
-        taskStackBuilder.addNextIntent(intent);
+        if (send)
+        {
+            builder.setSound(Uri.parse(sound_Path), AudioManager.STREAM_NOTIFICATION);
+            builder.setSmallIcon(R.mipmap.ic_launcher_round);
 
-        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setLargeIcon(bitmap);
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("not",true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        builder.setContentIntent(pendingIntent);
+            TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+            taskStackBuilder.addNextIntent(intent);
 
-        builder.setContentTitle(title);
-        builder.setContentText(body);
-        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
+            PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+
+            builder.setContentIntent(pendingIntent);
+
+            builder.setContentTitle(title);
+            builder.setContentText(body);
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
+
+        }
 
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (manager != null) {
-            manager.notify(78887, builder.build());
+            if (send)
+            {
+                manager.notify(78887, builder.build());
+            }
+
+
             EventBus.getDefault().post(new NotFireModel(true));
 
         }

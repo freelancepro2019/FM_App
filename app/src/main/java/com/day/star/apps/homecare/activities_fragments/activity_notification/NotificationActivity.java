@@ -28,6 +28,7 @@ import com.day.star.apps.homecare.databinding.ActivityNotificationBinding;
 import com.day.star.apps.homecare.databinding.DialogRateBinding;
 import com.day.star.apps.homecare.interfaces.Listeners;
 import com.day.star.apps.homecare.language.LanguageHelper;
+import com.day.star.apps.homecare.models.NotFireModel;
 import com.day.star.apps.homecare.models.NotificationDataModel;
 import com.day.star.apps.homecare.models.UserModel;
 import com.day.star.apps.homecare.preferences.Preferences;
@@ -35,6 +36,10 @@ import com.day.star.apps.homecare.remote.Api;
 import com.day.star.apps.homecare.share.Common;
 import com.day.star.apps.homecare.tags.Tags;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,6 +80,7 @@ public class NotificationActivity extends AppCompatActivity implements Listeners
     }
 
     private void initView() {
+        EventBus.getDefault().register(this);
         preferences = Preferences.newInstance();
         userModel = preferences.getUserData(this);
         Paper.init(this);
@@ -111,6 +117,11 @@ public class NotificationActivity extends AppCompatActivity implements Listeners
         getNotification();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void ListenForNotification(NotFireModel notFireModel)
+    {
+        getNotification();
+    }
 
     public void getNotification() {
 
@@ -360,5 +371,12 @@ public class NotificationActivity extends AppCompatActivity implements Listeners
         finish();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().unregister(this);
+        }
+    }
 }

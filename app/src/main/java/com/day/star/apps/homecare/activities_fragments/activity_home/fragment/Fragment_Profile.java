@@ -58,7 +58,7 @@ public class Fragment_Profile extends Fragment  {
 
         Picasso.with(activity).load(Uri.parse(Tags.IMAGE_AVATAR+userModel.getLogo())).placeholder(R.drawable.splash).fit().into(binding.image);
 
-        binding.llEditProfile.setOnClickListener(view ->
+        binding.imageEdit.setOnClickListener(view ->
         {
             Intent intent = new Intent(activity, EditProfileActivity.class);
             startActivityForResult(intent,100);

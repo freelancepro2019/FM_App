@@ -51,7 +51,7 @@
 
     <string name="next">Next</string>
 
-    <string name="name">name</string>
+    <string name="name">Name</string>
     <string name="call">Call</string>
     <string name="message">Message</string>
     <string name="location">Location on map</string>
@@ -204,6 +204,7 @@
     <string name="provider_order_cancel">The request was canceled from the service provider</string>
     <string name="rate_provider">Request completed, rate</string>
     <string name="have_rating">You rated</string>
+    <string name="thanks_for_using_homecare_app">Thanks for using\n<font color="#00d4a8">HomeCare App</font></string>
 
 
 </resources>
