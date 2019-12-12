@@ -22,11 +22,13 @@ import androidx.core.app.NotificationCompat;
 
 import com.day.star.apps.homecare.R;
 import com.day.star.apps.homecare.activities_fragments.activity_home.HomeActivity;
+import com.day.star.apps.homecare.models.NotFireIds;
 import com.day.star.apps.homecare.models.NotFireModel;
 import com.day.star.apps.homecare.preferences.Preferences;
 import com.day.star.apps.homecare.tags.Tags;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -266,9 +268,9 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
     private boolean isNotificationToMe(String my_id,String ids)
     {
-        String[] split = ids.split(",");
+        NotFireIds data = new Gson().fromJson(ids, NotFireIds.class);
 
-        for (String id :split)
+        for (String id :data.getIds())
         {
             if (my_id.equals(id))
             {
