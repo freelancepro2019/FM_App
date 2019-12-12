@@ -229,7 +229,7 @@ public interface Service {
     );
 
     @FormUrlEncoded
-    @POST("api/refuse-order")
+    @POST("api/provider-end-order")
     Call<ResponseBody> providerEndOrder(@Header("device-lang") String header,
                                         @Header("Authorization") String user_token,
                                         @Field("order_id") String order_id

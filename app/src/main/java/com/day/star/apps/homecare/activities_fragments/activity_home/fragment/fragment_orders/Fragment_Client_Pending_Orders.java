@@ -275,6 +275,13 @@ public class Fragment_Client_Pending_Orders extends Fragment  {
                 adapter.notifyItemRemoved(this.selectedPos);
                 this.selectedPos=-1;
 
+                if (orderModelList.size()>0)
+                {
+                    binding.tvNoOrders.setVisibility(View.GONE);
+                }else {
+                    binding.tvNoOrders.setVisibility(View.VISIBLE);
+
+                }
             }
 
         }

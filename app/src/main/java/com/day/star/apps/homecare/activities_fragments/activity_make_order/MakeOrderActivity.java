@@ -448,7 +448,6 @@ public class MakeOrderActivity extends AppCompatActivity implements Listeners.Ba
         timePickerDialog.setCancelText(getString(R.string.cancel));
         timePickerDialog.setLocale(new Locale(lang));
         timePickerDialog.setVersion(TimePickerDialog.Version.VERSION_2);
-        timePickerDialog.setMinTime(calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),calendar.get(Calendar.SECOND));
 
 
     }
@@ -783,4 +782,19 @@ public class MakeOrderActivity extends AppCompatActivity implements Listeners.Ba
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (googleApiClient!=null)
+        {
+            googleApiClient.disconnect();
+        }
+
+        if (locationRequest!=null)
+        {
+            LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest,locationCallback,Looper.getMainLooper());
+
+        }
+
+    }
 }

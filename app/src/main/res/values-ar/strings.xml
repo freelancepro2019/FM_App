@@ -29,7 +29,7 @@
     <string name="since">منذ</string>
     <string name="wait">إنتظر قليلا...</string>
     <string name="inv_em_ps">البريد الالكتروني او كلمة المرور غير صحيحة</string>
-    <string name="failed">فشل حاول مرة اخرى لاحقا</string>
+    <string name="failed">خطأ حاول مرة اخرى لاحقا</string>
     <string name="something">تحقق من الاتصال بالانترنت</string>
     <string name="em_exist">البريد الالكتروني او رقم الجوال موجود مسبقا</string>
     <string name="profile">حسابي</string>
@@ -62,7 +62,7 @@
 
     <string name="call">اتصال</string>
     <string name="message">رسالة</string>
-    <string name="location">موقع</string>
+    <string name="location">الموقع على الخريطة</string>
     <string name="share">شارك</string>
     <string name="edit">تعديل</string>
     <string name="price">السعر : </string>
@@ -208,6 +208,10 @@
     <string name="add_comment">أضف تعليق</string>
     <string name="add_rate">أضف تقييم</string>
     <string name="no_comments">لا توجد تعليقات</string>
+    <string name="any2">الجنسين</string>
+    <string name="new_order">طلب جديد</string>
+    <string name="order_accepted">تم قبول طلبك</string>
+    <string name="ord_pen">طلبك قيد الانتظار حتى يتم الموافقة علية من قبل مقدمين الخدمة</string>
 
 
 </resources>

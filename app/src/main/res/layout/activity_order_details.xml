@@ -79,6 +79,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/sign_up_bg"
@@ -481,6 +482,10 @@
                         android:layout_marginTop="10dp"
                         android:background="@color/gray2" />
 
+
+
+
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -494,7 +499,7 @@
                         />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
@@ -511,6 +516,147 @@
                         android:layout_height="1px"
                         android:layout_marginTop="10dp"
                         android:background="@color/gray2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:text="@string/order_details"
+                        android:textStyle="bold"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+
+
+                        />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="10dp"
+
+                        >
+
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="1"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:gravity="center_vertical"
+
+
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".3"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:text="@string/date"
+                                />
+
+                            <FrameLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.7"
+
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/mdtp_dark_gray"
+                                    android:textSize="13sp"
+                                    orderDate="@{orderModel.order_date}"
+                                    orderTime="@{orderModel.order_time}"
+                                    android:layout_gravity="center_vertical"
+                                    />
+                            </FrameLayout>
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="1"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:gravity="center_vertical"
+
+
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".3"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:text="@string/gender2"
+                                />
+
+                            <FrameLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.7"
+
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/mdtp_dark_gray"
+                                    android:textSize="13sp"
+                                    android:text='@{orderModel.gender.equals("1")?@string/male:(orderModel.gender.equals("2")?@string/female:@string/any2)}'
+                                    android:layout_gravity="center_vertical"
+
+                                    />
+                            </FrameLayout>
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1px"
+                            android:layout_marginTop="30dp"
+                            android:background="@color/gray2" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:text="@string/location"
+                            android:textStyle="bold"
+                            android:layout_marginTop="5dp"
+
+                            />
+                        <fragment
+                            android:id="@+id/map"
+                            android:name="com.day.star.apps.homecare.activities_fragments.activity_make_order.FragmentMapTouchListener"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            android:layout_marginTop="8dp"
+
+                            />
+
+
+
+
+
+
+
+                    </LinearLayout>
+
 
                     <LinearLayout
                         android:id="@+id/clientContainer"
@@ -552,15 +698,22 @@
                                 android:textSize="14sp"
                                 android:text="@string/name"
                                 />
-                            
-                            <TextView
+                            <FrameLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight=".6"
-                                android:textColor="@color/mdtp_dark_gray"
-                                android:textSize="13sp"
-                                android:text="@{orderModel.client.name}"
-                                />
+                                android:layout_weight="0.6"
+
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/mdtp_dark_gray"
+                                    android:textSize="13sp"
+                                    android:text="@{orderModel.client.name}"
+                                    android:layout_gravity="center_vertical"
+                                    />
+                            </FrameLayout>
+
                             
                         </LinearLayout>
                         <LinearLayout
@@ -584,15 +737,22 @@
                                 android:text="@string/email"
                                 />
 
-                            <TextView
+                            <FrameLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight=".6"
-                                android:textColor="@color/mdtp_dark_gray"
-                                android:textSize="13sp"
-                                android:text="@{orderModel.client.email}"
+                                android:layout_weight="0.6"
 
-                                />
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/mdtp_dark_gray"
+                                    android:textSize="13sp"
+                                    android:text="@{orderModel.client.email}"
+                                    android:layout_gravity="center_vertical"
+                                    />
+                            </FrameLayout>
+
 
                         </LinearLayout>
                         <LinearLayout
@@ -616,15 +776,22 @@
                                 android:text="@string/phone"
                                 />
 
-                            <TextView
+                            <FrameLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight=".6"
-                                android:textColor="@color/mdtp_dark_gray"
-                                android:textSize="13sp"
-                                android:text='@{orderModel.client.phone_code.replaceFirst("00","+")+" "+orderModel.client.phone}'
+                                android:layout_weight="0.6"
 
-                                />
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/mdtp_dark_gray"
+                                    android:textSize="13sp"
+                                    android:text='@{orderModel.client.phone_code.replaceFirst("00","+")+" "+orderModel.client.phone}'
+
+                                    />
+                            </FrameLayout>
+
 
                         </LinearLayout>
 
@@ -673,15 +840,22 @@
                                     android:text="@string/name"
                                     />
 
-                                <TextView
+                                <FrameLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight=".6"
-                                    android:textColor="@color/mdtp_dark_gray"
-                                    android:textSize="13sp"
-                                    android:text='@{orderModel.provider.name}'
+                                    android:layout_weight="0.6"
 
-                                    />
+                                    >
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mdtp_dark_gray"
+                                        android:textSize="13sp"
+                                        android:text='@{orderModel.provider.name}'
+                                        android:layout_gravity="center_vertical"
+                                        />
+                                </FrameLayout>
+
 
                             </LinearLayout>
                             <LinearLayout
@@ -705,15 +879,23 @@
                                     android:text="@string/email"
                                     />
 
-                                <TextView
+                                <FrameLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight=".6"
-                                    android:textColor="@color/mdtp_dark_gray"
-                                    android:textSize="13sp"
-                                    android:text='@{orderModel.provider.email}'
+                                    android:layout_weight="0.6"
 
-                                    />
+                                    >
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mdtp_dark_gray"
+                                        android:textSize="13sp"
+                                        android:text='@{orderModel.provider.email}'
+                                        android:layout_gravity="center_vertical"
+
+                                        />
+                                </FrameLayout>
+
 
                             </LinearLayout>
                             <LinearLayout
@@ -737,15 +919,21 @@
                                     android:text="@string/phone"
                                     />
 
-                                <TextView
+                                <FrameLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight=".6"
-                                    android:textColor="@color/mdtp_dark_gray"
-                                    android:textSize="13sp"
-                                    android:text='@{orderModel.provider.phone_code.replaceFirst("00","+")+" "+orderModel.provider.phone}'
+                                    android:layout_weight="0.6"
+                                    >
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mdtp_dark_gray"
+                                        android:textSize="13sp"
+                                        android:text='@{orderModel.provider.phone_code.replaceFirst("00","+")+" "+orderModel.provider.phone}'
+                                        android:layout_gravity="center_vertical"
+                                        />
+                                </FrameLayout>
 
-                                    />
 
                             </LinearLayout>
 

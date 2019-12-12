@@ -17,6 +17,10 @@ import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UI_General_Method {
@@ -145,6 +149,20 @@ public class UI_General_Method {
         textView.setText(Time_Ago.getTimeAgo(time,textView.getContext()));
     }
 
+
+    @BindingAdapter({"orderDate","orderTime"})
+    public static void displayDateTime(TextView textView,String dateLong,String timeLong)
+    {
+
+        if (dateLong!=null&&timeLong!=null)
+        {
+            String date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(new Date(Long.parseLong(dateLong)*1000));
+            String time = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH).format(new Date(Long.parseLong(timeLong)*1000));
+
+            textView.setText(date+" "+time);
+        }
+
+    }
 
 
 

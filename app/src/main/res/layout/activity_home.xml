@@ -7,9 +7,7 @@
 
     <data>
 
-        <variable
-            name="notCount"
-            type="Integer" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -23,67 +21,6 @@
 
             >
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/top_bg"
-
-                />
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-                <FrameLayout
-                    android:id="@+id/flNotification"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-
-                    >
-
-                    <ImageView
-                        android:id="@+id/imageNotification"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center"
-                        android:clickable="false"
-                        android:longClickable="false"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_nav_notification"
-                        android:tint="@color/white" />
-
-                    <TextView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/circle_not_bg"
-                        android:clickable="false"
-                        android:gravity="center"
-                        android:longClickable="false"
-                        android:singleLine="true"
-                        android:text='@{String.valueOf(notCount),default="0"}'
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_margin="5dp"
-                        />
-
-                </FrameLayout>
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/home"
-                    android:layout_centerInParent="true"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-            </androidx.appcompat.widget.Toolbar>
 
 
             <FrameLayout
@@ -93,7 +30,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintBottom_toTopOf="@+id/ah_bottom_nav"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintTop_toTopOf="parent"
 
                 >
 

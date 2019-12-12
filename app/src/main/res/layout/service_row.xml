@@ -8,9 +8,10 @@
             name="serviceModel"
             type="com.day.star.apps.homecare.models.ServicesDataModel.ServiceModel" />
     </data>
-<!--
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
         app:cardCornerRadius="5dp"
         app:cardBackgroundColor="@color/white"
@@ -21,72 +22,167 @@
         android:layout_marginBottom="3dp"
         app:contentPadding="5dp"
         >
-
-    </androidx.cardview.widget.CardView>
--->
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="3dp"
-        >
-
-
-        <FrameLayout
-            android:id="@+id/fl"
-            android:layout_width="105dp"
-            android:layout_height="105dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/circle_border_white"
-            android:padding="5dp"
-
-            >
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                serviceImage="@{serviceModel.logo}"
-                android:padding="5dp"
-
-                />
-           <!-- <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/image"
-                android:layout_width="95dp"
-                android:layout_height="95dp"
-                android:layout_gravity="center"
-                app:riv_border_width="0dp"
-                app:riv_corner_radius="100dp"
-                app:riv_mutate_background="true"
-                android:background="@color/color3"
-                android:tint="@color/white"
-                android:padding="15dp"
-                />-->
-
-        </FrameLayout>
-
-
-
-        <TextView
-            android:id="@+id/tvTitle"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:maxLines="2"
-            android:lines="2"
-            android:ellipsize="end"
-            android:textColor="@color/color3"
-            android:textSize="13sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:text='@{serviceModel.words.title??@string/no_name}'
+            android:orientation="vertical"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:layout_gravity="center"
+            >
 
-            />
-    </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/fl"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/circle_border_white"
+                android:padding="5dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    serviceImage="@{serviceModel.logo}"
+                    android:padding="5dp"
+
+                    />
+                <!-- <com.makeramen.roundedimageview.RoundedImageView
+                     android:id="@+id/image"
+                     android:layout_width="95dp"
+                     android:layout_height="95dp"
+                     android:layout_gravity="center"
+                     app:riv_border_width="0dp"
+                     app:riv_corner_radius="100dp"
+                     app:riv_mutate_background="true"
+                     android:background="@color/color3"
+                     android:tint="@color/white"
+                     android:padding="15dp"
+                     />-->
+
+            </FrameLayout>
+
+
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="2"
+                android:lines="2"
+                android:ellipsize="end"
+                android:textColor="@color/color3"
+                android:textSize="13sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:text='@{serviceModel.words.title??@string/no_name}'
+
+                />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
 
 
 </layout>
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>
+    <layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
+        <data>
+            <variable
+                name="serviceModel"
+                type="com.day.star.apps.homecare.models.ServicesDataModel.ServiceModel" />
+        </data>
+    &lt;!&ndash;
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="2dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="3dp"
+            app:contentPadding="5dp"
+            >
+
+        </androidx.cardview.widget.CardView>
+    &ndash;&gt;
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            >
+
+
+            <FrameLayout
+                android:id="@+id/fl"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/circle_border_white"
+                android:padding="5dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    serviceImage="@{serviceModel.logo}"
+                    android:padding="5dp"
+
+                    />
+               &lt;!&ndash; <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/image"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:layout_gravity="center"
+                    app:riv_border_width="0dp"
+                    app:riv_corner_radius="100dp"
+                    app:riv_mutate_background="true"
+                    android:background="@color/color3"
+                    android:tint="@color/white"
+                    android:padding="15dp"
+                    />&ndash;&gt;
+
+            </FrameLayout>
+
+
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="2"
+                android:lines="2"
+                android:ellipsize="end"
+                android:textColor="@color/color3"
+                android:textSize="13sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:text='@{serviceModel.words.title??@string/no_name}'
+
+                />
+        </LinearLayout>
+
+
+    </layout>-->

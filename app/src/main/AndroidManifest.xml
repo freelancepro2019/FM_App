@@ -58,7 +58,11 @@
         <activity
             android:name=".activities_fragments.activity_home.HomeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            />
         <activity
             android:name=".activities_fragments.activity_sign_up.SignUpActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

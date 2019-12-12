@@ -54,7 +54,7 @@
     <string name="name">name</string>
     <string name="call">Call</string>
     <string name="message">Message</string>
-    <string name="location">Location</string>
+    <string name="location">Location on map</string>
     <string name="share">share</string>
     <string name="edit">Edit</string>
     <string name="price">Price : </string>
@@ -196,6 +196,10 @@
     <string name="add_comment">Add comment</string>
     <string name="add_rate">Add rate</string>
     <string name="no_comments">No comments</string>
+    <string name="any2">both</string>
+    <string name="new_order">New order</string>
+    <string name="order_accepted">your order accepted</string>
+    <string name="ord_pen">Order is pending</string>
 
 
 </resources>

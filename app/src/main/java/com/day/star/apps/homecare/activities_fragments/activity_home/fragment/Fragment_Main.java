@@ -1,5 +1,6 @@
 package com.day.star.apps.homecare.activities_fragments.activity_home.fragment;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,12 +16,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.day.star.apps.homecare.R;
 import com.day.star.apps.homecare.activities_fragments.activity_home.HomeActivity;
+import com.day.star.apps.homecare.activities_fragments.activity_notification.NotificationActivity;
 import com.day.star.apps.homecare.adapters.Services_Adapter;
 import com.day.star.apps.homecare.databinding.FragmentMainBinding;
+import com.day.star.apps.homecare.models.NotificationCountModel;
 import com.day.star.apps.homecare.models.ServicesDataModel;
 import com.day.star.apps.homecare.models.UserModel;
 import com.day.star.apps.homecare.preferences.Preferences;
 import com.day.star.apps.homecare.remote.Api;
+import com.day.star.apps.homecare.share.Common;
 import com.day.star.apps.homecare.tags.Tags;
 
 import java.io.IOException;
@@ -68,16 +72,89 @@ public class Fragment_Main extends Fragment {
         binding.recView.setItemViewCacheSize(25);
         binding.recView.setDrawingCacheEnabled(true);
         binding.recView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        binding.recView.setLayoutManager(new GridLayoutManager(activity, 3));
+        binding.recView.setLayoutManager(new GridLayoutManager(activity, 2));
         adapter = new Services_Adapter(serviceModelList, activity, this);
         binding.recView.setAdapter(adapter);
 
 
+        binding.flNotification.setOnClickListener(view ->
+        {
+            if (userModel != null) {
+                updateNotificationCount(0);
+                Intent intent = new Intent(activity, NotificationActivity.class);
+                startActivity(intent);
+
+            } else {
+                Common.CreateDialogAlert(activity, getString(R.string.please_sign_in_or_sign_up), R.color.colorPrimary);
+
+            }
+
+        });
 
         getData();
+        if (userModel!=null)
+        {
+            getNotificationCount();
+        }
 
     }
 
+
+
+    public void getNotificationCount()
+    {
+        Api.getService(Tags.base_url).
+                getNotificationCount(lang,userModel.getToken())
+                .enqueue(new Callback<NotificationCountModel>() {
+                    @Override
+                    public void onResponse(Call<NotificationCountModel> call, Response<NotificationCountModel> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            updateNotificationCount(response.body().getUnread_counter());
+                        } else {
+                            try {
+
+                                Log.e("error", response.code() + "_" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                            } else {
+                                Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<NotificationCountModel> call, Throwable t) {
+
+                        try {
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+
+
+
+                    }
+                });
+    }
+
+    public void updateNotificationCount(int unread_counter) {
+        binding.setNotCount(unread_counter);
+    }
 
 
 

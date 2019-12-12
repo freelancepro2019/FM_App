@@ -248,6 +248,8 @@ public class NotificationActivity extends AppCompatActivity implements Listeners
             intent.putExtra("order_id", notificationModel.getProcess_id_fk());
             intent.putExtra("from", "notification");
             intent.putExtra("notification_id", notificationModel.getNotification_id());
+            intent.putExtra("from_user_id", notificationModel.getFrom_user_id());
+
             startActivityForResult(intent, 100);
         } else if (notificationModel.getAction_type().equals("2")) {
             CreateRateDialogAlert(notificationModel, adapterPosition);
@@ -292,7 +294,7 @@ public class NotificationActivity extends AppCompatActivity implements Listeners
         dialog.show();
 
         Api.getService(Tags.base_url)
-                .clientEndOrder(lang,userModel.getToken(),userModel.getUser_id(),notificationModel.getProcess_id_fk(),notificationModel.getNotification_id(),rate,comment)
+                .clientEndOrder(lang,userModel.getToken(),notificationModel.getFrom_user_id(),notificationModel.getProcess_id_fk(),notificationModel.getNotification_id(),rate,comment)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -340,6 +342,14 @@ public class NotificationActivity extends AppCompatActivity implements Listeners
                 adapter.notifyItemRemoved(this.selectedPos);
                 this.selectedPos = -1;
 
+                if (notificationModelList.size()>0)
+                {
+                    binding.llNoNotification.setVisibility(View.GONE);
+                }else
+                    {
+                        binding.llNoNotification.setVisibility(View.VISIBLE);
+
+                    }
             }
 
         }

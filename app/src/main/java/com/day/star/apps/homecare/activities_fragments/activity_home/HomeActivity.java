@@ -1,5 +1,6 @@
 package com.day.star.apps.homecare.activities_fragments.activity_home;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +41,7 @@ import com.day.star.apps.homecare.activities_fragments.activity_sub_service_deta
 import com.day.star.apps.homecare.adapters.SubServiceAdapter;
 import com.day.star.apps.homecare.databinding.ActivityHomeBinding;
 import com.day.star.apps.homecare.language.LanguageHelper;
-import com.day.star.apps.homecare.models.NotificationCountModel;
+import com.day.star.apps.homecare.models.NotFireModel;
 import com.day.star.apps.homecare.models.ServicesDataModel;
 import com.day.star.apps.homecare.models.SubServicesModel;
 import com.day.star.apps.homecare.models.UserModel;
@@ -50,6 +51,10 @@ import com.day.star.apps.homecare.share.Common;
 import com.day.star.apps.homecare.tags.Tags;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -99,8 +104,24 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
         initView();
+        getDataFromIntent();
 
+    }
 
+    private void getDataFromIntent() {
+        Intent  intent = getIntent();
+        if (intent!=null&&intent.hasExtra("not"))
+        {
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (manager!=null)
+            {
+                manager.cancel(78887);
+            }
+
+            Intent intent1 = new Intent(this, NotificationActivity.class);
+            startActivity(intent1);
+
+        }
     }
 
     private void initView() {
@@ -143,23 +164,12 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        binding.flNotification.setOnClickListener(view ->
-        {
-            if (userModel != null) {
-                updateNotificationCount(0);
-                Intent intent = new Intent(this, NotificationActivity.class);
-                startActivity(intent);
 
-            } else {
-                Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up), R.color.colorPrimary);
-
-            }
-
-        });
 
         if (userModel != null) {
+            EventBus.getDefault().register(this);
             updateTokenFireBase();
-            getNotificationCount();
+
         }
 
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
@@ -227,7 +237,7 @@ public class HomeActivity extends AppCompatActivity {
                 try {
 
                     Api.getService(Tags.base_url)
-                            .updateToken(lang,userModel.getToken(),token,1)
+                            .updateToken(lang,userModel.getToken(),token,2)
                             .enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -270,60 +280,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void getNotificationCount()
-    {
-        Api.getService(Tags.base_url).
-                getNotificationCount(lang,userModel.getToken())
-                .enqueue(new Callback<NotificationCountModel>() {
-                    @Override
-                    public void onResponse(Call<NotificationCountModel> call, Response<NotificationCountModel> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            updateNotificationCount(response.body().getUnread_counter());
-                        } else {
-                            try {
-
-                                Log.e("error", response.code() + "_" + response.errorBody().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            if (response.code() == 500) {
-                                Toast.makeText(HomeActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-
-
-                            } else {
-                                Toast.makeText(HomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
-
-
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<NotificationCountModel> call, Throwable t) {
-
-                        try {
-                            if (t.getMessage() != null) {
-                                Log.e("error", t.getMessage());
-                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                    Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                        } catch (Exception e) {
-                        }
-
-
-
-                    }
-                });
-    }
-
-    public void updateNotificationCount(int unread_counter) {
-        binding.setNotCount(unread_counter);
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void changeStatusBarColor(int color)
@@ -333,8 +289,6 @@ public class HomeActivity extends AppCompatActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimary));
     }
-
-
 
     public void openSheet(int color, ServicesDataModel.ServiceModel serviceModel)
     {
@@ -422,7 +376,6 @@ public class HomeActivity extends AppCompatActivity {
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
-
     public void setSubServiceItemData(SubServicesModel.SubServiceModel subServiceModel) {
 
         Intent intent = new Intent(this, SubServiceDetailsActivity.class);
@@ -432,6 +385,14 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void ListenForNotification(NotFireModel notFireModel)
+    {
+        if (fragment_main!=null&&fragment_main.isAdded())
+        {
+            fragment_main.getNotificationCount();
+        }
+    }
     private void setUpBottomNavigation() {
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(getString(R.string.home), R.drawable.ic_nav_home);
@@ -497,7 +458,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void DisplayFragmentMain() {
-        binding.toolbar.setVisibility(View.VISIBLE);
+        //binding.toolbar.setVisibility(View.VISIBLE);
         if (fragment_main == null) {
             fragment_main = Fragment_Main.newInstance();
         }
@@ -525,12 +486,12 @@ public class HomeActivity extends AppCompatActivity {
 
         }
         binding.ahBottomNav.setCurrentItem(0, false);
-        binding.tvTitle.setText(getString(R.string.home));
+        //binding.tvTitle.setText(getString(R.string.home));
 
     }
 
     private void DisplayFragmentClientOrders() {
-        binding.toolbar.setVisibility(View.GONE);
+        //binding.toolbar.setVisibility(View.GONE);
 
         if (fragment_client_orders ==null)
         {
@@ -557,12 +518,12 @@ public class HomeActivity extends AppCompatActivity {
 
         }
         binding.ahBottomNav.setCurrentItem(1, false);
-        binding.tvTitle.setText(R.string.orders);
+        //binding.tvTitle.setText(R.string.orders);
     }
 
     private void DisplayFragmentProviderOrders()
     {
-        binding.toolbar.setVisibility(View.GONE);
+        //binding.toolbar.setVisibility(View.GONE);
         if (fragment_provider_orders ==null)
         {
             fragment_provider_orders = Fragment_Provider_Orders.newInstance();
@@ -589,12 +550,12 @@ public class HomeActivity extends AppCompatActivity {
 
         }
         binding.ahBottomNav.setCurrentItem(1, false);
-        binding.tvTitle.setText(R.string.orders);
+        //binding.tvTitle.setText(R.string.orders);
     }
 
     private void DisplayFragmentProfile() {
 
-        binding.toolbar.setVisibility(View.GONE);
+        //binding.toolbar.setVisibility(View.GONE);
 
         if (fragment_profile == null) {
             fragment_profile = Fragment_Profile.newInstance();
@@ -621,11 +582,11 @@ public class HomeActivity extends AppCompatActivity {
 
         }
         binding.ahBottomNav.setCurrentItem(2, false);
-        binding.tvTitle.setText(R.string.profile);
+        //binding.tvTitle.setText(R.string.profile);
     }
 
     private void DisplayFragmentMore() {
-        binding.toolbar.setVisibility(View.GONE);
+        //binding.toolbar.setVisibility(View.GONE);
 
         if (fragment_settings == null) {
             fragment_settings = Fragment_Settings.newInstance();
@@ -652,7 +613,7 @@ public class HomeActivity extends AppCompatActivity {
 
         }
         binding.ahBottomNav.setCurrentItem(3, false);
-        binding.tvTitle.setText(R.string.more);
+        //binding.tvTitle.setText(R.string.more);
     }
 
     public void refreshFragmentOrder()
@@ -799,6 +760,13 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().unregister(this);
+        }
+    }
 }
 
