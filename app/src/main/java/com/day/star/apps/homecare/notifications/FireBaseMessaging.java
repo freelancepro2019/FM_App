@@ -117,9 +117,10 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         String sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not;
 
         String not_type = map.get("notification_type");
-        String title = map.get("title");
+        String title = map.get("from_name");
         String body = "";
 
+        Log.e("not_type",not_type+"__");
         if (not_type!=null&&not_type.equals("new_order"))
         {
             body =getString(R.string.new_order);
@@ -160,6 +161,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
         }
 
+        Log.e("body",body+"__");
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         String CHANNEL_ID = "my_channel_02";
         CharSequence CHANNEL_NAME = "my_channel_name";
@@ -191,10 +193,9 @@ public class FireBaseMessaging extends FirebaseMessagingService {
             PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
             builder.setContentIntent(pendingIntent);
-
             builder.setContentTitle(title);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
-            builder.setContentText(body);
+            //builder.setContentText(body);
 
         }
 
@@ -222,7 +223,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         String sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not;
 
         String not_type = map.get("notification_type");
-        String title = map.get("title");
+        String title = map.get("from_name");
         String body = "";
 
         if (not_type!=null&&not_type.equals("new_order"))
@@ -280,7 +281,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
             builder.setContentIntent(pendingIntent);
 
             builder.setContentTitle(title);
-            builder.setContentText(body);
+           // builder.setContentText(body);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
 
         }
