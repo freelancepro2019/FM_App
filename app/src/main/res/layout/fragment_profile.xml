@@ -38,7 +38,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/profile_top" />
+                android:background='@{lang.equals("en")?@drawable/profile_top:@drawable/profile_top_right}'
+
+                />
 
             <ImageView
                 android:id="@+id/imageEdit"
