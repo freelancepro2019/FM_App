@@ -790,7 +790,7 @@ public class MakeOrderActivity extends AppCompatActivity implements Listeners.Ba
             googleApiClient.disconnect();
         }
 
-        if (locationRequest!=null)
+        if (locationRequest!=null&&locationCallback!=null)
         {
             LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest,locationCallback,Looper.getMainLooper());
 

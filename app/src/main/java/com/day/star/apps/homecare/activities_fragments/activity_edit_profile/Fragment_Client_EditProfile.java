@@ -268,9 +268,6 @@ public class Fragment_Client_EditProfile extends Fragment implements Listeners.S
 
     }
 
-
-
-
     @Override
     public void updateProfile() {
 
