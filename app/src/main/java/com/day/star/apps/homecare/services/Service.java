@@ -179,7 +179,8 @@ public interface Service {
                                    @Field("desc") String desc,
                                    @Field("price") double price,
                                    @Field("num_times") int num_times,
-                                   @Field("num_patients") int num_patients
+                                   @Field("num_patients") int num_patients,
+                                   @Field("other_details") int num_shift
 
 
     );

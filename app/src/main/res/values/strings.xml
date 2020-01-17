@@ -205,6 +205,13 @@
     <string name="rate_provider">Request completed, rate</string>
     <string name="have_rating">You rated</string>
     <string name="thanks_for_using_homecare_app">Thanks for using\n<font color="#00d4a8">HomeCare App</font></string>
+    <string name="hour">Hour</string>
+    <string name="ch_num_shift">Choose number of shifts</string>
+    <string name="num_shifts">Home shifts</string>
+    <string name="provider_registration">Provider registration</string>
+    <string name="client_registration">Client registration</string>
+    <string name="exper">Experience</string>
+    <string name="year">Year</string>
 
 
 </resources>

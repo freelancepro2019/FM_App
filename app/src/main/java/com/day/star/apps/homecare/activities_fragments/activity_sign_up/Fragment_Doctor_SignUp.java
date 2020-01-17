@@ -178,10 +178,10 @@ public class Fragment_Doctor_SignUp extends Fragment implements Listeners.ShowCo
 
     private void addExperiment()
     {
-        experimentList.add(getString(R.string.ch));
+        experimentList.add(getString(R.string.exper));
         for (int i =1;i<16;i++)
         {
-            experimentList.add(String.valueOf(i));
+            experimentList.add(i+" "+getString(R.string.year));
         }
     }
     private void getData() {

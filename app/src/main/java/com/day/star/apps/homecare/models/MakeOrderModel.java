@@ -31,6 +31,8 @@ public class MakeOrderModel extends BaseObservable implements Serializable {
     private int payment;
     private String description;
     private double total;
+    private boolean hasShift;
+    private int shift_num;
 
     public ObservableField<String> error_age = new ObservableField<>();
     public ObservableField<String> error_address = new ObservableField<>();
@@ -55,7 +57,21 @@ public class MakeOrderModel extends BaseObservable implements Serializable {
                 !description.isEmpty()
         )
         {
-            return true;
+
+            if (hasShift)
+            {
+                if (shift_num==0)
+                {
+                    return false;
+                }else
+                    {
+                        return true;
+                    }
+            }else
+                {
+                   return true;
+                }
+
         }else
             {
                 if (num_time==0)
@@ -125,12 +141,24 @@ public class MakeOrderModel extends BaseObservable implements Serializable {
                     error_description.set(null);
 
                 }
+
+
+                if (hasShift)
+                {
+                    if (shift_num==0)
+                    {
+                        Toast.makeText(context, R.string.ch_num_shift, Toast.LENGTH_SHORT).show();
+
+                    }
+                }
                 return false;
             }
     }
 
     public MakeOrderModel() {
+        hasShift = false;
         user_id = "0";
+        shift_num = 0;
         main_service_id ="0";
         sub_service_id="0";
         num_time = 0;
@@ -149,6 +177,7 @@ public class MakeOrderModel extends BaseObservable implements Serializable {
         total = 0;
 
     }
+
 
     @Bindable
     public String getUser_id() {
@@ -322,5 +351,21 @@ public class MakeOrderModel extends BaseObservable implements Serializable {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public boolean isHasShift() {
+        return hasShift;
+    }
+
+    public void setHasShift(boolean hasShift) {
+        this.hasShift = hasShift;
+    }
+
+    public int getShift_num() {
+        return shift_num;
+    }
+
+    public void setShift_num(int shift_num) {
+        this.shift_num = shift_num;
     }
 }

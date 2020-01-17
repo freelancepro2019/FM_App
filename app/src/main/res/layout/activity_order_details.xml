@@ -623,6 +623,48 @@
 
 
                         </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="1"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:gravity="center_vertical"
+                            android:visibility='@{orderModel.other_details!=null?(!orderModel.other_details.isEmpty()?(!orderModel.other_details.equals("0")?View.VISIBLE:View.GONE):View.GONE):View.GONE,default=gone}'
+
+
+
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:text="@string/num_shifts"
+                                />
+
+                            <FrameLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/mdtp_dark_gray"
+                                    android:textSize="13sp"
+                                    android:text='@{orderModel.other_details!=null?(!orderModel.other_details.isEmpty()?(!orderModel.other_details.equals("0")?orderModel.other_details+" "+@string/hour:""):""):""}'
+                                    android:layout_gravity="center_vertical"
+
+                                    />
+                            </FrameLayout>
+
+
+                        </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"

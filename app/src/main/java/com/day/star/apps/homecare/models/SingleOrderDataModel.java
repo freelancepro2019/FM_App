@@ -20,6 +20,7 @@ public class SingleOrderDataModel implements Serializable {
         private String order_date;
         private String order_time;
         private String order_status;
+        private String other_details;//home shifts
         private String age;
         private String gender;
         private String address;
@@ -136,6 +137,10 @@ public class SingleOrderDataModel implements Serializable {
 
         public OrderDataModel.Service getService_titles() {
             return service_titles;
+        }
+
+        public String getOther_details() {
+            return other_details;
         }
     }
     public class Client implements Serializable

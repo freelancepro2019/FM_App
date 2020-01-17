@@ -217,6 +217,13 @@
     <string name="rate_provider">تم انهاء الطلب قم بالتقييم</string>
     <string name="have_rating">تم تقييمك</string>
     <string name="thanks_for_using_homecare_app">Thanks for using HomeCare App</string>
+    <string name="hour">ساعة</string>
+    <string name="ch_num_shift">أختر الشفت</string>
+    <string name="num_shifts">عدد ساعات الشفت</string>
+    <string name="provider_registration">تسجيل مقدم خدمة</string>
+    <string name="client_registration">تسجيل مستخدم</string>
+    <string name="exper">الخبرة</string>
+    <string name="year">سنة</string>
 
 
 </resources>

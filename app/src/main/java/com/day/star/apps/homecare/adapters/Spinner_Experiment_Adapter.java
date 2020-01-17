@@ -30,7 +30,7 @@ public class Spinner_Experiment_Adapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return data.get(i);
+        return i;
     }
 
     @Override

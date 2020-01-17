@@ -12,6 +12,7 @@ public class SubServicesModel implements Serializable {
         private String logo;
         private String cost;
         private WordsModel words;
+        private List<Integer> other_details;// maybe null
 
         public WordsModel getWords() {
             return words;
@@ -27,6 +28,14 @@ public class SubServicesModel implements Serializable {
 
         public String getCost() {
             return cost;
+        }
+
+        public String getService_id() {
+            return service_id;
+        }
+
+        public List<Integer> getOther_details() {
+            return other_details;
         }
 
         public class WordsModel implements Serializable {

@@ -30,7 +30,7 @@ public class Spinner_Adapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return data.get(i);
+        return i;
     }
 
     @Override
@@ -42,6 +42,7 @@ public class Spinner_Adapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         @SuppressLint("ViewHolder") SpinnerExperimentRowBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.spinner_experiment_row,viewGroup,false);
         binding.setData(data.get(i));
+
         return binding.getRoot();
     }
 }
