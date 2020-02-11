@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">نادي جامعة طيبة</string>
+
+    <string name="log_in">تسجيل الدخول</string>
+    <string name="password">كلمة المرور</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="signup">إنشاء حساب جديد</string>
+    <string name="are_you_forgot_password">نسيت كلمة المرور؟</string>
+    <string name="do_you_have_a_new_account">هل لديك حساب جديد</string>
+    <string name="create_an_account">إنشاء حساب جديد</string>
+    <string name="user_name">الإسم</string>
+    <string name="phone">رقم الجوال</string>
+    <string name="you_already_have_an_account_log_in">لديك حساب بالفعل ! سجل الدخول</string>
+    <string name="home">الرئيسية</string>
+    <string name="notifications">الاشعارات</string>
+    <string name="more">المزيد</string>
+    <string name="terms_and_conditions">الشروط والاحكام</string>
+    <string name="about_app">عن التطبيق</string>
+    <string name="contact_us">اتصل بنا</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="skip">تخطي</string>
+
+    <string name="field_req">الحقل مطلوب</string>
+    <string name="inv_email">البريد الالكتروني غير صحيح</string>
+    <string name="back">رجوع</string>
+    <string name="wait">إنتظر قليلا...</string>
+    <string name="inv_em_ps">البريد الالكتروني او كلمة المرور غير صحيحة</string>
+    <string name="failed">فشل حاول مرة اخرى لاحقا</string>
+    <string name="something">تحقق من الاتصال بالانترنت</string>
+    <string name="em_exist">البريد الالكتروني او رقم الجوال موجود مسبقا</string>
+    <string name="profile">حسابي</string>
+    <string name="general_settings">الإعدادت العامة</string>
+    <string name="edit_profile">تعديل الملف الشخصي</string>
+    <string name="please_sign_in_or_sign_up">برجاء تسجيل الدخول أو إنشاء حساب جديد.</string>
+    <string name="cancel">إلغاء</string>
+    <string name="ok">حسنا</string>
+    <string name="all_services_are_reserved_for_homecare_app">جميع الحقوق محفوظة لهذا التطبيق.</string>
+    <string name="language_setting">إعدادات اللغة</string>
+    <string name="about_us">عن التطبيق</string>
+    <string name="rate_app">قيم التطبيق</string>
+    <string name="share_app">شارك التطبيق</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="send">إرسال</string>
+    <string name="subject">الموضوع</string>
+    <string name="message">رسالة</string>
+    <string name="suc">تم بنجاح</string>
+    <string name="pass_short">كلمة المرور قصيرة جدا</string>
+    <string name="accept_terms_and_conditions">الموافقة على الشروط والاحكام</string>
+    <string name="ch_gender">إختر النوع</string>
+    <string name="register">سجل</string>
+    <string name="name">الاسم</string>
+    <string name="code">الكود</string>
+    <string name="inv_phone">Invalid phone</string>
+
+    <string name="perm_image_denied">الوصول لصور غير مسموح</string>
+    <string name="upload_image">اضف الصوره</string>
+    <string name="select_a_picture_to_upload">إختر صورة لرفعها</string>
+    <string name="camera">كاميرا</string>
+    <string name="gallery">البوم صور</string>
+    <string name="no_data_to_show">لا توجد عناصر لعرضها</string>
+    <string name="open">فتح</string>
+    <string name="close">غلق</string>
+    <string name="show_all">عرض الكل</string>
+    <string name="join_now">إشترك الآن</string>
+    <string name="sell_participation">بيع الإشتراك</string>
+    <string name="home_sessions">جلسات منزلية</string>
+    <string name="health_food">الغذاء الصحي</string>
+
+</resources>
