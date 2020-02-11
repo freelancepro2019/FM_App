@@ -51,7 +51,7 @@
     <string name="register">سجل</string>
     <string name="name">الاسم</string>
     <string name="code">الكود</string>
-    <string name="inv_phone">Invalid phone</string>
+    <string name="inv_phone">رقم الهاتف خطأ</string>
 
     <string name="perm_image_denied">الوصول لصور غير مسموح</string>
     <string name="upload_image">اضف الصوره</string>
@@ -66,5 +66,6 @@
     <string name="sell_participation">بيع الإشتراك</string>
     <string name="home_sessions">جلسات منزلية</string>
     <string name="health_food">الغذاء الصحي</string>
+    <string name="Diet">حمية غذائية</string>
 
 </resources>
