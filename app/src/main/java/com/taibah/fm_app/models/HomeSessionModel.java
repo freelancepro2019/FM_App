@@ -10,21 +10,20 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.taibah.fm_app.R;
-import com.taibah.fm_app.tags.Tags;
 
 import java.io.Serializable;
 
 public class HomeSessionModel extends BaseObservable implements Serializable {
 
-    private String id;
+    private String phone_code;
     private String phone;
     private String time;
-    private String age;
     private String date;
+    private String age;
     private String service;
     private String address;
     private String details;
-    public ObservableField<String> error_id = new ObservableField<>();
+
     public ObservableField<String> error_date = new ObservableField<>();
     public ObservableField<String> error_phone = new ObservableField<>();
     public ObservableField<String> error_age = new ObservableField<>();
@@ -34,69 +33,82 @@ public class HomeSessionModel extends BaseObservable implements Serializable {
 
 
     public HomeSessionModel() {
-        this.id = "";
+        this.service = "";
+        this.phone_code = "";
         this.details = "";
         this.date = "";
         this.time = "";
         this.age = "";
         this.address = "";
         this.phone = "";
+
+        setPhone_code(phone_code);
+        setPhone(phone);
+        setAge(age);
+        setDate(date);
+        setTime(time);
+        setService(service);
+        setAddress(address);
+        setDetails(details);
     }
 
-    public HomeSessionModel( String id, String phone, String age, String date,String time,String service,String address, String details) {
-        this.id = id;
-        this.phone = phone;
-        this.age = age;
-        this.date = date;
-        this.time = time;
-        this.service = service;
-        this.address=address;
-        this.details = details;
+
+
+    @Bindable
+    public String getPhone_code() {
+        return phone_code;
     }
 
-
-
-    public String getId() {
-        return id;
+    public void setPhone_code(String phone_code) {
+        this.phone_code = phone_code;
+        notifyPropertyChanged(BR.phone_code);
     }
 
-    public void setId(String id) {
-        this.id = id;
-
-    }
-
+    @Bindable
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+        notifyPropertyChanged(BR.phone);
+
     }
 
+    @Bindable
     public String getTime() {
         return time;
     }
 
     public void setTime(String time) {
         this.time = time;
+        notifyPropertyChanged(BR.time);
+
     }
 
+    @Bindable
     public String getAge() {
         return age;
     }
 
     public void setAge(String age) {
         this.age = age;
+        notifyPropertyChanged(BR.age);
+
     }
 
+    @Bindable
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
+        notifyPropertyChanged(BR.date);
+
     }
 
+    @Bindable
     public String getService() {
         return service;
     }
@@ -105,12 +117,15 @@ public class HomeSessionModel extends BaseObservable implements Serializable {
         this.service = service;
     }
 
+    @Bindable
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
+        notifyPropertyChanged(BR.address);
+
     }
 
     @Bindable
@@ -125,13 +140,13 @@ public class HomeSessionModel extends BaseObservable implements Serializable {
     }
 
     public boolean isDataValid(Context context) {
-        if (service != null &&
-                !TextUtils.isEmpty(phone) &&
-                !TextUtils.isEmpty(date) &&
-                !TextUtils.isEmpty(age) &&
-                !TextUtils.isEmpty(time) &&
-                !TextUtils.isEmpty(address) &&
-                !TextUtils.isEmpty(details)
+        if (!TextUtils.isEmpty(phone) &&
+                        !TextUtils.isEmpty(date) &&
+                        !TextUtils.isEmpty(time) &&
+                        !service.isEmpty()&&
+                        !TextUtils.isEmpty(age) &&
+                        !TextUtils.isEmpty(address) &&
+                        !TextUtils.isEmpty(details)
 
         ) {
             error_phone.set(null);
@@ -142,32 +157,33 @@ public class HomeSessionModel extends BaseObservable implements Serializable {
             error_details.set(null);
 
 
-
-
         } else {
 
 
-
-            if (service == null) {
+            if (service.isEmpty()) {
                 Toast.makeText(context, R.string.ch_ser, Toast.LENGTH_SHORT).show();
             }
 
 
-
+            if (phone.isEmpty()) {
+                error_phone.set(context.getString(R.string.field_req));
+            } else {
+                error_phone.set(null);
+            }
 
             if (date.isEmpty()) {
                 error_date.set(context.getString(R.string.field_req));
             } else {
                 error_date.set(null);
             }
-            if (age.isEmpty()){
+            if (age.isEmpty()) {
                 error_age.set(context.getString(R.string.field_req));
-            }else {
+            } else {
                 error_age.set(null);
             }
-            if (time.isEmpty()){
+            if (time.isEmpty()) {
                 error_time.set(context.getString(R.string.field_req));
-            }else {
+            } else {
                 error_time.set(null);
             }
             if (address.isEmpty()) {

@@ -6,11 +6,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Toast;
@@ -41,6 +41,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mukesh.countrypicker.Country;
+import com.mukesh.countrypicker.CountryPicker;
+import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 import com.taibah.fm_app.R;
 import com.taibah.fm_app.adapters.ServiceAdapter;
 import com.taibah.fm_app.databinding.ActivityHomeSessionsBinding;
@@ -62,12 +65,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeSessionsActivity extends AppCompatActivity implements Listeners.BackListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, Listeners.HomeSessionListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class HomeSessionsActivity extends AppCompatActivity implements Listeners.BackListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, Listeners.HomeSessionListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Listeners.ShowCountryDialogListener, OnCountryPickerListener {
     private ActivityHomeSessionsBinding binding;
     private String lang;
     private HomeSessionModel model;
@@ -75,7 +79,6 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
     private DatePickerDialog datePickerDialog;
     private ServiceAdapter adapter;
     private TimePickerDialog timePickerDialog;
-    private long date = 0, time = 0;
     private GoogleMap mMap;
     private FragmentMapTouchListener fragment;
     private GoogleApiClient googleApiClient;
@@ -86,6 +89,9 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
     private double lat, lng;
     private Marker marker;
     private final float zoom = 15.6f;
+    private CountryPicker countryPicker;
+    private HomeSessionModel homeSessionModel;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -103,29 +109,35 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
 
     private void initView() {
+        homeSessionModel = new HomeSessionModel();
         serviceList = new ArrayList<>();
         model = new HomeSessionModel();
         Paper.init(this);
-        lang = Paper.book().read("lang","ar");
+        lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         binding.setBackListener(this);
         binding.setModel(model);
         binding.setHomeSessionListener(this);
+        binding.setShowCountryListener(this);
 
-        binding.scrollView.getParent().requestChildFocus(binding.scrollView,binding.scrollView);
-        adapter = new ServiceAdapter(this,serviceList);
+        binding.scrollView.getParent().requestChildFocus(binding.scrollView, binding.scrollView);
+        adapter = new ServiceAdapter(this, serviceList);
         binding.spinner.setAdapter(adapter);
         CreateDatePickerDialog();
         createTimePickerDialog();
+        createCountryDialog();
+        initMap();
 
-        binding.llTime.setOnClickListener(view ->
-                timePickerDialog.show(getFragmentManager(), "")
+        binding.tvChangeTime.setOnClickListener(view ->
+                {
+                    try {
+                        timePickerDialog.show(getFragmentManager(), "");
+
+                    } catch (Exception e) {
+                    }
+                }
         );
 
-
-
-
-        initMap();
 
         binding.imageSearch.setOnClickListener(view ->
         {
@@ -153,11 +165,7 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
     private void CreateDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH,1);
-        calendar.set(Calendar.MONTH,Calendar.JANUARY);
-        calendar.set(Calendar.YEAR,2020);
-
-
+        calendar.add(Calendar.DAY_OF_MONTH,1);
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.dismissOnPause(true);
         datePickerDialog.setAccentColor(ActivityCompat.getColor(this, R.color.colorPrimary));
@@ -168,24 +176,6 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
         datePickerDialog.setLocale(new Locale(lang));
         datePickerDialog.setVersion(DatePickerDialog.Version.VERSION_2);
         datePickerDialog.setMinDate(calendar);
-
-    }
-
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, monthOfYear);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
-        String d = dateFormat.format(new Date(calendar.getTimeInMillis()));
-
-        binding.tvDate.setText(d);
-
-        model.setDate(d);
-        binding.setModel(model);
 
     }
 
@@ -203,6 +193,56 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
 
     }
+
+    private void createCountryDialog() {
+        countryPicker = new CountryPicker.Builder()
+                .canSearch(true)
+                .listener(this)
+                .theme(CountryPicker.THEME_NEW)
+                .with(this)
+                .build();
+
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+        try {
+            if (countryPicker.getCountryFromSIM() != null) {
+                updatePhoneCode(countryPicker.getCountryFromSIM());
+            } else if (telephonyManager != null && countryPicker.getCountryByISO(telephonyManager.getNetworkCountryIso()) != null) {
+                updatePhoneCode(countryPicker.getCountryByISO(telephonyManager.getNetworkCountryIso()));
+            } else if (countryPicker.getCountryByLocale(Locale.getDefault()) != null) {
+                updatePhoneCode(countryPicker.getCountryByLocale(Locale.getDefault()));
+            } else {
+                String code = "+966";
+                binding.tvCode.setText(code);
+                homeSessionModel.setPhone_code(code);
+
+            }
+        } catch (Exception e) {
+            String code = "+966";
+            binding.tvCode.setText(code);
+            homeSessionModel.setPhone_code(code);
+        }
+
+
+    }
+
+    @Override
+    public void showDialog() {
+        countryPicker.showDialog(this);
+    }
+
+    @Override
+    public void onSelectCountry(Country country) {
+        updatePhoneCode(country);
+    }
+
+    private void updatePhoneCode(Country country) {
+        binding.tvCode.setText(country.getDialCode());
+        homeSessionModel.setPhone_code(country.getDialCode());
+
+    }
+
+
     @Override
     public void back() {
         finish();
@@ -210,8 +250,7 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
     @Override
     public void checkHomeSessionData(HomeSessionModel homeSessionModel) {
-        if (homeSessionModel.isDataValid(this))
-        {
+        if (homeSessionModel.isDataValid(this)) {
             send(homeSessionModel);
         }
     }
@@ -219,6 +258,24 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
     private void send(HomeSessionModel homeSessionModel) {
 
     }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, monthOfYear);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
+        String date= dateFormat.format(new Date(calendar.getTimeInMillis()));
+
+        binding.tvDate.setText(date);
+        model.setDate(date);
+        binding.setModel(model);
+
+    }
+
 
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
@@ -231,10 +288,10 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
         String t = dateFormat.format(new Date(calendar.getTimeInMillis()));
         binding.tvTime.setText(t);
 
-        time = calendar.getTimeInMillis();
-        model.setTime((time / 1000)+"");
+        model.setTime(t);
         binding.setModel(model);
     }
+
     private void initMap() {
 
         fragment = (FragmentMapTouchListener) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -396,10 +453,12 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
 
     }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         initLocationRequest();
     }
+
     private void initLocationRequest() {
         locationRequest = LocationRequest.create();
         locationRequest.setFastestInterval(1000);
@@ -425,6 +484,7 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
         });
 
     }
+
     @SuppressLint("MissingPermission")
     private void startLocationUpdate() {
         locationCallback = new LocationCallback() {
@@ -436,6 +496,7 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
         LocationServices.getFusedLocationProviderClient(this)
                 .requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
     }
+
     @Override
     public void onConnectionSuspended(int i) {
         if (googleApiClient != null) {
@@ -480,14 +541,12 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
         if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
 
             startLocationUpdate();
-        }else if (requestCode == 200) {
+        } else if (requestCode == 200) {
 
-            if (resultCode == Activity.RESULT_OK)
-            {
+            if (resultCode == Activity.RESULT_OK) {
                 CreateAlert();
 
-            }else if (resultCode == Activity.RESULT_CANCELED)
-            {
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
             }
         }

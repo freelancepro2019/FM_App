@@ -20,6 +20,10 @@
         <variable
             name="HomeSessionListener"
             type="com.taibah.fm_app.interfaces.Listeners.HomeSessionListener" />
+        <variable
+            name="showCountryListener"
+            type="com.taibah.fm_app.interfaces.Listeners.ShowCountryDialogListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -103,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/rounded_corner"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
 
                     >
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -172,7 +176,7 @@
                             android:layout_marginRight="5dp"
                             android:background="@color/white"
                             android:hint="@string/phone"
-                            android:inputType="phone"
+                            android:inputType="number"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textColorHint="@color/gray4"
@@ -183,6 +187,8 @@
                             app:layout_constraintTop_toTopOf="parent"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
+                            android:text="@={model.phone}"
+                            error="@{model.error_phone}"
 
                             />
 
@@ -208,7 +214,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-
+                            android:onClick="@{()->showCountryListener.showDialog()}"
 
 
                             />
@@ -219,57 +225,70 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:text="@string/time"
 
                     />
-                <LinearLayout
-                    android:id="@+id/llTime"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginTop="8dp"
-
-                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:background="@drawable/rounded_corner"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    >
+
+                    <ImageView
+                        android:id="@+id/iconTime"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:src="@drawable/ic_clock"
+                        android:padding="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:tint="@color/colorPrimary"
+
+                        />
 
                     <TextView
                         android:id="@+id/tvTime"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".75"
-                        android:clickable="false"
-                        android:gravity="center_vertical"
-                        android:hint="@string/time"
-                        android:longClickable="false"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:singleLine="true"
+                        android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:textSize="15sp"
-
-
-                        tools:ignore="NestedWeights" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".25"
-                        android:clickable="false"
-                        android:longClickable="false"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_clock"
-                        android:tint="@color/colorPrimary"
+                        android:textSize="14sp"
+                        android:hint="@string/time"
+                        app:layout_constraintStart_toEndOf="@id/iconTime"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/tvChangeTime"
+                        android:gravity="center"
+                        error="@{model.error_time}"
 
                         />
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvChangeTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="@string/change"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:text="@string/date"
@@ -277,7 +296,7 @@
                     />
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="10dp"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
@@ -311,6 +330,8 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/tvChange"
                         android:gravity="center"
+                        error="@{model.error_date}"
+
                         />
                     <TextView
                         android:id="@+id/tvChange"
@@ -328,7 +349,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
-                    android:id="@+id/llId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -336,7 +356,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:text="@string/age"
@@ -344,7 +364,7 @@
                         />
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35dp"
+                        android:layout_height="40dp"
                         android:orientation="horizontal"
                         android:background="@drawable/rounded_corner"
                         android:layout_marginTop="8dp"
@@ -380,6 +400,9 @@
                             android:background="@color/white"
                             android:hint="@string/age"
                             android:textColorHint="@color/gray4"
+                            android:inputType="number"
+                            android:text="@={model.age}"
+                            error="@{model.error_age}"
 
                             />
 
@@ -407,7 +430,7 @@
                     <Spinner
                         android:id="@+id/spinner"
                         android:layout_width="match_parent"
-                        android:layout_height="35dp"
+                        android:layout_height="40dp"
                         app:backgroundTint="@color/colorPrimary"
                         />
                 </FrameLayout>
@@ -423,7 +446,7 @@
                     />
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="10dp"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
@@ -495,7 +518,7 @@
                             android:id="@+id/edtAddress"
                             android:layout_width="0dp"
                             android:layout_weight=".9"
-                            android:layout_height="35dp"
+                            android:layout_height="33dp"
                             android:background="@color/white"
                             android:gravity="center_vertical"
                             android:hint="@string/address"
@@ -505,6 +528,8 @@
                             android:textColor="@color/black"
                             android:textColorHint="@color/gray4"
                             android:textSize="13sp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
                             android:text="@={model.address}"
                             error="@{model.error_address}"
 
