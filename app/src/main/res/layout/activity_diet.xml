@@ -108,7 +108,7 @@
                         />
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35dp"
+                        android:layout_height="40dp"
                         android:orientation="horizontal"
                         android:background="@drawable/rounded_corner"
                         android:layout_marginTop="8dp"
@@ -141,7 +141,7 @@
                             android:textSize="14sp"
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
-                            android:inputType=""
+                            android:inputType="number"
                             android:background="@color/white"
                             android:hint="@string/age"
                             android:textColorHint="@color/gray4"
@@ -170,7 +170,7 @@
                         />
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35dp"
+                        android:layout_height="40dp"
                         android:orientation="horizontal"
                         android:background="@drawable/rounded_corner"
                         android:layout_marginTop="8dp"
@@ -203,7 +203,7 @@
                             android:textSize="14sp"
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
-                            android:inputType=""
+                            android:inputType="number"
                             android:background="@color/white"
                             android:hint="@string/height"
                             android:textColorHint="@color/gray4"
@@ -231,7 +231,7 @@
                         />
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35dp"
+                        android:layout_height="40dp"
                         android:orientation="horizontal"
                         android:background="@drawable/rounded_corner"
                         android:layout_marginTop="8dp"
@@ -267,6 +267,7 @@
                             android:background="@color/white"
                             android:hint="@string/weight"
                             android:textColorHint="@color/gray4"
+                            android:inputType="number"
 
 
                             />
@@ -282,7 +283,7 @@
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:weightSum="2"
 
@@ -320,7 +321,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:text="@string/details"

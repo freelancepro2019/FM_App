@@ -23,7 +23,10 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
-        <activity android:name=".activities_fragments.activity_health_food.HealthFoodActivity"></activity>
+        <activity android:name=".activities_fragments.activity_health_food.HealthFoodActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            />
         <activity
             android:name=".activities_fragments.activity_terms.TermsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -53,9 +56,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
+
 
         <activity
             android:name=".activities_fragments.activity_login.LoginActivity"
@@ -65,14 +66,6 @@
             android:name=".activities_fragments.activity_sign_up.SignUpActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/map_api_key" />
 
         <activity
             android:name=".activities_fragments.activity_splash.SplashActivity"
@@ -84,6 +77,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_api_key" />
     </application>
 
 </manifest>
