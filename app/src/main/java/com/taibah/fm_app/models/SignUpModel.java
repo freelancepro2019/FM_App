@@ -12,8 +12,10 @@ import androidx.databinding.library.baseAdapters.BR;
 
 import com.taibah.fm_app.R;
 
+import java.io.Serializable;
 
-public class SignUpModel extends BaseObservable {
+
+public class SignUpModel extends BaseObservable implements Serializable {
 
     private String image_url;
     private String name;

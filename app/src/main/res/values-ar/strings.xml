@@ -51,7 +51,7 @@
     <string name="register">سجل</string>
     <string name="name">الاسم</string>
     <string name="code">الكود</string>
-    <string name="inv_phone">رقم الهاتف خطأ</string>
+    <string name="inv_phone">رقم الجوال غير صحيح</string>
 
     <string name="perm_image_denied">الوصول لصور غير مسموح</string>
     <string name="upload_image">اضف الصوره</string>
@@ -66,6 +66,36 @@
     <string name="sell_participation">بيع الإشتراك</string>
     <string name="home_sessions">جلسات منزلية</string>
     <string name="health_food">الغذاء الصحي</string>
+    <string name="details">التفاصيل</string>
     <string name="Diet">حمية غذائية</string>
+    <string name="student">طالب</string>
+    <string name="trainer">متدرب</string>
+    <string name="id">رقم الهوية</string>
+    <string name="duration">المدة</string>
+    <string name="cost">التكلفة</string>
+    <string name="sar">ر.س</string>
+    <string name="gender">النوع</string>
+    <string name="male">ذكر</string>
+    <string name="female">انثى</string>
+    <string name="birth_date">تاريخ الميلاد</string>
+    <string name="change">تغيير</string>
+    <string name="day_month_year">يوم/شهر/سنة</string>
+    <string name="ch">إختر</string>
+    <string name="ch_dur">إختر المدة</string>
+
+    <string name="day">يوم</string>
+    <string name="month">شهر</string>
+    <string name="month3">3 أشهر</string>
+    <string name="year">سنة</string>
+
+    <string name="enter_code">أدخل الرمز</string>
+    <string name="we_ll_never_share_or_sell_your_phone_number_your_privacy_is_100_guaranteed">بياناتك في الحفظ والصون لدينا، ماراح نشارك بياناتك مع اي احد ولأي سبب.</string>
+    <string name="enter_the_sms_verification_code_below_that_was_sent_to_your_mobile_phone">أرجو منك إدخال الرمز المرسل إلى الهاتف الخاص بك.</string>
+    <string name="inc_code_verification">رمز التحقق غير صحيح</string>
+    <string name="you_will_receive_4_digit">ارسلنا لك رمز التفعيل على جوالك نرجو منك إدخال الرمز.</string>
+    <string name="resend">أعد الارسال</string>
+    <string name="confirm">تحقق</string>
+    <string name="inc_code">رمز التحقق غير صحيح</string>
+
 
 </resources>

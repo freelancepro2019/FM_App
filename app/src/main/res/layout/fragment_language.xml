@@ -50,7 +50,7 @@
                     android:textSize="17sp"
                     android:padding="8dp"
                     android:text="English"
-                    android:button="@drawable/rb_bg"
+                    android:button="@drawable/rb_bg_blue"
                     />
                 <View
                     android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                     android:textSize="17sp"
                     android:padding="8dp"
                     android:text="العربية"
-                    android:button="@drawable/rb_bg"
+                    android:button="@drawable/rb_bg_blue"
                     android:checked="true"
                     />
                 <View

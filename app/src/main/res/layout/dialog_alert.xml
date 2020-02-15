@@ -69,9 +69,9 @@
                     android:id="@+id/btn_cancel"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/transparent"
+                    android:background="@drawable/rounded_corner"
                     android:text="@string/ok"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/colorPrimary" />
             </androidx.cardview.widget.CardView>
 
 

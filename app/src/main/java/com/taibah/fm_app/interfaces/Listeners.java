@@ -1,6 +1,9 @@
 package com.taibah.fm_app.interfaces;
 
 
+import com.taibah.fm_app.models.JoinNowModel;
+import com.taibah.fm_app.models.SellParticipationModel;
+
 public interface Listeners {
 
 
@@ -25,16 +28,14 @@ public interface Listeners {
         void checkDataSignUp();
     }
 
-    interface MoreActions
-    {
-        void aboutApp();
-        void changeLanguage();
-        void contactUs();
-        void rateApp();
-        void terms();
-        void share();
-        void profile();
-        void logout();
+
+    interface SellListener {
+        void checkSellData(SellParticipationModel sellParticipationModel);
+    }
+
+
+    interface JoinListener {
+        void checkJoinData(JoinNowModel joinNowModel);
     }
 
     interface UpdateProfileListener

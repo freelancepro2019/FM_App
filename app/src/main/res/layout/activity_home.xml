@@ -17,7 +17,7 @@
         android:background="@drawable/app_bg"
         android:fitsSystemWindows="true"
         tools:context=".activities_fragments.activity_home.HomeActivity"
-        tools:openDrawer="end"
+        tools:openDrawer="start"
 
         >
 
@@ -558,7 +558,7 @@
                                     android:layout_height="40dp"
                                     android:layout_marginStart="10dp"
                                     android:layout_marginEnd="10dp"
-                                    android:src="@drawable/ic_food"
+                                    android:src="@drawable/ic_apple"
                                     android:tint="@color/white"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
@@ -602,7 +602,9 @@
                         android:padding="10dp"
                         app:riv_border_width="0dp"
                         app:riv_corner_radius="20dp"
-                        app:riv_mutate_background="true" />
+                        app:riv_mutate_background="true"
+                        android:src="@drawable/logo"
+                        />
 
                     <View
                         android:layout_width="match_parent"
@@ -784,7 +786,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1px" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                   <!-- <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/consContactUs"
 
                         android:layout_width="match_parent"
@@ -842,7 +844,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px" />
-
+-->
                     <!-- <androidx.constraintlayout.widget.ConstraintLayout
                          android:id="@+id/consDeliveryOrder"
 

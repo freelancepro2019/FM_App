@@ -1,5 +1,6 @@
 package com.taibah.fm_app.activities_fragments.activity_sign_up;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,22 +8,35 @@ import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 import com.taibah.fm_app.R;
+import com.taibah.fm_app.activities_fragments.activity_confirm_code.ConfirmCodeActivity;
+import com.taibah.fm_app.activities_fragments.activity_home.HomeActivity;
 import com.taibah.fm_app.activities_fragments.activity_login.LoginActivity;
+import com.taibah.fm_app.activities_fragments.activity_terms.TermsActivity;
 import com.taibah.fm_app.databinding.ActivitySignUpBinding;
 import com.taibah.fm_app.interfaces.Listeners;
 import com.taibah.fm_app.language.LanguageHelper;
 import com.taibah.fm_app.models.SignUpModel;
+import com.taibah.fm_app.models.UserModel;
 import com.taibah.fm_app.preferences.Preferences;
 import com.taibah.fm_app.share.Common;
+import com.taibah.fm_app.tags.Tags;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import io.paperdb.Paper;
 
@@ -32,6 +46,10 @@ public class SignUpActivity extends AppCompatActivity implements Listeners.ShowC
     private CountryPicker countryPicker;
     private SignUpModel signUpModel;
     private Preferences preferences;
+    private FirebaseAuth mAuth;
+    private DatabaseReference dRef;
+    private ProgressDialog dialog;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -47,6 +65,8 @@ public class SignUpActivity extends AppCompatActivity implements Listeners.ShowC
     }
 
     private void initView() {
+        dRef = FirebaseDatabase.getInstance().getReference(Tags.DATABASE_NAME).child(Tags.TABLE_USERS);
+        mAuth = FirebaseAuth.getInstance();
         signUpModel = new SignUpModel();
         preferences = Preferences.newInstance();
         lang = Paper.book().read("lang","ar");
@@ -61,9 +81,9 @@ public class SignUpActivity extends AppCompatActivity implements Listeners.ShowC
             if (binding.checkbox.isChecked())
             {
                 signUpModel.setAccept(true);
-                /*Intent intent = new Intent(activity, TermsActivity.class);
+                Intent intent = new Intent(this, TermsActivity.class);
                 intent.putExtra("type",1);
-                startActivity(intent);*/
+                startActivity(intent);
             }else
             {
                 signUpModel.setAccept(false);
@@ -91,7 +111,6 @@ public class SignUpActivity extends AppCompatActivity implements Listeners.ShowC
         });
 
 
-
     }
 
 
@@ -100,9 +119,90 @@ public class SignUpActivity extends AppCompatActivity implements Listeners.ShowC
 
         if (signUpModel.isDataValid(this)) {
             Common.CloseKeyBoard(this,binding.edtName);
-
+            sendSmsToPhone();
 
         }
+    }
+
+    private void sendSmsToPhone() {
+
+        dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+
+        PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                mAuth.setLanguageCode(lang);
+                mAuth.signInWithCredential(phoneAuthCredential)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                String userId = task.getResult().getUser().getUid();
+
+                                UserModel userModel = new UserModel(userId, signUpModel.getName(), signUpModel.getEmail(), signUpModel.getPhone_code() + signUpModel.getPhone());
+                                registerUser(userModel);
+
+                            }
+                        }).addOnFailureListener(e -> {
+                    if (e.getMessage() != null) {
+                        Common.CreateDialogAlert(SignUpActivity.this,e.getMessage());
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onVerificationFailed(@NonNull FirebaseException e) {
+                dialog.dismiss();
+                if (e.getMessage()!=null)
+                {
+                    Common.CreateDialogAlert(SignUpActivity.this,e.getMessage());
+
+                }
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(verificationId, forceResendingToken);
+                dialog.dismiss();
+                Intent intent = new Intent(SignUpActivity.this, ConfirmCodeActivity.class);
+                intent.putExtra("verification_id",verificationId);
+                intent.putExtra("data",signUpModel);
+                startActivity(intent);
+                finish();
+
+            }
+        };
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                signUpModel.getPhone_code()+signUpModel.getPhone(),
+                60,
+                TimeUnit.SECONDS,
+                this,
+                mCallback
+                );
+    }
+
+    private void registerUser(UserModel user)
+    {
+
+        dRef.child(user.getId())
+                .setValue(user)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        dialog.dismiss();
+                        preferences.create_update_userData(this, user);
+                        Intent intent = new Intent(this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }).addOnFailureListener(e -> {
+            if (e.getMessage() != null) {
+                dialog.dismiss();
+                Common.CreateDialogAlert(SignUpActivity.this,e.getMessage());
+            }
+        });
     }
 
     private void createCountryDialog() {
@@ -125,13 +225,13 @@ public class SignUpActivity extends AppCompatActivity implements Listeners.ShowC
             } else {
                 String code = "+966";
                 binding.tvCode.setText(code);
-                signUpModel.setPhone_code(code.replace("+", "00"));
+                signUpModel.setPhone_code(code);
 
             }
         } catch (Exception e) {
             String code = "+966";
             binding.tvCode.setText(code);
-            signUpModel.setPhone_code(code.replace("+", "00"));
+            signUpModel.setPhone_code(code);
         }
 
 
@@ -149,10 +249,14 @@ public class SignUpActivity extends AppCompatActivity implements Listeners.ShowC
 
     private void updatePhoneCode(Country country) {
         binding.tvCode.setText(country.getDialCode());
-        signUpModel.setPhone_code(country.getDialCode().replace("+", "00"));
+        signUpModel.setPhone_code(country.getDialCode());
 
     }
 
+    @Override
+    public void onBackPressed() {
+      back();
+    }
 
     @Override
     public void back()

@@ -65,4 +65,34 @@
     <string name="home_sessions">Home Sessions</string>
     <string name="health_food">Health Food</string>
     <string name="Diet">Diet</string>
+    <string name="details">Details</string>
+    <string name="student">Student</string>
+    <string name="trainer">Trainer</string>
+    <string name="id">Id</string>
+    <string name="duration">Duration</string>
+    <string name="cost">Cost</string>
+    <string name="sar">SAR</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="change">Change</string>
+    <string name="day_month_year">Day/Month/Year</string>
+    <string name="ch">Choose</string>
+    <string name="ch_dur">Choose duration</string>
+
+    <string name="day">Day</string>
+    <string name="month">Month</string>
+    <string name="month3">3 months</string>
+    <string name="year">Year</string>
+
+    <string name="enter_code">Enter code</string>
+    <string name="we_ll_never_share_or_sell_your_phone_number_your_privacy_is_100_guaranteed">We\'ll never share or sell your phone number your privacy is 100% guaranteed.</string>
+    <string name="enter_the_sms_verification_code_below_that_was_sent_to_your_mobile_phone">Enter the SMS verification code below that was sent to your email address</string>
+    <string name="inc_code_verification">Incorrect code verification</string>
+    <string name="you_will_receive_4_digit">You will receive 4 digit code on your mobile</string>
+    <string name="resend">Resend</string>
+    <string name="confirm">Confirm</string>
+    <string name="inc_code">Incorrect code</string>
+
 </resources>

@@ -19,7 +19,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.tabs.TabLayout;
 import com.taibah.fm_app.R;
+import com.taibah.fm_app.activities_fragments.activity_join_now.JoinNowActivity;
 import com.taibah.fm_app.activities_fragments.activity_login.LoginActivity;
+import com.taibah.fm_app.activities_fragments.activity_sell_participation.SellParticipationActivity;
+import com.taibah.fm_app.activities_fragments.activity_terms.TermsActivity;
 import com.taibah.fm_app.databinding.ActivityHomeBinding;
 import com.taibah.fm_app.language.LanguageHelper;
 import com.taibah.fm_app.models.UserModel;
@@ -149,16 +152,59 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
+        binding.flSell.setOnClickListener(view -> {
+
+           /* if (userModel == null) {
+                Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
+            } else {
+            }*/
+
+            navigateToSellActivity();
+        });
 
 
+        binding.flJoin.setOnClickListener(view -> {
 
+           /* if (userModel == null) {
+                Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
+            } else {
+            }*/
+
+           navigateToJoinActivity();
+        });
+
+        binding.consAbout.setOnClickListener(view -> {
+            navigateToTermsActivity(2);
+        });
+
+        binding.consTerms.setOnClickListener(view -> {
+            navigateToTermsActivity(1);
+        });
     }
+
+
 
 
     public void navigateToSignInActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void navigateToJoinActivity() {
+        Intent intent = new Intent(this, JoinNowActivity.class);
+        startActivity(intent);
+    }
+
+    private void navigateToSellActivity() {
+        Intent intent = new Intent(this, SellParticipationActivity.class);
+        startActivity(intent);
+    }
+
+    private void navigateToTermsActivity(int type) {
+        Intent intent = new Intent(this, TermsActivity.class);
+        intent.putExtra("type",type);
+        startActivity(intent);
     }
 
 
