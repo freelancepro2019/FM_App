@@ -25,10 +25,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.taibah.fm_app.R;
+import com.taibah.fm_app.activities_fragments.activity_diet.DietActivity;
+import com.taibah.fm_app.activities_fragments.activity_health_food.HealthFoodActivity;
 import com.taibah.fm_app.activities_fragments.activity_join_now.JoinNowActivity;
 import com.taibah.fm_app.activities_fragments.activity_login.LoginActivity;
 import com.taibah.fm_app.activities_fragments.activity_sell_participation.SellParticipationActivity;
 import com.taibah.fm_app.activities_fragments.activity_terms.TermsActivity;
+import com.taibah.fm_app.activities_fragments.activity_home_sessions.HomeSessionsActivity;
 import com.taibah.fm_app.adapters.SliderAdapter;
 import com.taibah.fm_app.databinding.ActivityHomeBinding;
 import com.taibah.fm_app.language.LanguageHelper;
@@ -194,10 +197,19 @@ public class HomeActivity extends AppCompatActivity {
 
            navigateToJoinActivity();
         });
-
+        binding.flSession.setOnClickListener(view -> {
+            navigateToHomeSessioActivity();
+        });
+        binding.fldiet.setOnClickListener(view -> {
+            navigateToDietActivity();
+        });
+        binding.flHealthFood.setOnClickListener(view -> {
+            navigateToHealthFoodActivity();
+        });
         binding.consAbout.setOnClickListener(view -> {
             navigateToTermsActivity(2);
         });
+
 
         binding.consTerms.setOnClickListener(view -> {
             navigateToTermsActivity(1);
@@ -259,9 +271,20 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, JoinNowActivity.class);
         startActivity(intent);
     }
-
+    private void navigateToHomeSessioActivity() {
+        Intent intent = new Intent(this, HomeSessionsActivity.class);
+        startActivity(intent);
+    }
+    private void navigateToDietActivity() {
+        Intent intent = new Intent(this, DietActivity.class);
+        startActivity(intent);
+    }
     private void navigateToSellActivity() {
         Intent intent = new Intent(this, SellParticipationActivity.class);
+        startActivity(intent);
+    }
+    private void navigateToHealthFoodActivity() {
+        Intent intent = new Intent(this, HealthFoodActivity.class);
         startActivity(intent);
     }
 

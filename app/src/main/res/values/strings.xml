@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">FM App</string>
+    <string name="map_api_key">AIzaSyCbc2Y5AIwZ8uUeHRUXiozGN3CnpjKT0oI</string>
 
     <string name="log_in">Log In</string>
     <string name="password">Password</string>
@@ -94,5 +95,17 @@
     <string name="resend">Resend</string>
     <string name="confirm">Confirm</string>
     <string name="inc_code">Incorrect code</string>
+    <string name="time">time</string>
+    <string name="age">age</string>
+    <string name="date">date</string>
+    <string name="Services">Services</string>
+    <string name="ch_ser">Choose Service</string>
+    <string name="height">height</string>
+    <string name="weight">weight</string>
+    <string name="select_location_on_map">select location on map</string>
+    <string name="address">address</string>
+    <string name="select">select</string>
+    <string name="order_sent">order sent</string>
+    <string name="no_foods">no_foods</string>
 
 </resources>
