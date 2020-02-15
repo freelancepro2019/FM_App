@@ -3,6 +3,7 @@ package com.taibah.fm_app.activities_fragments.activity_home;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,16 +19,28 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.taibah.fm_app.R;
 import com.taibah.fm_app.activities_fragments.activity_join_now.JoinNowActivity;
 import com.taibah.fm_app.activities_fragments.activity_login.LoginActivity;
 import com.taibah.fm_app.activities_fragments.activity_sell_participation.SellParticipationActivity;
 import com.taibah.fm_app.activities_fragments.activity_terms.TermsActivity;
+import com.taibah.fm_app.adapters.SliderAdapter;
 import com.taibah.fm_app.databinding.ActivityHomeBinding;
 import com.taibah.fm_app.language.LanguageHelper;
 import com.taibah.fm_app.models.UserModel;
 import com.taibah.fm_app.preferences.Preferences;
 import com.taibah.fm_app.share.Common;
+import com.taibah.fm_app.tags.Tags;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.paperdb.Paper;
 
@@ -37,6 +50,11 @@ public class HomeActivity extends AppCompatActivity {
     private Preferences preferences;
     private UserModel userModel;
     private ActionBarDrawerToggle toggle;
+    private SliderAdapter sliderAdapter;
+    private List<String> images;
+    private Timer timer;
+    private TimerTask timerTask;
+    private DatabaseReference dRef;
 
 
     @Override
@@ -53,19 +71,23 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        dRef = FirebaseDatabase.getInstance().getReference(Tags.DATABASE_NAME).child(Tags.TABLE_SETTINGS).child(Tags.TABLE_SLIDER);
+        images = new ArrayList<>();
         preferences = Preferences.newInstance();
         userModel = preferences.getUserData(this);
         Paper.init(this);
         lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
+        binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.white), PorterDuff.Mode.SRC_IN);
+
         toggle = new ActionBarDrawerToggle(this, binding.drawer, binding.toolBar, R.string.open, R.string.close);
         toggle.syncState();
         toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
 
-
         binding.tab.addTab(binding.tab.newTab().setText("عربي"));
         binding.tab.addTab(binding.tab.newTab().setText("English"));
 
+        binding.tab2.setupWithViewPager(binding.pager);
 
         if (lang.equals("ar")) {
 
@@ -180,9 +202,51 @@ public class HomeActivity extends AppCompatActivity {
         binding.consTerms.setOnClickListener(view -> {
             navigateToTermsActivity(1);
         });
+
+        getSliderImages();
     }
 
+    private void getSliderImages() {
 
+        dRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()!=null)
+                {
+                    binding.sliderContainer.setVisibility(View.VISIBLE);
+
+                    for (DataSnapshot ds :dataSnapshot.getChildren())
+                    {
+                        images.add(ds.getValue().toString());
+                    }
+
+                    updateSliderUI();
+
+                }else
+                    {
+                        binding.sliderContainer.setVisibility(View.INVISIBLE);
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void updateSliderUI() {
+
+        binding.progBar.setVisibility(View.GONE);
+        sliderAdapter = new SliderAdapter(images,this);
+        binding.pager.setAdapter(sliderAdapter);
+
+        if (images.size()>1)
+        {
+            startTimer();
+        }
+    }
 
 
     public void navigateToSignInActivity() {
@@ -239,6 +303,29 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    private void startTimer() {
+        timer = new Timer();
+        timerTask = new MyTask();
+        timer.scheduleAtFixedRate(timerTask,6000,6000);
+
+
+    }
+    private class MyTask extends TimerTask{
+        @Override
+        public void run() {
+            runOnUiThread(() -> {
+                if (binding.pager.getCurrentItem()<sliderAdapter.getCount()-1)
+                {
+                    binding.pager.setCurrentItem(binding.pager.getCurrentItem()+1);
+                }else
+                {
+                    binding.pager.setCurrentItem(0);
+                }
+            });
+        }
+    }
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -246,6 +333,21 @@ public class HomeActivity extends AppCompatActivity {
             navigateToSignInActivity();
         } else {
             finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timer!=null)
+        {
+            timer.purge();
+            timer.cancel();
+        }
+
+        if (timerTask!=null)
+        {
+            timerTask.cancel();
         }
     }
 }

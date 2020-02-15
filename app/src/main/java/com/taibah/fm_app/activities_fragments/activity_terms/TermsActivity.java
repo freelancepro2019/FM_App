@@ -100,10 +100,10 @@ public class TermsActivity extends AppCompatActivity implements Listeners.BackLi
 
             if (lang.equals("ar"))
             {
-                databaseReference = dRef.child(Tags.TABLE_About).child("ar_about");
+                databaseReference = dRef.child(Tags.TABLE_ABOUT).child("ar_about");
 
             }else {
-                databaseReference = dRef.child(Tags.TABLE_About).child("en_about");
+                databaseReference = dRef.child(Tags.TABLE_ABOUT).child("en_about");
 
             }
 
