@@ -197,12 +197,14 @@ public class HomeActivity extends AppCompatActivity {
 
            navigateToJoinActivity();
         });
+
         binding.flSession.setOnClickListener(view -> {
             navigateToHomeSessioActivity();
         });
         binding.fldiet.setOnClickListener(view -> {
             navigateToDietActivity();
         });
+
         binding.flHealthFood.setOnClickListener(view -> {
             navigateToHealthFoodActivity();
         });
