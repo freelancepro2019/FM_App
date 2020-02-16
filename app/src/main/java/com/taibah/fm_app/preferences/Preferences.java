@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.taibah.fm_app.models.UserModel;
+import com.taibah.fm_app.tags.Tags;
 
 public class Preferences {
 
@@ -44,6 +45,7 @@ public class Preferences {
         String userDataGson = gson.toJson(userModel);
         editor.putString("user_data",userDataGson);
         editor.apply();
+        createSession(context, Tags.session_login);
     }
 
     public UserModel getUserData(Context context)

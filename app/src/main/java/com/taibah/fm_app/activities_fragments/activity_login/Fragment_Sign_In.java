@@ -19,12 +19,11 @@ import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 import com.taibah.fm_app.R;
+import com.taibah.fm_app.activities_fragments.activity_confirm_code.ConfirmCodeActivity;
 import com.taibah.fm_app.activities_fragments.activity_home.HomeActivity;
-import com.taibah.fm_app.activities_fragments.activity_sign_up.SignUpActivity;
 import com.taibah.fm_app.databinding.FragmentSignInBinding;
 import com.taibah.fm_app.interfaces.Listeners;
 import com.taibah.fm_app.models.LoginModel;
-import com.taibah.fm_app.preferences.Preferences;
 import com.taibah.fm_app.share.Common;
 
 import java.util.Locale;
@@ -37,7 +36,8 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
     private String lang;
     private CountryPicker countryPicker;
     private LoginModel loginModel;
-    private Preferences preferences;
+
+
 
     public static Fragment_Sign_In newInstance() {
         return new Fragment_Sign_In();
@@ -52,7 +52,6 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
     }
 
     private void initView() {
-        preferences = Preferences.newInstance();
         loginModel = new LoginModel();
         activity = (LoginActivity) getActivity();
         Paper.init(activity);
@@ -64,11 +63,7 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
         binding.setShowCountryListener(this);
         binding.setLoginListener(this);
         createCountryDialog();
-        binding.tvNewAccount.setOnClickListener(view -> {
-            Intent intent = new Intent(activity, SignUpActivity.class);
-            startActivity(intent);
-            activity.finish();
-        });
+
         binding.edtPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -110,13 +105,13 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
             } else {
                 String code = "+20";
                 binding.tvCode.setText(code);
-                loginModel.setPhone_code(code.replace("+", "00"));
+                loginModel.setPhone_code(code);
 
             }
         } catch (Exception e) {
             String code = "+20";
             binding.tvCode.setText(code);
-            loginModel.setPhone_code(code.replace("+", "00"));
+            loginModel.setPhone_code(code);
         }
 
 
@@ -133,8 +128,15 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
 
     private void login(LoginModel loginModel) {
 
-
+        Intent intent = new Intent(activity, ConfirmCodeActivity.class);
+        intent.putExtra("phone_code",loginModel.getPhone_code());
+        intent.putExtra("phone_number",loginModel.getPhone());
+        startActivity(intent);
+        activity.finish();
     }
+
+
+
 
     @Override
     public void showDialog() {
@@ -148,7 +150,7 @@ public class Fragment_Sign_In extends Fragment implements Listeners.LoginListene
 
     private void updatePhoneCode(Country country) {
         binding.tvCode.setText(country.getDialCode());
-        loginModel.setPhone_code(country.getDialCode().replace("+", "00"));
+        loginModel.setPhone_code(country.getDialCode());
 
     }
 

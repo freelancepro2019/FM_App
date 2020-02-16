@@ -19,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +30,7 @@ import com.taibah.fm_app.activities_fragments.activity_diet.DietActivity;
 import com.taibah.fm_app.activities_fragments.activity_health_food.HealthFoodActivity;
 import com.taibah.fm_app.activities_fragments.activity_join_now.JoinNowActivity;
 import com.taibah.fm_app.activities_fragments.activity_login.LoginActivity;
+import com.taibah.fm_app.activities_fragments.activity_profile.ProfileActivity;
 import com.taibah.fm_app.activities_fragments.activity_sell_participation.SellParticipationActivity;
 import com.taibah.fm_app.activities_fragments.activity_terms.TermsActivity;
 import com.taibah.fm_app.activities_fragments.activity_home_sessions.HomeSessionsActivity;
@@ -58,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
     private Timer timer;
     private TimerTask timerTask;
     private DatabaseReference dRef;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -74,6 +77,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        mAuth = FirebaseAuth.getInstance();
         dRef = FirebaseDatabase.getInstance().getReference(Tags.DATABASE_NAME).child(Tags.TABLE_SETTINGS).child(Tags.TABLE_SLIDER);
         images = new ArrayList<>();
         preferences = Preferences.newInstance();
@@ -136,7 +140,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
         binding.tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -173,9 +176,10 @@ public class HomeActivity extends AppCompatActivity {
             if (userModel == null) {
                 Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
             } else {
+
+                navigateToProfileActivity();
             }
         });
-
 
         binding.flSell.setOnClickListener(view -> {
 
@@ -187,7 +191,6 @@ public class HomeActivity extends AppCompatActivity {
             navigateToSellActivity();
         });
 
-
         binding.flJoin.setOnClickListener(view -> {
 
            /* if (userModel == null) {
@@ -198,29 +201,23 @@ public class HomeActivity extends AppCompatActivity {
            navigateToJoinActivity();
         });
 
-        binding.flSession.setOnClickListener(view -> {
-            navigateToHomeSessioActivity();
-        });
-        binding.fldiet.setOnClickListener(view -> {
-            navigateToDietActivity();
-        });
+        binding.flSession.setOnClickListener(view ->navigateToHomeSessionActivity());
 
-        binding.flHealthFood.setOnClickListener(view -> {
-            navigateToHealthFoodActivity();
-        });
-        binding.consAbout.setOnClickListener(view -> {
-            navigateToTermsActivity(2);
-        });
+        binding.fldiet.setOnClickListener(view -> navigateToDietActivity());
 
+        binding.flHealthFood.setOnClickListener(view ->navigateToHealthFoodActivity());
 
-        binding.consTerms.setOnClickListener(view -> {
-            navigateToTermsActivity(1);
-        });
+        binding.consAbout.setOnClickListener(view -> navigateToTermsActivity(2));
+
+        binding.consTerms.setOnClickListener(view -> navigateToTermsActivity(1));
 
         getSliderImages();
     }
 
-    private void getSliderImages() {
+
+
+    private void getSliderImages()
+    {
 
         dRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -250,7 +247,8 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void updateSliderUI() {
+    private void updateSliderUI()
+    {
 
         binding.progBar.setVisibility(View.GONE);
         sliderAdapter = new SliderAdapter(images,this);
@@ -262,45 +260,71 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    private void navigateToProfileActivity()
+    {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
 
-    public void navigateToSignInActivity() {
+    public void navigateToSignInActivity()
+    {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
 
-    private void navigateToJoinActivity() {
+    private void navigateToJoinActivity()
+    {
         Intent intent = new Intent(this, JoinNowActivity.class);
         startActivity(intent);
     }
-    private void navigateToHomeSessioActivity() {
+
+    private void navigateToHomeSessionActivity()
+    {
         Intent intent = new Intent(this, HomeSessionsActivity.class);
         startActivity(intent);
     }
-    private void navigateToDietActivity() {
+
+    private void navigateToDietActivity()
+    {
         Intent intent = new Intent(this, DietActivity.class);
         startActivity(intent);
     }
-    private void navigateToSellActivity() {
+
+    private void navigateToSellActivity()
+    {
         Intent intent = new Intent(this, SellParticipationActivity.class);
         startActivity(intent);
     }
-    private void navigateToHealthFoodActivity() {
+
+    private void navigateToHealthFoodActivity()
+    {
         Intent intent = new Intent(this, HealthFoodActivity.class);
         startActivity(intent);
     }
 
-    private void navigateToTermsActivity(int type) {
+    private void navigateToTermsActivity(int type)
+    {
         Intent intent = new Intent(this, TermsActivity.class);
         intent.putExtra("type",type);
         startActivity(intent);
     }
 
-
-    private void logout() {
+    private void logout()
+    {
         binding.drawer.closeDrawer(GravityCompat.START);
-        preferences.clear(this);
-        navigateToSignInActivity();
+        if (userModel==null)
+        {
+            navigateToSignInActivity();
+
+        }else
+            {
+                mAuth.signOut();
+                preferences.clear(this);
+                navigateToSignInActivity();
+
+
+            }
     }
 
 
@@ -312,8 +336,8 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
-    public void RefreshActivity(String lang) {
+    public void RefreshActivity(String lang)
+    {
         Paper.book().write("lang", lang);
         LanguageHelper.setNewLocale(this, lang);
 
@@ -327,15 +351,16 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
-
-    private void startTimer() {
+    private void startTimer()
+    {
         timer = new Timer();
         timerTask = new MyTask();
         timer.scheduleAtFixedRate(timerTask,6000,6000);
 
 
     }
-    private class MyTask extends TimerTask{
+    private class MyTask extends TimerTask
+    {
         @Override
         public void run() {
             runOnUiThread(() -> {
@@ -350,15 +375,22 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (userModel == null) {
-            navigateToSignInActivity();
-        } else {
-            finish();
-        }
+
+        if (binding.drawer.isDrawerOpen(GravityCompat.START))
+        {
+            binding.drawer.closeDrawer(GravityCompat.START);
+        }else
+            {
+                if (userModel == null) {
+                    navigateToSignInActivity();
+                } else {
+                    finish();
+                }
+            }
+
+
     }
 
     @Override

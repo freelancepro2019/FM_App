@@ -23,10 +23,14 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
-        <activity android:name=".activities_fragments.activity_health_food.HealthFoodActivity"
+        <activity android:name=".activities_fragments.activity_profile.ProfileActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             />
+        <activity
+            android:name=".activities_fragments.activity_health_food.HealthFoodActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".activities_fragments.activity_terms.TermsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -55,9 +59,6 @@
             android:name=".activities_fragments.activity_home.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
-
-
         <activity
             android:name=".activities_fragments.activity_login.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -66,7 +67,6 @@
             android:name=".activities_fragments.activity_sign_up.SignUpActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
         <activity
             android:name=".activities_fragments.activity_splash.SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

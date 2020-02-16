@@ -182,8 +182,8 @@
                             android:background="@color/white"
                             android:hint="@string/id"
                             android:textColorHint="@color/gray4"
-                            android:text="@={model.id}"
-                            error="@{model.error_id}"
+                            android:text="@={model.user_id}"
+                            error="@{model.error_user_id}"
 
                             />
 

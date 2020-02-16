@@ -17,25 +17,25 @@ import java.io.Serializable;
 public class JoinNowModel extends BaseObservable implements Serializable {
 
     private int type;
-    private String id;
+    private String user_id;
     private Duration duration;
     private int gender;
     private String birthDate;
     private String details;
-    public ObservableField<String> error_id = new ObservableField<>();
+    public ObservableField<String> error_user_id = new ObservableField<>();
     public ObservableField<String> error_birth_date = new ObservableField<>();
     public ObservableField<String> error_details = new ObservableField<>();
 
 
     public JoinNowModel() {
-        this.id = "";
+        this.user_id = "";
         this.details = "";
         this.birthDate = "";
     }
 
-    public JoinNowModel(int type, String id, Duration duration, int gender, String birthDate, String details) {
+    public JoinNowModel(int type, String user_id, Duration duration, int gender, String birthDate, String details) {
         this.type = type;
-        this.id = id;
+        this.user_id = user_id;
         this.duration = duration;
         this.gender = gender;
         this.birthDate = birthDate;
@@ -52,13 +52,13 @@ public class JoinNowModel extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public String getId() {
-        return id;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-        notifyPropertyChanged(BR.id);
+    public void setUser_id(String id) {
+        this.user_id = id;
+        notifyPropertyChanged(BR.user_id);
 
     }
 
@@ -111,11 +111,11 @@ public class JoinNowModel extends BaseObservable implements Serializable {
 
             if (type == Tags.student) {
 
-                if (id.isEmpty()) {
-                    error_id.set(context.getString(R.string.field_req));
+                if (user_id.isEmpty()) {
+                    error_user_id.set(context.getString(R.string.field_req));
                     return false;
                 }else {
-                    error_id.set(null);
+                    error_user_id.set(null);
 
                     return true;
                 }
@@ -129,10 +129,10 @@ public class JoinNowModel extends BaseObservable implements Serializable {
 
             if (type == Tags.student) {
 
-                if (id.isEmpty()) {
-                    error_id.set(context.getString(R.string.field_req));
+                if (user_id.isEmpty()) {
+                    error_user_id.set(context.getString(R.string.field_req));
                 }else {
-                    error_id.set(null);
+                    error_user_id.set(null);
 
                 }
 

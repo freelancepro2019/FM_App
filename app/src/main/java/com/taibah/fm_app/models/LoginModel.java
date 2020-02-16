@@ -15,11 +15,9 @@ public class LoginModel extends BaseObservable {
 
     private String phone_code;
     private String phone;
-    private String password;
 
     public ObservableField<String> error_phone_code = new ObservableField<>();
     public ObservableField<String> error_phone = new ObservableField<>();
-    public ObservableField<String> error_password = new ObservableField<>();
 
 
 
@@ -28,8 +26,7 @@ public class LoginModel extends BaseObservable {
         notifyPropertyChanged(BR.phone_code);
         this.phone="";
         notifyPropertyChanged(BR.phone);
-        this.password = "";
-        notifyPropertyChanged(BR.password);
+
 
     }
 
@@ -56,27 +53,16 @@ public class LoginModel extends BaseObservable {
         notifyPropertyChanged(BR.phone);
 
     }
-    @Bindable
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-        notifyPropertyChanged(BR.password);
-
-    }
 
     public boolean isDataValid(Context context)
     {
         if (!TextUtils.isEmpty(phone_code)&&
-                !TextUtils.isEmpty(phone)&&
-                password.length()>=6
+                !TextUtils.isEmpty(phone)
         )
         {
             error_phone_code.set(null);
             error_phone.set(null);
-            error_password.set(null);
 
             return true;
         }else
@@ -97,16 +83,7 @@ public class LoginModel extends BaseObservable {
                 error_phone.set(null);
             }
 
-            if (password.isEmpty())
-            {
-                error_password.set(context.getString(R.string.field_req));
-            }else if (password.length()<6)
-            {
-                error_password.set(context.getString(R.string.pass_short));
-            }else
-            {
-                error_password.set(null);
-            }
+
 
 
             return false;

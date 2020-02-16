@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
                 displayFragmentLanguage();
             }
         }
+
+
     }
 
     private void displayFragmentLanguage()

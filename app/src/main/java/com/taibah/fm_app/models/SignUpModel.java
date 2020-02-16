@@ -20,16 +20,10 @@ public class SignUpModel extends BaseObservable implements Serializable {
     private String image_url;
     private String name;
     private String email;
-    private String phone_code;
-    private String phone;
-    private String password;
     private boolean isAccept;
 
     public ObservableField<String> error_name = new ObservableField<>();
     public ObservableField<String> error_email = new ObservableField<>();
-    public ObservableField<String> error_phone_code = new ObservableField<>();
-    public ObservableField<String> error_phone = new ObservableField<>();
-    public ObservableField<String> error_password = new ObservableField<>();
 
 
 
@@ -38,17 +32,12 @@ public class SignUpModel extends BaseObservable implements Serializable {
         if (!TextUtils.isEmpty(name)&&
                 !TextUtils.isEmpty(email)&&
                 Patterns.EMAIL_ADDRESS.matcher(email).matches()&&
-                !TextUtils.isEmpty(phone_code)&&
-                !TextUtils.isEmpty(phone)&&
-                password.length()>=6&&
                 isAccept
         )
         {
             error_name.set(null);
             error_email.set(null);
-            error_phone_code.set(null);
-            error_phone.set(null);
-            error_password.set(null);
+
 
             return true;
         }else
@@ -75,33 +64,6 @@ public class SignUpModel extends BaseObservable implements Serializable {
                 error_email.set(null);
             }
 
-            if (phone_code.isEmpty())
-            {
-                error_phone_code.set(context.getString(R.string.field_req));
-            }else
-            {
-                error_phone_code.set(null);
-            }
-
-            if (phone.isEmpty())
-            {
-                error_phone.set(context.getString(R.string.field_req));
-            }else
-            {
-                error_phone.set(null);
-            }
-
-            if (password.isEmpty())
-            {
-                error_password.set(context.getString(R.string.field_req));
-            }else if (password.length()<6)
-            {
-                error_password.set(context.getString(R.string.pass_short));
-            }else
-            {
-                error_password.set(null);
-            }
-
 
             if (!isAccept)
             {
@@ -115,12 +77,6 @@ public class SignUpModel extends BaseObservable implements Serializable {
 
     public SignUpModel() {
         isAccept = false;
-        this.phone_code = "";
-        notifyPropertyChanged(BR.phone_code);
-        this.phone="";
-        notifyPropertyChanged(BR.phone);
-        this.password = "";
-        notifyPropertyChanged(BR.password);
         this.name = "";
         notifyPropertyChanged(BR.name);
         this.email = "";
@@ -164,37 +120,8 @@ public class SignUpModel extends BaseObservable implements Serializable {
 
     }
 
-    @Bindable
-    public String getPhone_code() {
-        return phone_code;
-    }
 
-    public void setPhone_code(String phone_code) {
-        this.phone_code = phone_code;
-        notifyPropertyChanged(BR.phone_code);
 
-    }
-
-    @Bindable
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-        notifyPropertyChanged(BR.phone);
-
-    }
-    @Bindable
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-        notifyPropertyChanged(BR.password);
-
-    }
     public boolean isAccept() {
         return isAccept;
     }

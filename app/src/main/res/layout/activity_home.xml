@@ -17,7 +17,7 @@
         android:background="@drawable/app_bg"
         android:fitsSystemWindows="true"
         tools:context=".activities_fragments.activity_home.HomeActivity"
-        tools:openDrawer="end"
+        tools:openDrawer="start"
 
         >
 

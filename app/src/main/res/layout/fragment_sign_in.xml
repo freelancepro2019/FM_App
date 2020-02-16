@@ -71,7 +71,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="20dp"
-                    app:layout_constraintVertical_bias=".15"
+                    app:layout_constraintVertical_bias=".25"
                     >
 
                     <FrameLayout
@@ -192,6 +192,7 @@
 
                     </FrameLayout>
 
+<!--
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
@@ -257,6 +258,7 @@
                         </LinearLayout>
 
                     </FrameLayout>
+-->
 
                     <Button
                         android:layout_width="match_parent"
@@ -287,20 +289,6 @@
                         />
 
 
-                    <TextView
-                        android:id="@+id/tvNewAccount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="5dp"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:text="@string/create_an_account"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:textStyle="bold"
-                        />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

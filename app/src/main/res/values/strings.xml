@@ -106,6 +106,7 @@
     <string name="address">address</string>
     <string name="select">select</string>
     <string name="order_sent">order sent</string>
-    <string name="no_foods">no_foods</string>
+    <string name="no_foods">No data to show</string>
+    <string name="user_not_found">User not found</string>
 
 </resources>

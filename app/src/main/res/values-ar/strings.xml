@@ -101,14 +101,15 @@
     <string name="age">العمر</string>
     <string name="date">التاريخ</string>
     <string name="Services">الخدمات</string>
-    <string name="ch_ser">Choose Service</string>
-    <string name="height">height</string>
-    <string name="weight">weight</string>
-    <string name="select_location_on_map">select location on map</string>
-    <string name="address">address</string>
-    <string name="select">select</string>
-    <string name="order_sent">order sent</string>
-    <string name="no_foods">no_foods</string>
+    <string name="ch_ser">إختر الخدمة</string>
+    <string name="height">الطول</string>
+    <string name="weight">الوزن</string>
+    <string name="select_location_on_map">حدد موقعك على الخريطة</string>
+    <string name="address">العنوان</string>
+    <string name="select">إختر</string>
+    <string name="order_sent">تم إرسال الطلب</string>
+    <string name="no_foods">لا توجد بيانات لعرضها</string>
+    <string name="user_not_found">المستخدم غير موجود</string>
 
 
 </resources>

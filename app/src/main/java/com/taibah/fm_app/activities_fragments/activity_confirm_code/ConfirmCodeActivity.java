@@ -1,11 +1,14 @@
 package com.taibah.fm_app.activities_fragments.activity_confirm_code;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,13 +19,18 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.taibah.fm_app.R;
 import com.taibah.fm_app.activities_fragments.activity_home.HomeActivity;
+import com.taibah.fm_app.activities_fragments.activity_login.LoginActivity;
+import com.taibah.fm_app.activities_fragments.activity_sign_up.SignUpActivity;
 import com.taibah.fm_app.databinding.ActivityConfirmCodeBinding;
+import com.taibah.fm_app.databinding.DialogAlertBinding;
 import com.taibah.fm_app.language.LanguageHelper;
-import com.taibah.fm_app.models.SignUpModel;
 import com.taibah.fm_app.models.UserModel;
 import com.taibah.fm_app.preferences.Preferences;
 import com.taibah.fm_app.share.Common;
@@ -41,10 +49,10 @@ public class ConfirmCodeActivity extends AppCompatActivity {
     private String lang;
     private Preferences preferences;
     private FirebaseAuth mAuth;
-    private SignUpModel signUpModel;
-    private String verificationId;
     private DatabaseReference dRef;
     private ProgressDialog dialog;
+    private String phone_code, phone_number;
+    private String verificationId;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -63,9 +71,12 @@ public class ConfirmCodeActivity extends AppCompatActivity {
     private void getDataFromIntent() {
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("data")) {
-            signUpModel = (SignUpModel) intent.getSerializableExtra("data");
-            verificationId = intent.getStringExtra("verification_id");
+        if (intent != null && intent.hasExtra("phone_number")) {
+
+            phone_code = intent.getStringExtra("phone_code");
+            phone_number = intent.getStringExtra("phone_number");
+
+
         }
     }
 
@@ -84,6 +95,7 @@ public class ConfirmCodeActivity extends AppCompatActivity {
                 reSendSMSCode();
             }
         });
+        reSendSMSCode();
         startCounter();
     }
 
@@ -97,8 +109,56 @@ public class ConfirmCodeActivity extends AppCompatActivity {
         }
     }
 
+    private void reSendSMSCode() {
+
+        PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+
+                mAuth.signInWithCredential(phoneAuthCredential)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+
+                                String userId = task.getResult().getUser().getUid();
+                                getUserData(userId);
+
+
+                            }
+                        }).addOnFailureListener(e -> {
+                    if (e.getMessage() != null) {
+                        Common.CreateDialogAlert(ConfirmCodeActivity.this, e.getMessage());
+                    }
+                });
+            }
+
+            @Override
+            public void onVerificationFailed(@NonNull FirebaseException e) {
+
+                if (e.getMessage() != null) {
+                    createDialogAlert(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(verificationId, forceResendingToken);
+
+                ConfirmCodeActivity.this.verificationId = verificationId;
+
+            }
+        };
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phone_code+phone_number,
+                60,
+                TimeUnit.SECONDS,
+                this,
+                mCallback
+        );
+    }
+
     private void validateCode(String smsCode) {
-        dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog = Common.createProgressDialog(this, getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
@@ -108,9 +168,9 @@ public class ConfirmCodeActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         String userId = task.getResult().getUser().getUid();
+                        getUserData(userId);
 
-                        UserModel userModel = new UserModel(userId, signUpModel.getName(), signUpModel.getEmail(), signUpModel.getPhone_code() + signUpModel.getPhone());
-                        registerUser(userModel);
+
                     }
                 }).addOnFailureListener(e -> {
 
@@ -122,29 +182,7 @@ public class ConfirmCodeActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(UserModel user)
-    {
-
-        dRef.child(user.getId())
-                .setValue(user)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        dialog.dismiss();
-                        preferences.create_update_userData(this, user);
-                        Intent intent = new Intent(this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }).addOnFailureListener(e -> {
-            if (e.getMessage() != null) {
-                dialog.dismiss();
-                Common.CreateDialogAlert(ConfirmCodeActivity.this,e.getMessage());
-            }
-        });
-    }
-
-    private void startCounter()
-    {
+    private void startCounter() {
         countDownTimer = new CountDownTimer(60000, 1000) {
 
             @Override
@@ -164,52 +202,97 @@ public class ConfirmCodeActivity extends AppCompatActivity {
         }.start();
     }
 
-    private void reSendSMSCode()
-    {
+    private void getUserData(String userId) {
 
-        PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        Log.e("id",userId+"__");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Tags.DATABASE_NAME).child(Tags.TABLE_USERS);
+
+        // check is user table already created or not
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                mAuth.signInWithCredential(phoneAuthCredential)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                String userId = task.getResult().getUser().getUid();
-
-                                UserModel userModel = new UserModel(userId, signUpModel.getName(), signUpModel.getEmail(), signUpModel.getPhone_code() + signUpModel.getPhone());
-                                registerUser(userModel);
-
-                            }
-                        }).addOnFailureListener(e -> {
-                            if (e.getMessage() != null) {
-                                Common.CreateDialogAlert(ConfirmCodeActivity.this,e.getMessage());
-                            }
-                });
+                if (dataSnapshot.getValue()!=null)
+                {
+                    checkIsUserRegisterBefore(userId);
+                }else
+                    {
+                        Intent intent = new Intent(ConfirmCodeActivity.this, SignUpActivity.class);
+                        intent.putExtra("phone_code", phone_code);
+                        intent.putExtra("phone_number", phone_number);
+                        intent.putExtra("user_id", userId);
+                        startActivity(intent);
+                        finish();
+                    }
             }
 
             @Override
-            public void onVerificationFailed(@NonNull FirebaseException e) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                if (e.getMessage() != null) {
-                    Common.CreateDialogAlert(ConfirmCodeActivity.this,e.getMessage());
+            }
+        });
+
+
+    }
+
+    private void checkIsUserRegisterBefore(String userId){
+
+        dRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getValue() != null) {
+                    UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                    if (userModel != null) {
+                        preferences.create_update_userData(ConfirmCodeActivity.this, userModel);
+                        Intent intent = new Intent(ConfirmCodeActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(ConfirmCodeActivity.this, SignUpActivity.class);
+                        intent.putExtra("phone_code", phone_code);
+                        intent.putExtra("phone_number", phone_number);
+                        intent.putExtra("user_id", userId);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
 
             @Override
-            public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                super.onCodeSent(verificationId, forceResendingToken);
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                ConfirmCodeActivity.this.verificationId = verificationId;
-
+                Log.e("ccccccc","__");
             }
-        };
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                signUpModel.getPhone_code() + signUpModel.getPhone(),
-                60,
-                TimeUnit.SECONDS,
-                this,
-                mCallback
+
+
+        });
+
+    }
+
+
+    private void createDialogAlert(String msg) {
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .create();
+
+        DialogAlertBinding binding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_alert, null, false);
+
+        binding.tvMsg.setText(msg);
+        binding.btnCancel.setOnClickListener(v -> {
+                    dialog.dismiss();
+
+                    Intent intent = new Intent(ConfirmCodeActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                }
+
         );
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setView(binding.getRoot());
+        dialog.show();
     }
 
 
@@ -220,7 +303,6 @@ public class ConfirmCodeActivity extends AppCompatActivity {
             countDownTimer.cancel();
         }
     }
-
 
 }
 

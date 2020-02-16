@@ -14,13 +14,11 @@ import java.io.Serializable;
 
 public class DietModel extends BaseObservable implements Serializable {
 
-    private String id;
     private int gender;
     private int age;
     private int weight;
     private int height;
     private String details;
-    public ObservableField<String> error_id = new ObservableField<>();
     public ObservableField<String> error_age = new ObservableField<>();
     public ObservableField<String> error_height = new ObservableField<>();
     public ObservableField<String> error_weight = new ObservableField<>();
@@ -28,15 +26,14 @@ public class DietModel extends BaseObservable implements Serializable {
 
 
     public DietModel() {
-        this.id = "";
         this.details = "";
         this.age = 0;
         this.height=0;
         this.weight=0;
     }
 
-    public DietModel(int age, String id, int gender, int height,int weight ,String details) {
-        this.id = id;
+    public DietModel(int age, int gender, int height,int weight ,String details) {
+        this.age = age;
         this.gender = gender;
         this.gender = 0;
         this.details = details;
@@ -45,15 +42,6 @@ public class DietModel extends BaseObservable implements Serializable {
     }
 
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-        notifyPropertyChanged(BR.id);
-
-    }
 
     public int getAge() {
         return age;

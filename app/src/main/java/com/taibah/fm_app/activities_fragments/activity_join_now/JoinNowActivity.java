@@ -1,7 +1,10 @@
 package com.taibah.fm_app.activities_fragments.activity_join_now;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -9,12 +12,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.taibah.fm_app.R;
 import com.taibah.fm_app.adapters.DurationAdapter;
 import com.taibah.fm_app.databinding.ActivityJoinNowBinding;
+import com.taibah.fm_app.databinding.DialogAlertBinding;
 import com.taibah.fm_app.interfaces.Listeners;
 import com.taibah.fm_app.language.LanguageHelper;
 import com.taibah.fm_app.models.JoinNowModel;
+import com.taibah.fm_app.models.MyJoinModel;
+import com.taibah.fm_app.models.UserModel;
+import com.taibah.fm_app.preferences.Preferences;
+import com.taibah.fm_app.share.Common;
 import com.taibah.fm_app.tags.Tags;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -27,13 +37,16 @@ import java.util.Locale;
 
 import io.paperdb.Paper;
 
-public class JoinNowActivity extends AppCompatActivity implements Listeners.BackListener , Listeners.JoinListener, DatePickerDialog.OnDateSetListener {
+public class JoinNowActivity extends AppCompatActivity implements Listeners.BackListener, Listeners.JoinListener, DatePickerDialog.OnDateSetListener {
     private ActivityJoinNowBinding binding;
     private String lang;
     private JoinNowModel model;
     private List<JoinNowModel.Duration> durationList;
     private DatePickerDialog datePickerDialog;
     private DurationAdapter adapter;
+    private DatabaseReference dRef;
+    private Preferences preferences;
+    private UserModel userModel;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -51,40 +64,44 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
 
 
     private void initView() {
+
+        dRef = FirebaseDatabase.getInstance().getReference(Tags.DATABASE_NAME).child(Tags.TABLE_JOINS);
+        preferences = Preferences.newInstance();
+        userModel = preferences.getUserData(this);
         durationList = new ArrayList<>();
         model = new JoinNowModel();
         model.setType(Tags.student);
         Paper.init(this);
-        lang = Paper.book().read("lang","ar");
+        lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         binding.setBackListener(this);
         binding.setModel(model);
         binding.setJoinListener(this);
 
-        binding.scrollView.getParent().requestChildFocus(binding.scrollView,binding.scrollView);
-        adapter = new DurationAdapter(this,durationList);
+        binding.scrollView.getParent().requestChildFocus(binding.scrollView, binding.scrollView);
+        adapter = new DurationAdapter(this, durationList);
         binding.spinner.setAdapter(adapter);
         addDuration();
         CreateDatePickerDialog();
-        binding.rbMale.setOnClickListener(view ->{
+        binding.rbMale.setOnClickListener(view -> {
             model.setGender(Tags.male);
             binding.setModel(model);
         });
 
-        binding.rbFemale.setOnClickListener(view ->{
+        binding.rbFemale.setOnClickListener(view -> {
             model.setGender(Tags.female);
             binding.setModel(model);
         });
 
 
-        binding.rbStudent.setOnClickListener(view ->{
+        binding.rbStudent.setOnClickListener(view -> {
             model.setType(Tags.student);
             binding.setModel(model);
             binding.llId.setVisibility(View.VISIBLE);
             addDuration();
         });
 
-        binding.rbTrainer.setOnClickListener(view ->{
+        binding.rbTrainer.setOnClickListener(view -> {
             model.setType(Tags.trainer);
             binding.setModel(model);
             binding.llId.setVisibility(View.GONE);
@@ -95,15 +112,13 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if (i==0)
-                {
+                if (i == 0) {
                     model.setDuration(null);
                     binding.setModel(model);
-                }else
-                    {
-                        model.setDuration(durationList.get(i));
-                        binding.setModel(model);
-                    }
+                } else {
+                    model.setDuration(durationList.get(i));
+                    binding.setModel(model);
+                }
             }
 
             @Override
@@ -121,18 +136,16 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
 
     }
 
-    private void addDuration()
-    {
+    private void addDuration() {
         durationList.clear();
-        durationList.add(new JoinNowModel.Duration(getString(R.string.ch),""));
-        if (model.getType()==Tags.student)
-        {
-            durationList.add(new JoinNowModel.Duration(getString(R.string.day),"10"));
-            durationList.add(new JoinNowModel.Duration(getString(R.string.month),"300"));
+        durationList.add(new JoinNowModel.Duration(getString(R.string.ch), ""));
+        if (model.getType() == Tags.student) {
+            durationList.add(new JoinNowModel.Duration(getString(R.string.day), "10"));
+            durationList.add(new JoinNowModel.Duration(getString(R.string.month), "300"));
 
         }
-        durationList.add(new JoinNowModel.Duration(getString(R.string.month3),"900"));
-        durationList.add(new JoinNowModel.Duration(getString(R.string.year),"10800"));
+        durationList.add(new JoinNowModel.Duration(getString(R.string.month3), "900"));
+        durationList.add(new JoinNowModel.Duration(getString(R.string.year), "10800"));
 
         adapter.notifyDataSetChanged();
         binding.spinner.setSelection(0);
@@ -141,9 +154,9 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
 
     private void CreateDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH,1);
-        calendar.set(Calendar.MONTH,Calendar.JANUARY);
-        calendar.set(Calendar.YEAR,1995);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.MONTH, Calendar.JANUARY);
+        calendar.set(Calendar.YEAR, 1995);
 
 
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -187,13 +200,56 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
     @Override
     public void checkJoinData(JoinNowModel joinNowModel) {
 
-        if (joinNowModel.isDataValid(this))
-        {
+        if (joinNowModel.isDataValid(this)) {
             send(joinNowModel);
         }
     }
 
     private void send(JoinNowModel joinNowModel) {
 
+        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        String itemId = dRef.push().getKey();
+
+        MyJoinModel myJoinModel = new MyJoinModel(itemId, joinNowModel.getType(), joinNowModel.getUser_id(), joinNowModel.getDuration().getDuration(), joinNowModel.getDuration().getCost(), joinNowModel.getGender(), joinNowModel.getBirthDate(), joinNowModel.getDetails(), userModel.getId());
+        dRef.child(userModel.getId()).child(itemId)
+                .setValue(myJoinModel).addOnCompleteListener(task -> {
+
+            dialog.dismiss();
+
+            if (task.isSuccessful()) {
+
+                createDialogAlert(getString(R.string.suc));
+            }
+        }).addOnFailureListener(e -> {
+            dialog.dismiss();
+            if (e.getMessage() != null) {
+                Common.CreateDialogAlert(this, e.getMessage());
+            }
+        });
     }
+
+    private void createDialogAlert(String msg) {
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .create();
+
+        DialogAlertBinding binding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_alert, null, false);
+
+        binding.tvMsg.setText(msg);
+        binding.btnCancel.setOnClickListener(v -> {
+
+                    finish();
+                    dialog.dismiss();
+                }
+
+        );
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setView(binding.getRoot());
+        dialog.show();
+    }
+
 }
