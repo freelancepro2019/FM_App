@@ -110,6 +110,19 @@
     <string name="order_sent">تم إرسال الطلب</string>
     <string name="no_foods">لا توجد بيانات لعرضها</string>
     <string name="user_not_found">المستخدم غير موجود</string>
+    <string name="my_participation">إشتراكاتي</string>
+    <string name="sell">بيع إشتراك</string>
+    <string name="name_or_phone_number">الإسم او رقم الجوال</string>
+    <string name="no_search_results">لا توجد نتائج بحث</string>
+    <string name="sell_join">بيع الاشتراك ؟</string>
+    <string name="confirmation">تأكيد</string>
+    <string name="session_reservations">حجوزات الجلسات</string>
+    <string name="pending">قيد الإنتظار</string>
+    <string name="current">الحالية</string>
+    <string name="no_reservations_to_show">لا توجد حجوزات لعرضها</string>
+    <string name="reservation_number">رقم الحجز</string>
+    <string name="book_date">تاريخ الحجز</string>
+    <string name="book_time">وقت الحجز</string>
 
 
 </resources>

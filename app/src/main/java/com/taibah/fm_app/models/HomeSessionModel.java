@@ -15,17 +15,18 @@ import java.io.Serializable;
 
 public class HomeSessionModel extends BaseObservable implements Serializable {
 
-    private String phone_code;
-    private String phone;
     private String time;
     private String date;
     private String age;
     private String service;
+    private String service_name;
     private String address;
     private String details;
+    private String cost;
+    private double lat;
+    private double lng;
 
     public ObservableField<String> error_date = new ObservableField<>();
-    public ObservableField<String> error_phone = new ObservableField<>();
     public ObservableField<String> error_age = new ObservableField<>();
     public ObservableField<String> error_time = new ObservableField<>();
     public ObservableField<String> error_address = new ObservableField<>();
@@ -34,16 +35,12 @@ public class HomeSessionModel extends BaseObservable implements Serializable {
 
     public HomeSessionModel() {
         this.service = "";
-        this.phone_code = "";
         this.details = "";
         this.date = "";
         this.time = "";
         this.age = "";
         this.address = "";
-        this.phone = "";
 
-        setPhone_code(phone_code);
-        setPhone(phone);
         setAge(age);
         setDate(date);
         setTime(time);
@@ -52,28 +49,65 @@ public class HomeSessionModel extends BaseObservable implements Serializable {
         setDetails(details);
     }
 
+    public boolean isDataValid(Context context) {
+
+        if (!TextUtils.isEmpty(date) &&
+                !TextUtils.isEmpty(time) &&
+                !service.isEmpty() &&
+                !TextUtils.isEmpty(age) &&
+                !TextUtils.isEmpty(address) &&
+                !TextUtils.isEmpty(details)
+
+        ) {
+            error_date.set(null);
+            error_age.set(null);
+            error_time.set(null);
+            error_address.set(null);
+            error_details.set(null);
+
+            return true;
+
+        } else {
 
 
-    @Bindable
-    public String getPhone_code() {
-        return phone_code;
+            if (service.isEmpty()) {
+                Toast.makeText(context, R.string.ch_ser, Toast.LENGTH_SHORT).show();
+            }
+
+
+
+            if (date.isEmpty()) {
+                error_date.set(context.getString(R.string.field_req));
+            } else {
+                error_date.set(null);
+            }
+            if (age.isEmpty()) {
+                error_age.set(context.getString(R.string.field_req));
+            } else {
+                error_age.set(null);
+            }
+            if (time.isEmpty()) {
+                error_time.set(context.getString(R.string.field_req));
+            } else {
+                error_time.set(null);
+            }
+            if (address.isEmpty()) {
+                error_address.set(context.getString(R.string.field_req));
+            } else {
+                error_details.set(null);
+            }
+            if (details.isEmpty()) {
+                error_details.set(context.getString(R.string.field_req));
+            } else {
+                error_details.set(null);
+            }
+
+
+        }
+        return false;
+
     }
 
-    public void setPhone_code(String phone_code) {
-        this.phone_code = phone_code;
-        notifyPropertyChanged(BR.phone_code);
-    }
-
-    @Bindable
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-        notifyPropertyChanged(BR.phone);
-
-    }
 
     @Bindable
     public String getTime() {
@@ -95,6 +129,14 @@ public class HomeSessionModel extends BaseObservable implements Serializable {
         this.age = age;
         notifyPropertyChanged(BR.age);
 
+    }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
     }
 
     @Bindable
@@ -139,96 +181,54 @@ public class HomeSessionModel extends BaseObservable implements Serializable {
 
     }
 
-    public boolean isDataValid(Context context) {
-        if (!TextUtils.isEmpty(phone) &&
-                        !TextUtils.isEmpty(date) &&
-                        !TextUtils.isEmpty(time) &&
-                        !service.isEmpty()&&
-                        !TextUtils.isEmpty(age) &&
-                        !TextUtils.isEmpty(address) &&
-                        !TextUtils.isEmpty(details)
+    public double getLat() {
+        return lat;
+    }
 
-        ) {
-            error_phone.set(null);
-            error_date.set(null);
-            error_age.set(null);
-            error_time.set(null);
-            error_address.set(null);
-            error_details.set(null);
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
 
+    public double getLng() {
+        return lng;
+    }
 
-        } else {
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
 
+    public String getService_name() {
+        return service_name;
+    }
 
-            if (service.isEmpty()) {
-                Toast.makeText(context, R.string.ch_ser, Toast.LENGTH_SHORT).show();
-            }
-
-
-            if (phone.isEmpty()) {
-                error_phone.set(context.getString(R.string.field_req));
-            } else {
-                error_phone.set(null);
-            }
-
-            if (date.isEmpty()) {
-                error_date.set(context.getString(R.string.field_req));
-            } else {
-                error_date.set(null);
-            }
-            if (age.isEmpty()) {
-                error_age.set(context.getString(R.string.field_req));
-            } else {
-                error_age.set(null);
-            }
-            if (time.isEmpty()) {
-                error_time.set(context.getString(R.string.field_req));
-            } else {
-                error_time.set(null);
-            }
-            if (address.isEmpty()) {
-                error_address.set(context.getString(R.string.field_req));
-            } else {
-                error_details.set(null);
-            }
-            if (details.isEmpty()) {
-                error_details.set(context.getString(R.string.field_req));
-            } else {
-                error_details.set(null);
-            }
-
-
-        }
-        return false;
-
+    public void setService_name(String service_name) {
+        this.service_name = service_name;
     }
 
     public static class Service implements Serializable {
-        private String service;
+        private int id;
+        private String serviceName;
         private String cost;
 
         public Service() {
         }
 
-        public Service(String service, String cost) {
-            this.service = service;
+        public Service(int id, String serviceName, String cost) {
+            this.id = id;
+            this.serviceName = serviceName;
             this.cost = cost;
         }
 
-        public String getService() {
-            return service;
+        public int getId() {
+            return id;
         }
 
-        public void setService(String service) {
-            this.service = service;
+        public String getServiceName() {
+            return serviceName;
         }
 
         public String getCost() {
             return cost;
-        }
-
-        public void setCost(String cost) {
-            this.cost = cost;
         }
     }
 }

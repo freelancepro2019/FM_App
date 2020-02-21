@@ -1,4 +1,4 @@
-package com.taibah.fm_app.activities_fragments.activity_home_sessions;
+package com.taibah.fm_app.activities_fragments;
 
 import android.content.Context;
 import android.os.Bundle;

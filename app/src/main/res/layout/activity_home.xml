@@ -25,7 +25,8 @@
             android:id="@+id/llHomeContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolBar"
@@ -734,6 +735,66 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/consSessionReservation"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp">
+
+                        <ImageView
+                            android:id="@+id/img5"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:clickable="false"
+                            android:longClickable="false"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_session"
+                            android:tint="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:longClickable="false"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:singleLine="true"
+                            android:text="@string/session_reservations"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img5"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:clickable="false"
+                            android:longClickable="false"
+                            android:padding="8dp"
+                            android:rotation='@{lang.equals("ar")?180:0}'
+                            android:src="@drawable/ic_right_arrow"
+                            android:tint="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+
+
+                            />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px" />
+
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/consTerms"

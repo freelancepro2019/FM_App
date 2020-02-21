@@ -23,6 +23,7 @@ public class Tags {
     public static final String TABLE_ABOUT ="About";
     public static final String TABLE_SLIDER ="Slider";
     public static final String TABLE_JOINS ="Joins";
+    public static final String TABLE_SESSIONS ="Sessions";
 
 
 

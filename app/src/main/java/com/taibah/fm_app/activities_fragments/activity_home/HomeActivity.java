@@ -28,12 +28,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.taibah.fm_app.R;
 import com.taibah.fm_app.activities_fragments.activity_diet.DietActivity;
 import com.taibah.fm_app.activities_fragments.activity_health_food.HealthFoodActivity;
+import com.taibah.fm_app.activities_fragments.activity_home_sessions.HomeSessionsActivity;
 import com.taibah.fm_app.activities_fragments.activity_join_now.JoinNowActivity;
 import com.taibah.fm_app.activities_fragments.activity_login.LoginActivity;
+import com.taibah.fm_app.activities_fragments.activity_my_join.MyJoinsActivity;
 import com.taibah.fm_app.activities_fragments.activity_profile.ProfileActivity;
-import com.taibah.fm_app.activities_fragments.activity_sell_participation.SellParticipationActivity;
+import com.taibah.fm_app.activities_fragments.activity_session_reservations.SessionReservationActivity;
 import com.taibah.fm_app.activities_fragments.activity_terms.TermsActivity;
-import com.taibah.fm_app.activities_fragments.activity_home_sessions.HomeSessionsActivity;
 import com.taibah.fm_app.adapters.SliderAdapter;
 import com.taibah.fm_app.databinding.ActivityHomeBinding;
 import com.taibah.fm_app.language.LanguageHelper;
@@ -188,7 +189,7 @@ public class HomeActivity extends AppCompatActivity {
             } else {
             }*/
 
-            navigateToSellActivity();
+           navigateToMyJoinActivity();
         });
 
         binding.flJoin.setOnClickListener(view -> {
@@ -211,8 +212,11 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.consTerms.setOnClickListener(view -> navigateToTermsActivity(1));
 
+        binding.consSessionReservation.setOnClickListener(view -> navigateToSessionReservation());
+
         getSliderImages();
     }
+
 
 
 
@@ -291,10 +295,32 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void navigateToSellActivity()
+    private void navigateToMyJoinActivity()
     {
-        Intent intent = new Intent(this, SellParticipationActivity.class);
-        startActivity(intent);
+
+        if (userModel!=null)
+        {
+            Intent intent = new Intent(this, MyJoinsActivity.class);
+            startActivity(intent);
+        }else
+        {
+            Common.CreateDialogAlert(this,getString(R.string.please_sign_in_or_sign_up));
+        }
+
+    }
+
+    private void navigateToSessionReservation()
+    {
+
+        if (userModel!=null)
+        {
+            Intent intent = new Intent(this, SessionReservationActivity.class);
+            startActivity(intent);
+        }else
+        {
+            Common.CreateDialogAlert(this,getString(R.string.please_sign_in_or_sign_up));
+        }
+
     }
 
     private void navigateToHealthFoodActivity()

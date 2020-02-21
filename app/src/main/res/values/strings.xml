@@ -108,5 +108,18 @@
     <string name="order_sent">order sent</string>
     <string name="no_foods">No data to show</string>
     <string name="user_not_found">User not found</string>
+    <string name="my_participation">My Participation</string>
+    <string name="sell">Sell</string>
+    <string name="name_or_phone_number">Name or Phone number</string>
+    <string name="no_search_results">No search results</string>
+    <string name="sell_join">Sell Participation ?</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="session_reservations">Session Reservations</string>
+    <string name="pending">Pending</string>
+    <string name="current">Current</string>
+    <string name="no_reservations_to_show">No Reservations to Show</string>
+    <string name="reservation_number">Reservation Number</string>
+    <string name="book_date">Book Date</string>
+    <string name="book_time">Book Time</string>
 
 </resources>

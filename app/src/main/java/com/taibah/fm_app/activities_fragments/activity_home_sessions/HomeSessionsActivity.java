@@ -4,15 +4,18 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,10 +44,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mukesh.countrypicker.Country;
-import com.mukesh.countrypicker.CountryPicker;
-import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.taibah.fm_app.R;
+import com.taibah.fm_app.activities_fragments.FragmentMapTouchListener;
 import com.taibah.fm_app.adapters.ServiceAdapter;
 import com.taibah.fm_app.databinding.ActivityHomeSessionsBinding;
 import com.taibah.fm_app.databinding.DialogAlertBinding;
@@ -53,8 +56,12 @@ import com.taibah.fm_app.language.LanguageHelper;
 import com.taibah.fm_app.models.HomeSessionModel;
 import com.taibah.fm_app.models.PlaceGeocodeData;
 import com.taibah.fm_app.models.PlaceMapDetailsData;
+import com.taibah.fm_app.models.SessionModel;
+import com.taibah.fm_app.models.UserModel;
+import com.taibah.fm_app.preferences.Preferences;
 import com.taibah.fm_app.remote.Api;
 import com.taibah.fm_app.share.Common;
+import com.taibah.fm_app.tags.Tags;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -71,10 +78,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeSessionsActivity extends AppCompatActivity implements Listeners.BackListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, Listeners.HomeSessionListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Listeners.ShowCountryDialogListener, OnCountryPickerListener {
+public class HomeSessionsActivity extends AppCompatActivity implements Listeners.BackListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, Listeners.HomeSessionListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private ActivityHomeSessionsBinding binding;
     private String lang;
-    private HomeSessionModel model;
     private List<HomeSessionModel.Service> serviceList;
     private DatePickerDialog datePickerDialog;
     private ServiceAdapter adapter;
@@ -89,8 +95,10 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
     private double lat, lng;
     private Marker marker;
     private final float zoom = 15.6f;
-    private CountryPicker countryPicker;
     private HomeSessionModel homeSessionModel;
+    private Preferences preferences;
+    private UserModel userModel;
+    private DatabaseReference dRef;
 
 
     @Override
@@ -107,40 +115,66 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
     }
 
-
     private void initView() {
+        dRef = FirebaseDatabase.getInstance().getReference(Tags.DATABASE_NAME).child(Tags.TABLE_SESSIONS);
+        preferences = Preferences.newInstance();
+        userModel = preferences.getUserData(this);
         homeSessionModel = new HomeSessionModel();
         serviceList = new ArrayList<>();
-        model = new HomeSessionModel();
         Paper.init(this);
         lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         binding.setBackListener(this);
-        binding.setModel(model);
+        binding.setModel(homeSessionModel);
         binding.setHomeSessionListener(this);
-        binding.setShowCountryListener(this);
-
         binding.scrollView.getParent().requestChildFocus(binding.scrollView, binding.scrollView);
         adapter = new ServiceAdapter(this, serviceList);
         binding.spinner.setAdapter(adapter);
         CreateDatePickerDialog();
         createTimePickerDialog();
-        createCountryDialog();
         initMap();
+        addService();
 
-        binding.tvChangeTime.setOnClickListener(view ->
-                {
-                    try {
-                        timePickerDialog.show(getFragmentManager(), "");
+        binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    } catch (Exception e) {
-                    }
+                if (i == 0) {
+                    binding.tvCost.setText("0.0");
+                    homeSessionModel.setService("");
+                    homeSessionModel.setService_name("");
+                    binding.setModel(homeSessionModel);
+
+                } else {
+                    HomeSessionModel.Service service = serviceList.get(i);
+                    homeSessionModel.setService(String.valueOf(service.getId()));
+                    homeSessionModel.setCost(service.getCost());
+                    homeSessionModel.setService_name(service.getServiceName());
+
+                    binding.tvCost.setText(service.getCost());
+
+                    binding.setModel(homeSessionModel);
+
+
                 }
-        );
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
-        binding.imageSearch.setOnClickListener(view ->
-        {
+        binding.tvChangeTime.setOnClickListener(view -> {
+            try {
+                timePickerDialog.show(getFragmentManager(), "");
+
+            } catch (Exception e) {
+            }
+        });
+
+        binding.imageSearch.setOnClickListener(view -> {
             String address = binding.edtAddress.getText().toString().trim();
             if (!address.isEmpty()) {
                 Common.CloseKeyBoard(this, binding.edtAddress);
@@ -162,10 +196,29 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
     }
 
+    private void addService() {
+
+        HomeSessionModel.Service service1 = new HomeSessionModel.Service(0, getString(R.string.ch_ser), "0");
+        HomeSessionModel.Service service2 = new HomeSessionModel.Service(1, "Service1", "100");
+        HomeSessionModel.Service service3 = new HomeSessionModel.Service(2, "Service2", "200");
+        HomeSessionModel.Service service4 = new HomeSessionModel.Service(3, "Service3", "300");
+        HomeSessionModel.Service service5 = new HomeSessionModel.Service(4, "Service4", "400");
+        HomeSessionModel.Service service6 = new HomeSessionModel.Service(5, "Service5", "500");
+
+        serviceList.add(service1);
+        serviceList.add(service2);
+        serviceList.add(service3);
+        serviceList.add(service4);
+        serviceList.add(service5);
+        serviceList.add(service6);
+
+        adapter.notifyDataSetChanged();
+
+    }
 
     private void CreateDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH,1);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.dismissOnPause(true);
         datePickerDialog.setAccentColor(ActivityCompat.getColor(this, R.color.colorPrimary));
@@ -194,105 +247,46 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
     }
 
-    private void createCountryDialog() {
-        countryPicker = new CountryPicker.Builder()
-                .canSearch(true)
-                .listener(this)
-                .theme(CountryPicker.THEME_NEW)
-                .with(this)
-                .build();
-
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-        try {
-            if (countryPicker.getCountryFromSIM() != null) {
-                updatePhoneCode(countryPicker.getCountryFromSIM());
-            } else if (telephonyManager != null && countryPicker.getCountryByISO(telephonyManager.getNetworkCountryIso()) != null) {
-                updatePhoneCode(countryPicker.getCountryByISO(telephonyManager.getNetworkCountryIso()));
-            } else if (countryPicker.getCountryByLocale(Locale.getDefault()) != null) {
-                updatePhoneCode(countryPicker.getCountryByLocale(Locale.getDefault()));
-            } else {
-                String code = "+966";
-                binding.tvCode.setText(code);
-                homeSessionModel.setPhone_code(code);
-
-            }
-        } catch (Exception e) {
-            String code = "+966";
-            binding.tvCode.setText(code);
-            homeSessionModel.setPhone_code(code);
-        }
-
-
-    }
-
     @Override
-    public void showDialog() {
-        countryPicker.showDialog(this);
-    }
-
-    @Override
-    public void onSelectCountry(Country country) {
-        updatePhoneCode(country);
-    }
-
-    private void updatePhoneCode(Country country) {
-        binding.tvCode.setText(country.getDialCode());
-        homeSessionModel.setPhone_code(country.getDialCode());
-
-    }
-
-
-    @Override
-    public void back() {
-        finish();
-    }
-
-    @Override
-    public void checkHomeSessionData(HomeSessionModel homeSessionModel) {
+    public void checkHomeSessionData(HomeSessionModel homeSessionModel)
+    {
         if (homeSessionModel.isDataValid(this)) {
-            send(homeSessionModel);
+            if (userModel != null) {
+                send(homeSessionModel);
+
+            } else {
+                Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
+            }
         }
     }
 
-    private void send(HomeSessionModel homeSessionModel) {
+    private void send(HomeSessionModel model)
+    {
 
+        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
+        dialog.show();
+        String id = dRef.child(userModel.getId()).push().getKey();
+        String create_at = new SimpleDateFormat("dd/MMM/yyyy hh:mm aa",Locale.ENGLISH).format(new Date(Calendar.getInstance().getTimeInMillis()));
+        SessionModel sessionModel = new SessionModel(id,userModel.getName(), userModel.getPhone(), model.getAddress(), model.getLat(), model.getLng(), model.getService(), model.getCost(),model.getService_name(), model.getDate(), model.getTime(), model.getAge(), model.getDetails(), false,create_at);
+
+
+        dRef.child(userModel.getId()).child(id)
+                .setValue(sessionModel)
+                .addOnCompleteListener(task -> {
+                    dialog.dismiss();
+                    if (task.isSuccessful()) {
+                        createDialogAlert();
+                    }
+                }).addOnFailureListener(e -> {
+            dialog.dismiss();
+            if (e.getMessage() != null) {
+                Toast.makeText(this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, monthOfYear);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
-        String date= dateFormat.format(new Date(calendar.getTimeInMillis()));
-
-        binding.tvDate.setText(date);
-        model.setDate(date);
-        binding.setModel(model);
-
-    }
-
-
-    @Override
-    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, second);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH);
-        String t = dateFormat.format(new Date(calendar.getTimeInMillis()));
-        binding.tvTime.setText(t);
-
-        model.setTime(t);
-        binding.setModel(model);
-    }
-
-    private void initMap() {
+    private void initMap()
+    {
 
         fragment = (FragmentMapTouchListener) getSupportFragmentManager().findFragmentById(R.id.map);
         if (fragment != null) {
@@ -300,6 +294,28 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
         }
 
+    }
+
+    private void createDialogAlert()
+    {
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .create();
+
+        DialogAlertBinding binding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_alert, null, false);
+
+        binding.tvMsg.setText(getString(R.string.suc));
+        binding.btnCancel.setOnClickListener(v -> {
+
+                    dialog.dismiss();
+                    finish();
+                }
+
+        );
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setView(binding.getRoot());
+        dialog.show();
     }
 
     private void CheckPermission() {
@@ -331,10 +347,16 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
             CheckPermission();
 
             mMap.setOnMapClickListener(latLng -> {
-                marker.setPosition(latLng);
-                lat = latLng.latitude;
-                lng = latLng.longitude;
-                getGeoData(lat, lng);
+                if (marker != null) {
+                    marker.setPosition(latLng);
+                    lat = latLng.latitude;
+                    lng = latLng.longitude;
+                    homeSessionModel.setLat(lat);
+                    homeSessionModel.setLng(lng);
+                    binding.setModel(homeSessionModel);
+                    getGeoData(lat, lng);
+                }
+
 
             });
 
@@ -403,9 +425,9 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
                                 lat = response.body().getCandidates().get(0).getGeometry().getLocation().getLat();
                                 lng = response.body().getCandidates().get(0).getGeometry().getLocation().getLng();
                                 binding.edtAddress.setText(address);
-                                model.setAddress(address);
+                                homeSessionModel.setAddress(address);
 
-                                binding.setModel(model);
+                                binding.setModel(homeSessionModel);
                                 AddMarker(response.body().getCandidates().get(0).getGeometry().getLocation().getLat(), response.body().getCandidates().get(0).getGeometry().getLocation().getLng());
                             }
                         } else {
@@ -477,7 +499,11 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
                     break;
 
                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-
+                    try {
+                        status.startResolutionForResult(HomeSessionsActivity.this, 100);
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
                     break;
 
             }
@@ -513,6 +539,9 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
     public void onLocationChanged(Location location) {
         lat = location.getLatitude();
         lng = location.getLongitude();
+        homeSessionModel.setLat(lat);
+        homeSessionModel.setLng(lng);
+        binding.setModel(homeSessionModel);
         AddMarker(lat, lng);
         getGeoData(location.getLatitude(), location.getLongitude());
 
@@ -539,40 +568,45 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
-
             startLocationUpdate();
-        } else if (requestCode == 200) {
-
-            if (resultCode == Activity.RESULT_OK) {
-                CreateAlert();
-
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 
-    public void CreateAlert() {
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .create();
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
-        DialogAlertBinding binding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_alert, null, false);
-        binding.btnCancel.setBackgroundResource(R.color.red);
-        binding.llContainer.setBackgroundResource(R.color.green);
-        binding.tvMsg.setText(R.string.order_sent);
-        binding.btnCancel.setOnClickListener(v ->
-                {
-                    dialog.dismiss();
-                    finish();
-                }
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, monthOfYear);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
+        String date = dateFormat.format(new Date(calendar.getTimeInMillis()));
 
-        );
-        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setView(binding.getRoot());
-        dialog.show();
+        binding.tvDate.setText(date);
+        homeSessionModel.setDate(date);
+        binding.setModel(homeSessionModel);
+
+    }
+
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH);
+        String t = dateFormat.format(new Date(calendar.getTimeInMillis()));
+        binding.tvTime.setText(t);
+
+        homeSessionModel.setTime(t);
+        binding.setModel(homeSessionModel);
+    }
+
+    @Override
+    public void back() {
+        finish();
     }
 
 

@@ -1,12 +1,14 @@
 package com.taibah.fm_app.activities_fragments.activity_profile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.taibah.fm_app.R;
+import com.taibah.fm_app.activities_fragments.activity_my_join.MyJoinsActivity;
 import com.taibah.fm_app.databinding.ActivityProfileBinding;
 import com.taibah.fm_app.interfaces.Listeners;
 import com.taibah.fm_app.language.LanguageHelper;
@@ -48,6 +50,11 @@ public class ProfileActivity extends AppCompatActivity implements Listeners.Back
         binding.setBackListener(this);
         binding.setLang(lang);
         binding.setUserModel(userModel);
+
+        binding.btn.setOnClickListener(view -> {
+            Intent intent  = new Intent(this, MyJoinsActivity.class);
+            startActivity(intent);
+        });
 
 
 

@@ -184,6 +184,7 @@
                             android:textColorHint="@color/gray4"
                             android:text="@={model.user_id}"
                             error="@{model.error_user_id}"
+                            android:inputType="number"
 
                             />
 

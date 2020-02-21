@@ -92,6 +92,10 @@ public class ConfirmCodeActivity extends AppCompatActivity {
         binding.btnResend.setOnClickListener(v -> {
 
             if (canResend) {
+                dialog = Common.createProgressDialog(this, getString(R.string.wait));
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
                 reSendSMSCode();
             }
         });
@@ -115,6 +119,7 @@ public class ConfirmCodeActivity extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
 
+
                 mAuth.signInWithCredential(phoneAuthCredential)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -133,7 +138,10 @@ public class ConfirmCodeActivity extends AppCompatActivity {
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
-
+                if (dialog!=null)
+                {
+                    dialog.dismiss();
+                }
                 if (e.getMessage() != null) {
                     createDialogAlert(e.getMessage());
                 }
@@ -142,7 +150,10 @@ public class ConfirmCodeActivity extends AppCompatActivity {
             @Override
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(verificationId, forceResendingToken);
-
+                if (dialog!=null)
+                {
+                    dialog.dismiss();
+                }
                 ConfirmCodeActivity.this.verificationId = verificationId;
 
             }
@@ -175,7 +186,10 @@ public class ConfirmCodeActivity extends AppCompatActivity {
                 }).addOnFailureListener(e -> {
 
             if (e.getMessage() != null) {
-                dialog.dismiss();
+                if (dialog!=null)
+                {
+                    dialog.dismiss();
+                }
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -205,43 +219,19 @@ public class ConfirmCodeActivity extends AppCompatActivity {
     private void getUserData(String userId) {
 
         Log.e("id",userId+"__");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Tags.DATABASE_NAME).child(Tags.TABLE_USERS);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Tags.DATABASE_NAME).child(Tags.TABLE_USERS).child(userId);
 
-        // check is user table already created or not
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                if (dialog!=null)
+                {
+                    dialog.dismiss();
+                }
+
                 if (dataSnapshot.getValue()!=null)
                 {
-                    checkIsUserRegisterBefore(userId);
-                }else
-                    {
-                        Intent intent = new Intent(ConfirmCodeActivity.this, SignUpActivity.class);
-                        intent.putExtra("phone_code", phone_code);
-                        intent.putExtra("phone_number", phone_number);
-                        intent.putExtra("user_id", userId);
-                        startActivity(intent);
-                        finish();
-                    }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
-
-    private void checkIsUserRegisterBefore(String userId){
-
-        dRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.getValue() != null) {
                     UserModel userModel = dataSnapshot.getValue(UserModel.class);
                     if (userModel != null) {
                         preferences.create_update_userData(ConfirmCodeActivity.this, userModel);
@@ -256,19 +246,35 @@ public class ConfirmCodeActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
-                }
+                }else
+                    {
+                        if (dialog!=null)
+                        {
+                            dialog.dismiss();
+                        }
+
+
+
+
+
+                        Intent intent = new Intent(ConfirmCodeActivity.this, SignUpActivity.class);
+                        intent.putExtra("phone_code", phone_code);
+                        intent.putExtra("phone_number", phone_number);
+                        intent.putExtra("user_id", userId);
+                        startActivity(intent);
+                        finish();
+                    }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                Log.e("ccccccc","__");
             }
-
-
         });
 
+
     }
+
 
 
     private void createDialogAlert(String msg) {

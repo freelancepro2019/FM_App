@@ -20,9 +20,6 @@
         <variable
             name="HomeSessionListener"
             type="com.taibah.fm_app.interfaces.Listeners.HomeSessionListener" />
-        <variable
-            name="showCountryListener"
-            type="com.taibah.fm_app.interfaces.Listeners.ShowCountryDialogListener" />
 
     </data>
 
@@ -94,7 +91,7 @@
                 android:padding="16dp"
 
                 >
-                <TextView
+               <!-- <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -221,7 +218,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </FrameLayout>
+                </FrameLayout>-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -454,6 +451,7 @@
                     >
 
                     <TextView
+                        android:id="@+id/tvCost"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -462,6 +460,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+
 
 
                         />
@@ -495,7 +494,7 @@
 
                     <fragment
                         android:id="@+id/map"
-                        android:name="com.taibah.fm_app.activities_fragments.activity_home_sessions.FragmentMapTouchListener"
+                        android:name="com.taibah.fm_app.activities_fragments.FragmentMapTouchListener"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
 
@@ -509,8 +508,8 @@
                         android:layout_marginEnd="15dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/rounded_corner"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:gravity="center_vertical"
                         >
 

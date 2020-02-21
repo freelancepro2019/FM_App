@@ -201,7 +201,14 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
     public void checkJoinData(JoinNowModel joinNowModel) {
 
         if (joinNowModel.isDataValid(this)) {
-            send(joinNowModel);
+            if (userModel!=null)
+            {
+                send(joinNowModel);
+
+            }else
+            {
+                Common.CreateDialogAlert(this,getString(R.string.please_sign_in_or_sign_up));
+            }
         }
     }
 
@@ -213,7 +220,10 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
         dialog.show();
         String itemId = dRef.push().getKey();
 
-        MyJoinModel myJoinModel = new MyJoinModel(itemId, joinNowModel.getType(), joinNowModel.getUser_id(), joinNowModel.getDuration().getDuration(), joinNowModel.getDuration().getCost(), joinNowModel.getGender(), joinNowModel.getBirthDate(), joinNowModel.getDetails(), userModel.getId());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy - hh:mm aa",Locale.ENGLISH);
+        String date =  dateFormat.format(new Date(Calendar.getInstance().getTimeInMillis()));
+
+        MyJoinModel myJoinModel = new MyJoinModel(itemId, joinNowModel.getType(), joinNowModel.getUser_id(), joinNowModel.getDuration().getDuration(), joinNowModel.getDuration().getCost(), joinNowModel.getGender(), joinNowModel.getBirthDate(), joinNowModel.getDetails(), userModel.getId(),date);
         dRef.child(userModel.getId()).child(itemId)
                 .setValue(myJoinModel).addOnCompleteListener(task -> {
 
