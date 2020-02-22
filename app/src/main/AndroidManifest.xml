@@ -23,10 +23,15 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
-        <activity android:name=".activities_fragments.activity_session_details.SessionDetailsActivity"
+        <activity android:name=".activities_fragments.activity_update_profile.UpdateProfileActivity"></activity>
+        <activity
+            android:name=".activities_fragments.activity_purchases.PurchasesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity
+            android:name=".activities_fragments.activity_session_details.SessionDetailsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".activities_fragments.activity_session_reservations.SessionReservationActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

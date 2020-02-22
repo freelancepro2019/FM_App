@@ -1,14 +1,14 @@
 package com.taibah.fm_app.ui_general_method;
 
+import android.net.Uri;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 
 public class UI_General_Method {
@@ -29,22 +29,18 @@ public class UI_General_Method {
         }
     }
 
-
-
-    @BindingAdapter("date")
-    public static void displayDate(TextView textView,long date)
+    @BindingAdapter("image")
+    public static void displayImage(View view ,String url)
     {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
-        String sTime = dateFormat.format(new Date(date*1000));
-        textView.setText(sTime);
-    }
+        if (url!=null&&!url.isEmpty())
+        {
+            if (view instanceof RoundedImageView)
+            {
+                RoundedImageView imageView = (RoundedImageView) view;
 
-    @BindingAdapter("time")
-    public static void displayTime(TextView textView,long time)
-    {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH);
-        String sTime = dateFormat.format(new Date(time*1000));
-        textView.setText(sTime);
+                Picasso.with(view.getContext()).load(Uri.parse(url)).fit().into(imageView);
+            }
+        }
     }
 
 

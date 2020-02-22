@@ -26,7 +26,6 @@ import io.paperdb.Paper;
 public class SessionDetailsActivity extends AppCompatActivity implements Listeners.BackListener, OnMapReadyCallback{
     private ActivitySessionDetailsBinding binding;
     private GoogleMap mMap;
-
     private FragmentMapTouchListener fragment;
     private SessionModel sessionModel;
     private String lang;
@@ -67,7 +66,6 @@ public class SessionDetailsActivity extends AppCompatActivity implements Listene
 
     }
 
-
     private void initMap() {
 
         fragment = (FragmentMapTouchListener) getSupportFragmentManager().findFragmentById(R.id.map1);
@@ -77,7 +75,6 @@ public class SessionDetailsActivity extends AppCompatActivity implements Listene
         }
 
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -107,7 +104,6 @@ public class SessionDetailsActivity extends AppCompatActivity implements Listene
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng),15.6f));
 
     }
-
 
     @Override
     public void back() {

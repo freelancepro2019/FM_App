@@ -123,6 +123,11 @@
     <string name="reservation_number">رقم الحجز</string>
     <string name="book_date">تاريخ الحجز</string>
     <string name="book_time">وقت الحجز</string>
+    <string name="buy_now">شراء الان</string>
+    <string name="no_product_to_show">لا توجد منتجات لعرضها</string>
+    <string name="buy">شراء</string>
+    <string name="purchases">المشتريات</string>
+    <string name="update_profile">تعديل الملف الشخصي</string>
 
 
 </resources>

@@ -33,8 +33,10 @@ import com.taibah.fm_app.activities_fragments.activity_join_now.JoinNowActivity;
 import com.taibah.fm_app.activities_fragments.activity_login.LoginActivity;
 import com.taibah.fm_app.activities_fragments.activity_my_join.MyJoinsActivity;
 import com.taibah.fm_app.activities_fragments.activity_profile.ProfileActivity;
+import com.taibah.fm_app.activities_fragments.activity_purchases.PurchasesActivity;
 import com.taibah.fm_app.activities_fragments.activity_session_reservations.SessionReservationActivity;
 import com.taibah.fm_app.activities_fragments.activity_terms.TermsActivity;
+import com.taibah.fm_app.activities_fragments.activity_update_profile.UpdateProfileActivity;
 import com.taibah.fm_app.adapters.SliderAdapter;
 import com.taibah.fm_app.databinding.ActivityHomeBinding;
 import com.taibah.fm_app.language.LanguageHelper;
@@ -184,22 +186,24 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.flSell.setOnClickListener(view -> {
 
-           /* if (userModel == null) {
+            if (userModel == null) {
                 Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
             } else {
-            }*/
+                navigateToMyJoinActivity();
 
-           navigateToMyJoinActivity();
+            }
+
         });
 
         binding.flJoin.setOnClickListener(view -> {
 
-           /* if (userModel == null) {
+            if (userModel == null) {
                 Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
             } else {
-            }*/
+                navigateToJoinActivity();
 
-           navigateToJoinActivity();
+            }
+
         });
 
         binding.flSession.setOnClickListener(view ->navigateToHomeSessionActivity());
@@ -214,6 +218,16 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.consSessionReservation.setOnClickListener(view -> navigateToSessionReservation());
 
+        binding.consPurchases.setOnClickListener(view -> navigateToPurchasesActivity());
+
+        binding.consEditProfile.setOnClickListener(view -> {
+            if (userModel == null) {
+                Common.CreateDialogAlert(this, getString(R.string.please_sign_in_or_sign_up));
+            } else {
+                navigateToUpdateProfileActivity();
+
+            }
+        });
         getSliderImages();
     }
 
@@ -326,6 +340,18 @@ public class HomeActivity extends AppCompatActivity {
     private void navigateToHealthFoodActivity()
     {
         Intent intent = new Intent(this, HealthFoodActivity.class);
+        startActivity(intent);
+    }
+
+    private void navigateToPurchasesActivity()
+    {
+        Intent intent = new Intent(this, PurchasesActivity.class);
+        startActivity(intent);
+    }
+
+    private void navigateToUpdateProfileActivity() {
+
+        Intent intent = new Intent(this, UpdateProfileActivity.class);
         startActivity(intent);
     }
 

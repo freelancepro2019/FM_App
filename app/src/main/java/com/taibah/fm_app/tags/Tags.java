@@ -24,6 +24,8 @@ public class Tags {
     public static final String TABLE_SLIDER ="Slider";
     public static final String TABLE_JOINS ="Joins";
     public static final String TABLE_SESSIONS ="Sessions";
+    public static final String TABLE_PRODUCTS ="Products";
+    public static final String TABLE_PURCHASES ="Purchases";
 
 
 

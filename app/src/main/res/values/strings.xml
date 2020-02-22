@@ -121,5 +121,10 @@
     <string name="reservation_number">Reservation Number</string>
     <string name="book_date">Book Date</string>
     <string name="book_time">Book Time</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="no_product_to_show">No Product to Show</string>
+    <string name="buy">Buy</string>
+    <string name="purchases">Purchases</string>
+    <string name="update_profile">Update Profile</string>
 
 </resources>
