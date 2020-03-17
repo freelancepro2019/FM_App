@@ -19,7 +19,7 @@ public class JoinNowModel extends BaseObservable implements Serializable {
     private int type;
     private String user_id;
     private Duration duration;
-    private int gender;
+//    private int gender;
     private String birthDate;
     private String details;
     public ObservableField<String> error_user_id = new ObservableField<>();
@@ -33,13 +33,13 @@ public class JoinNowModel extends BaseObservable implements Serializable {
         this.birthDate = "";
     }
 
-    public JoinNowModel(int type, String user_id, Duration duration, int gender, String birthDate, String details) {
+    public JoinNowModel(int type, String user_id, Duration duration, String birthDate, String details) {
         this.type = type;
         this.user_id = user_id;
         this.duration = duration;
-        this.gender = gender;
+      //  this.gender = gender;
         this.birthDate = birthDate;
-        this.gender = 0;
+     //   this.gender = 0;
         this.details = details;
     }
 
@@ -70,6 +70,7 @@ public class JoinNowModel extends BaseObservable implements Serializable {
         this.duration = duration;
     }
 
+/*
     public int getGender() {
         return gender;
     }
@@ -77,6 +78,7 @@ public class JoinNowModel extends BaseObservable implements Serializable {
     public void setGender(int gender) {
         this.gender = gender;
     }
+*/
 
     @Bindable
     public String getBirthDate() {
@@ -100,7 +102,7 @@ public class JoinNowModel extends BaseObservable implements Serializable {
 
     public boolean isDataValid(Context context) {
         if (duration != null &&
-                gender != 0 &&
+              //  gender != 0 &&
                 !TextUtils.isEmpty(birthDate) &&
                 !TextUtils.isEmpty(details)
 
@@ -143,10 +145,12 @@ public class JoinNowModel extends BaseObservable implements Serializable {
             }
 
 
+/*
             if (gender == 0) {
                 Toast.makeText(context,context.getString(R.string.ch_gender), Toast.LENGTH_SHORT).show();
 
             }
+*/
 
             if (birthDate.isEmpty()) {
                 error_birth_date.set(context.getString(R.string.field_req));

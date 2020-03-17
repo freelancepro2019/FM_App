@@ -218,7 +218,7 @@ public class HomeSessionsActivity extends AppCompatActivity implements Listeners
 
     private void CreateDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
+      //  calendar.add(Calendar.DAY_OF_MONTH, 1);
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.dismissOnPause(true);
         datePickerDialog.setAccentColor(ActivityCompat.getColor(this, R.color.colorPrimary));

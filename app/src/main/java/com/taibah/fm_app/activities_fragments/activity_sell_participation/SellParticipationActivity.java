@@ -4,14 +4,17 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,8 +36,15 @@ import com.taibah.fm_app.preferences.Preferences;
 import com.taibah.fm_app.share.Common;
 import com.taibah.fm_app.tags.Tags;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.paperdb.Paper;
 
@@ -47,6 +57,8 @@ public class SellParticipationActivity extends AppCompatActivity implements List
     private Preferences preferences;
     private UserModel userModel;
     private MyJoinModel myJoinModel;
+    private String currentDate;
+    private int sellingDays;
 
 
 
@@ -56,12 +68,15 @@ public class SellParticipationActivity extends AppCompatActivity implements List
         super.attachBaseContext(LanguageHelper.updateResources(newBase, Paper.book().read("lang", "ar")));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sell_participation);
+        getCurrentDate();
         getDataFromIntent();
         initView();
+        getSellingDays();
 
     }
 
@@ -171,11 +186,31 @@ public class SellParticipationActivity extends AppCompatActivity implements List
 
 
     public void setItemData(UserModel model) {
+        createDialogSelling(model);
 
-        createDialogAlert(model);
 
     }
+    private void getCurrentDate() {
 
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        currentDate = df.format(c);
+
+
+        Log.e("nnnnnnnnnnnnn",currentDate);
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getSellingDays() {
+       DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy").withLocale(Locale.US);
+
+        LocalDate startDate = LocalDate.parse(myJoinModel.getBirth_date(), f);
+        LocalDate endDate = LocalDate.parse(currentDate, f);
+
+        Period period = Period.between(startDate, endDate);
+       sellingDays= period.getDays();
+        Log.e("nnnnnnnnnnnnn",period.getDays()+"");
+    }
 
     private void createDialogAlert(UserModel model) {
         final AlertDialog dialog = new AlertDialog.Builder(this)
@@ -187,6 +222,27 @@ public class SellParticipationActivity extends AppCompatActivity implements List
         binding.btnConfirm.setOnClickListener(view -> {
             dialog.dismiss();
             addJoin(model);
+        });
+        binding.btnCancel.setOnClickListener(v -> dialog.dismiss()
+
+        );
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setView(binding.getRoot());
+        dialog.show();
+    }
+    private void createDialogSelling(UserModel model) {
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .create();
+
+        DialogAlertSellBinding binding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_alert_sell, null, false);
+
+        int cost =sellingDays*10;
+        binding.tvMsg.setText((R.string.selling_cost)+" "+cost);
+        binding.btnConfirm.setOnClickListener(view -> {
+            dialog.dismiss();
+            createDialogAlert(model);
         });
         binding.btnCancel.setOnClickListener(v -> dialog.dismiss()
 
@@ -232,6 +288,8 @@ public class SellParticipationActivity extends AppCompatActivity implements List
 
                 }).addOnFailureListener(e -> dialog.dismiss());
 
+
     }
+
 
 }

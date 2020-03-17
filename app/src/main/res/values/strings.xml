@@ -126,5 +126,7 @@
     <string name="buy">Buy</string>
     <string name="purchases">Purchases</string>
     <string name="update_profile">Update Profile</string>
+    <string name="join_date">Join Date</string>
+    <string name="selling_cost">Selling Cost</string>
 
 </resources>

@@ -385,6 +385,7 @@
 
                         </FrameLayout>
                     </androidx.cardview.widget.CardView>
+<!--
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
@@ -408,7 +409,7 @@
                                 android:clickable="false"
                                 android:longClickable="false">
 
-                                <!--
+                                &lt;!&ndash;
                                                                 <com.makeramen.roundedimageview.RoundedImageView
                                                                     android:id="@+id/imageScooter"
                                                                     android:layout_width="120dp"
@@ -421,7 +422,7 @@
 
 
                                                                 </com.makeramen.roundedimageview.RoundedImageView>
-                                -->
+                                &ndash;&gt;
 
                                 <TextView
                                     android:id="@+id/tvScooter"
@@ -480,6 +481,7 @@
 
                         </FrameLayout>
                     </androidx.cardview.widget.CardView>
+-->
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/flHealthFood"
@@ -573,6 +575,7 @@
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
                             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                         </FrameLayout>
                     </androidx.cardview.widget.CardView>

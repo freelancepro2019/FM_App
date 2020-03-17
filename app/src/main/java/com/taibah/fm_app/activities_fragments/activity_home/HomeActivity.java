@@ -208,7 +208,7 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.flSession.setOnClickListener(view ->navigateToHomeSessionActivity());
 
-        binding.fldiet.setOnClickListener(view -> navigateToDietActivity());
+     //   binding.fldiet.setOnClickListener(view -> navigateToDietActivity());
 
         binding.flHealthFood.setOnClickListener(view ->navigateToHealthFoodActivity());
 

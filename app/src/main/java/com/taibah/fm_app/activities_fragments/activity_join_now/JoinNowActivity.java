@@ -3,11 +3,14 @@ package com.taibah.fm_app.activities_fragments.activity_join_now;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
@@ -29,6 +32,9 @@ import com.taibah.fm_app.tags.Tags;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -83,7 +89,7 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
         binding.spinner.setAdapter(adapter);
         addDuration();
         CreateDatePickerDialog();
-        binding.rbMale.setOnClickListener(view -> {
+       /* binding.rbMale.setOnClickListener(view -> {
             model.setGender(Tags.male);
             binding.setModel(model);
         });
@@ -91,7 +97,7 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
         binding.rbFemale.setOnClickListener(view -> {
             model.setGender(Tags.female);
             binding.setModel(model);
-        });
+        });*/
 
 
         binding.rbStudent.setOnClickListener(view -> {
@@ -154,21 +160,20 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
 
     private void CreateDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.MONTH, Calendar.JANUARY);
-        calendar.set(Calendar.YEAR, 1995);
-
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
 
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.dismissOnPause(true);
         datePickerDialog.setAccentColor(ActivityCompat.getColor(this, R.color.colorPrimary));
         datePickerDialog.setCancelColor(ActivityCompat.getColor(this, R.color.gray4));
         datePickerDialog.setOkColor(ActivityCompat.getColor(this, R.color.colorPrimary));
-        datePickerDialog.setOkText(getString(R.string.ch));
+        datePickerDialog.setOkText(getString(R.string.select));
         datePickerDialog.setCancelText(getString(R.string.cancel));
         datePickerDialog.setLocale(new Locale(lang));
         datePickerDialog.setVersion(DatePickerDialog.Version.VERSION_2);
         datePickerDialog.setMinDate(calendar);
+
+
 
     }
 
@@ -180,7 +185,7 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
         calendar.set(Calendar.MONTH, monthOfYear);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         String d = dateFormat.format(new Date(calendar.getTimeInMillis()));
 
         binding.tvDate.setText(d);
@@ -223,7 +228,7 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy - hh:mm aa",Locale.ENGLISH);
         String date =  dateFormat.format(new Date(Calendar.getInstance().getTimeInMillis()));
 
-        MyJoinModel myJoinModel = new MyJoinModel(itemId, joinNowModel.getType(), joinNowModel.getUser_id(), joinNowModel.getDuration().getDuration(), joinNowModel.getDuration().getCost(), joinNowModel.getGender(), joinNowModel.getBirthDate(), joinNowModel.getDetails(), userModel.getId(),date);
+        MyJoinModel myJoinModel = new MyJoinModel(itemId, joinNowModel.getType(), joinNowModel.getUser_id(), joinNowModel.getDuration().getDuration(), joinNowModel.getDuration().getCost(), joinNowModel.getBirthDate(), joinNowModel.getDetails(), userModel.getId(),date);
         dRef.child(userModel.getId()).child(itemId)
                 .setValue(myJoinModel).addOnCompleteListener(task -> {
 
