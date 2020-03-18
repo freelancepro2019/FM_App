@@ -160,7 +160,7 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
 
     private void CreateDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
 
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.dismissOnPause(true);
@@ -185,12 +185,12 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
         calendar.set(Calendar.MONTH, monthOfYear);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
         String d = dateFormat.format(new Date(calendar.getTimeInMillis()));
 
         binding.tvDate.setText(d);
 
-        model.setBirthDate(d);
+        model.setJoinDate(d);
         binding.setModel(model);
 
     }
@@ -228,7 +228,7 @@ public class JoinNowActivity extends AppCompatActivity implements Listeners.Back
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy - hh:mm aa",Locale.ENGLISH);
         String date =  dateFormat.format(new Date(Calendar.getInstance().getTimeInMillis()));
 
-        MyJoinModel myJoinModel = new MyJoinModel(itemId, joinNowModel.getType(), joinNowModel.getUser_id(), joinNowModel.getDuration().getDuration(), joinNowModel.getDuration().getCost(), joinNowModel.getBirthDate(), joinNowModel.getDetails(), userModel.getId(),date);
+        MyJoinModel myJoinModel = new MyJoinModel(itemId, joinNowModel.getType(), joinNowModel.getUser_id(), joinNowModel.getDuration().getDuration(), joinNowModel.getDuration().getCost(), joinNowModel.getJoinDate(), joinNowModel.getDetails(), userModel.getId(),date);
         dRef.child(userModel.getId()).child(itemId)
                 .setValue(myJoinModel).addOnCompleteListener(task -> {
 

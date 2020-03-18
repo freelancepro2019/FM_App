@@ -20,25 +20,25 @@ public class JoinNowModel extends BaseObservable implements Serializable {
     private String user_id;
     private Duration duration;
 //    private int gender;
-    private String birthDate;
+    private String joinDate;
     private String details;
     public ObservableField<String> error_user_id = new ObservableField<>();
-    public ObservableField<String> error_birth_date = new ObservableField<>();
+    public ObservableField<String> error_join_date = new ObservableField<>();
     public ObservableField<String> error_details = new ObservableField<>();
 
 
     public JoinNowModel() {
         this.user_id = "";
         this.details = "";
-        this.birthDate = "";
+        this.joinDate = "";
     }
 
-    public JoinNowModel(int type, String user_id, Duration duration, String birthDate, String details) {
+    public JoinNowModel(int type, String user_id, Duration duration, String joinDate, String details) {
         this.type = type;
         this.user_id = user_id;
         this.duration = duration;
       //  this.gender = gender;
-        this.birthDate = birthDate;
+        this.joinDate = joinDate;
      //   this.gender = 0;
         this.details = details;
     }
@@ -81,12 +81,12 @@ public class JoinNowModel extends BaseObservable implements Serializable {
 */
 
     @Bindable
-    public String getBirthDate() {
-        return birthDate;
+    public String getJoinDate() {
+        return joinDate;
     }
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public void setJoinDate(String joinDate) {
+        this.joinDate = joinDate;
     }
 
     @Bindable
@@ -103,11 +103,11 @@ public class JoinNowModel extends BaseObservable implements Serializable {
     public boolean isDataValid(Context context) {
         if (duration != null &&
               //  gender != 0 &&
-                !TextUtils.isEmpty(birthDate) &&
+                !TextUtils.isEmpty(joinDate) &&
                 !TextUtils.isEmpty(details)
 
         ) {
-            error_birth_date.set(null);
+            error_join_date.set(null);
             error_details.set(null);
 
 
@@ -152,10 +152,10 @@ public class JoinNowModel extends BaseObservable implements Serializable {
             }
 */
 
-            if (birthDate.isEmpty()) {
-                error_birth_date.set(context.getString(R.string.field_req));
+            if (joinDate.isEmpty()) {
+                error_join_date.set(context.getString(R.string.field_req));
             } else {
-                error_birth_date.set(null);
+                error_join_date.set(null);
             }
 
 

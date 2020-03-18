@@ -347,7 +347,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/tvChange"
                         android:gravity="center"
-                        error="@{model.error_birth_date}"
+                        error="@{model.error_join_date}"
                         />
                     <TextView
                         android:id="@+id/tvChange"

@@ -9,7 +9,7 @@ public class MyJoinModel implements Serializable {
     private String duration;
     private String cost;
  //   private int gender;
-    private String birth_date;
+    private String join_date;
     private String details;
     private String user_id;
     private String date;
@@ -17,14 +17,14 @@ public class MyJoinModel implements Serializable {
     public MyJoinModel() {
     }
 
-    public MyJoinModel(String id, int student_trainer, String student_id, String duration, String cost, String birth_date, String details, String user_id, String date) {
+    public MyJoinModel(String id, int student_trainer, String student_id, String duration, String cost, String join_date, String details, String user_id, String date) {
         this.id = id;
         this.student_trainer = student_trainer;
         this.student_id = student_id;
         this.duration = duration;
         this.cost = cost;
        // this.gender = gender;
-        this.birth_date = birth_date;
+        this.join_date = join_date;
         this.details = details;
         this.user_id = user_id;
         this.date = date;
@@ -78,12 +78,12 @@ public class MyJoinModel implements Serializable {
         this.gender = gender;
     }*/
 
-    public String getBirth_date() {
-        return birth_date;
+    public String getJoin_date() {
+        return join_date;
     }
 
-    public void setBirth_date(String birth_date) {
-        this.birth_date = birth_date;
+    public void setJoin_date(String join_date) {
+        this.join_date = join_date;
     }
 
     public String getDetails() {

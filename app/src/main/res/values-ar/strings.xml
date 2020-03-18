@@ -128,8 +128,8 @@
     <string name="buy">شراء</string>
     <string name="purchases">المشتريات</string>
     <string name="update_profile">تعديل الملف الشخصي</string>
-    <string name="join_date">Join Date</string>
-    <string name="selling_cost">Selling Cost</string>
+    <string name="join_date">تاريخ الاشتراك</string>
+    <string name="selling_cost">سعر البيع</string>
 
 
 </resources>

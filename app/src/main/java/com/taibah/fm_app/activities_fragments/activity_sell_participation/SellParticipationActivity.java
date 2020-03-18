@@ -48,18 +48,19 @@ import java.util.Locale;
 
 import io.paperdb.Paper;
 
-public class SellParticipationActivity extends AppCompatActivity implements Listeners.BackListener  {
+public class SellParticipationActivity extends AppCompatActivity implements Listeners.BackListener {
     private ActivitySellParticipationBinding binding;
     private String lang;
     private List<UserModel> userModelList;
     private UsersAdapter adapter;
-    private DatabaseReference dRef,dRefJoin;
+    private DatabaseReference dRef, dRefJoin;
     private Preferences preferences;
     private UserModel userModel;
     private MyJoinModel myJoinModel;
     private String currentDate;
     private int sellingDays;
-
+    private LocalDate startDate, endDate;
+    private String cost = "";
 
 
     @Override
@@ -73,18 +74,18 @@ public class SellParticipationActivity extends AppCompatActivity implements List
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sell_participation);
-        getCurrentDate();
         getDataFromIntent();
         initView();
+        getCurrentDate();
         getSellingDays();
 
     }
 
     private void getDataFromIntent() {
         Intent intent = getIntent();
-        if (intent.hasExtra("data"))
-        {
+        if (intent.hasExtra("data")) {
             myJoinModel = (MyJoinModel) intent.getSerializableExtra("data");
+            Log.e( "data",myJoinModel.getDate()+"_");
         }
     }
 
@@ -97,10 +98,10 @@ public class SellParticipationActivity extends AppCompatActivity implements List
         userModel = preferences.getUserData(this);
         userModelList = new ArrayList<>();
         Paper.init(this);
-        lang = Paper.book().read("lang","ar");
+        lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         binding.recView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new UsersAdapter(userModelList,this);
+        adapter = new UsersAdapter(userModelList, this);
         binding.recView.setAdapter(adapter);
 
         binding.edtSearch.addTextChangedListener(new TextWatcher() {
@@ -118,21 +119,18 @@ public class SellParticipationActivity extends AppCompatActivity implements List
             public void afterTextChanged(Editable editable) {
 
                 String query = editable.toString().trim();
-                if (!query.isEmpty())
-                {
+                if (!query.isEmpty()) {
                     search(query);
-                }else
-                    {
-                        userModelList.clear();
-                        adapter.notifyDataSetChanged();
-                    }
+                } else {
+                    userModelList.clear();
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
 
     }
 
-    private void search(String query)
-    {
+    private void search(String query) {
         binding.progBar.setVisibility(View.VISIBLE);
         binding.tvNoSearchResults.setVisibility(View.GONE);
         userModelList.clear();
@@ -143,31 +141,25 @@ public class SellParticipationActivity extends AppCompatActivity implements List
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 binding.progBar.setVisibility(View.GONE);
 
-                if (dataSnapshot.getValue()!=null)
-                {
-                    for (DataSnapshot ds :dataSnapshot.getChildren())
-                    {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         UserModel model = ds.getValue(UserModel.class);
 
-                        if (!model.getId().equals(userModel.getId())&&(model.getName().toLowerCase().contains(query.toLowerCase())||model.getPhone().contains(query)))
-                        {
+                        if (!model.getId().equals(userModel.getId()) && (model.getName().toLowerCase().contains(query.toLowerCase()) || model.getPhone().contains(query))) {
                             userModelList.add(model);
                         }
                     }
 
-                    if (userModelList.size()>0)
-                    {
+                    if (userModelList.size() > 0) {
                         adapter.notifyDataSetChanged();
-                    }else
-                        {
-                            binding.tvNoSearchResults.setVisibility(View.VISIBLE);
-
-                        }
-                }else
-                    {
-                        binding.progBar.setVisibility(View.GONE);
+                    } else {
                         binding.tvNoSearchResults.setVisibility(View.VISIBLE);
+
                     }
+                } else {
+                    binding.progBar.setVisibility(View.GONE);
+                    binding.tvNoSearchResults.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -178,7 +170,6 @@ public class SellParticipationActivity extends AppCompatActivity implements List
     }
 
 
-
     @Override
     public void back() {
         finish();
@@ -186,30 +177,36 @@ public class SellParticipationActivity extends AppCompatActivity implements List
 
 
     public void setItemData(UserModel model) {
+
         createDialogSelling(model);
 
 
     }
+
     private void getCurrentDate() {
 
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
         currentDate = df.format(c);
 
 
-        Log.e("nnnnnnnnnnnnn",currentDate);
+        Log.e("nnnnnnnnnnnnn", currentDate);
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void getSellingDays() {
-       DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy").withLocale(Locale.US);
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MMM/yyyy").withLocale(Locale.ENGLISH);
 
-        LocalDate startDate = LocalDate.parse(myJoinModel.getBirth_date(), f);
-        LocalDate endDate = LocalDate.parse(currentDate, f);
+//        SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy",Locale.ENGLISH);
+
+
+        startDate = LocalDate.parse(myJoinModel.getJoin_date(), f);
+        endDate = LocalDate.parse(currentDate, f);
 
         Period period = Period.between(startDate, endDate);
-       sellingDays= period.getDays();
-        Log.e("nnnnnnnnnnnnn",period.getDays()+"");
+        sellingDays = period.getDays();
+        Log.e("nnnnnnnnnnnnn", period.getDays() + "");
     }
 
     private void createDialogAlert(UserModel model) {
@@ -232,14 +229,23 @@ public class SellParticipationActivity extends AppCompatActivity implements List
         dialog.setView(binding.getRoot());
         dialog.show();
     }
+
     private void createDialogSelling(UserModel model) {
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .create();
 
         DialogAlertSellBinding binding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_alert_sell, null, false);
+        Log.e("mmmm", sellingDays + "");
 
-        int cost =sellingDays*10;
-        binding.tvMsg.setText((R.string.selling_cost)+" "+cost);
+        Log.e("kkkkkk", startDate + " " + endDate + "");
+        if (startDate.toString().equals(endDate.toString())) {
+            cost = myJoinModel.getCost();
+
+        } else {
+            cost = (Integer.parseInt(myJoinModel.getCost()) - sellingDays * 10) + "";
+        }
+//       cost = sellingDays * 10;
+        binding.tvMsg.setText(getString(R.string.selling_cost) + " " + cost + " " + getString(R.string.sar));
         binding.btnConfirm.setOnClickListener(view -> {
             dialog.dismiss();
             createDialogAlert(model);
@@ -255,20 +261,19 @@ public class SellParticipationActivity extends AppCompatActivity implements List
     }
 
     private void addJoin(UserModel model) {
-        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
         dialog.show();
 
         dRefJoin.child(model.getId()).child(myJoinModel.getId())
                 .setValue(myJoinModel)
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
+                    if (task.isSuccessful()) {
                         removeOldJoin(dialog);
                     }
                 }).addOnFailureListener(e -> {
-                    dialog.dismiss();
-                    Common.CreateDialogAlert(this,getString(R.string.failed));
-                });
+            dialog.dismiss();
+            Common.CreateDialogAlert(this, getString(R.string.failed));
+        });
 
     }
 
@@ -278,8 +283,7 @@ public class SellParticipationActivity extends AppCompatActivity implements List
                 .removeValue()
                 .addOnCompleteListener(task -> {
                     dialog.dismiss();
-                    if (task.isSuccessful())
-                    {
+                    if (task.isSuccessful()) {
                         Toast.makeText(this, getString(R.string.suc), Toast.LENGTH_SHORT).show();
 
                         setResult(RESULT_OK);

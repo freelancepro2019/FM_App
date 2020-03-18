@@ -66,7 +66,7 @@
                     android:layout_marginTop="5dp"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:text='@{model.date}'
+                    android:text='@{model.join_date}'
                     />
 
                 <TextView
