@@ -7,10 +7,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.collage.pnuapplication.R;
 import com.collage.pnuapplication.databinding.TimelineRowBinding;
+import com.collage.pnuapplication.fragments.Fragment_All;
+import com.collage.pnuapplication.fragments.Fragment_Clubs;
+import com.collage.pnuapplication.fragments.Fragment_Collage;
 import com.collage.pnuapplication.model.CourseModel;
 import com.squareup.picasso.Picasso;
 
@@ -23,10 +27,12 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
     private Context context;
     private List<CourseModel> data;
     private LayoutInflater inflater;
-    public TimeLineAdapter(Context context, List<CourseModel> data) {
+    private Fragment fragment;
+    public TimeLineAdapter(Context context, List<CourseModel> data,Fragment fragment) {
         this.context = context;
         this.data = data;
         inflater = LayoutInflater.from(context);
+        this.fragment = fragment;
 
 
     }
@@ -45,8 +51,25 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
         Picasso.get().load(data.get(position).getImage()).fit().into(holder.binding.image);
         holder.binding.setModel(data.get(position));
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.binding.tvJoin.setOnClickListener(v -> {
 
+            CourseModel courseModel = data.get(holder.getAdapterPosition());
+            if (fragment instanceof Fragment_All)
+            {
+                Fragment_All fragment_all = (Fragment_All) fragment;
+                fragment_all.setItemData(courseModel);
+
+            }else if (fragment instanceof Fragment_Clubs)
+            {
+                Fragment_Clubs fragment_clubs = (Fragment_Clubs) fragment;
+                fragment_clubs.setItemData(courseModel);
+
+            }else if (fragment instanceof Fragment_Collage)
+            {
+                Fragment_Collage fragment_collage = (Fragment_Collage) fragment;
+                fragment_collage.setItemData(courseModel);
+
+            }
         });
 
 

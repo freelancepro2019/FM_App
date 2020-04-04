@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1097397215387",
+    "firebase_url": "https://myapps-9946e.firebaseio.com",
+    "project_id": "myapps-9946e",
+    "storage_bucket": "myapps-9946e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097397215387:android:d39f8499e8b5d798d5663e",
+        "android_client_info": {
+          "package_name": "com.taibah.fm_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097397215387-cmc8b584d6smq0h25ilsniudcotp0kcb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.taibah.fm_app",
+            "certificate_hash": "6616577a7e310a6aae058246a826c73910eff6d4"
+          }
+        },
+        {
+          "client_id": "1097397215387-8breuh3abq3i9vhfgejh35cqv2shm3ol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOfeUdZvCHznEcRwYO3GCghqhG_vz-VLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097397215387-8breuh3abq3i9vhfgejh35cqv2shm3ol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
